@@ -1,0 +1,17 @@
+# doxygen
+html/
+latex/
+
+# source
+*.so*
+*.la
+*.a
+*.o
+
+# targets
+
+
+# tmp files
+*~
+*.swp
+*.swo
