@@ -78,7 +78,7 @@ static mp_digit get_urnd_int_small(int *sign)
  * @param ctx the NTRU context
  * @return newly allocated polynomial
  */
-pb_poly *get_urnd_poly_small(pqc_context *ctx)
+pb_poly *ntru_get_urnd_poly_small(ntru_context *ctx)
 {
 	mp_int *chara = malloc(sizeof(mp_int));
 	init_integer(chara);

@@ -41,6 +41,6 @@ typedef struct {
 	 * small modulus
 	 */
 	int p;
-} pqc_context;
+} ntru_context;
 
 #endif /* NTRU_CONTEXT_H */
