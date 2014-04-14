@@ -33,6 +33,11 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+/*
+ * static declarations
+ */
+static mp_digit get_urnd_int_small(int *sign);
+
 
 /**
  * Gets randomly a small integer
@@ -41,7 +46,7 @@
  * @param sign stores the signness [out]
  * @return random small integer
  */
-mp_digit get_urnd_int_small(int *sign)
+static mp_digit get_urnd_int_small(int *sign)
 {
 	int random_data;
 	mp_digit random_int;

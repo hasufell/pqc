@@ -28,8 +28,6 @@
 #include <tompoly.h>
 
 
-mp_digit get_urnd_int_small(int *sign);
-
 pb_poly *get_urnd_poly_small(pqc_context *ctx);
 
 #endif /* NTRU_RAND_H */
