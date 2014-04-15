@@ -31,7 +31,7 @@ void init_integer(mp_int *new_int);
 
 void init_polynom(pb_poly *new_poly, mp_int *chara);
 
-void init_polynom_size(pb_poly *new_poly, mp_int *chara, int size);
+void init_polynom_size(pb_poly *new_poly, mp_int *chara, size_t size);
 
 void delete_polynom(pb_poly *new_poly);
 
