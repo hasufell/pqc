@@ -66,7 +66,7 @@ void init_polynom(pb_poly *new_poly, mp_int *chara)
  * @param chara the characteristic
  * @param size the size of the polynomial
  */
-void init_polynom_size(pb_poly *new_poly, mp_int *chara, int size)
+void init_polynom_size(pb_poly *new_poly, mp_int *chara, size_t size)
 {
 	int result;
 	if ((result = pb_init_size(new_poly, chara, size)) != MP_OKAY) {
