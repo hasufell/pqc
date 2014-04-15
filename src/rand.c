@@ -55,7 +55,7 @@ static mp_digit get_urnd_int_small(int *sign)
 	random_data = open("/dev/urandom", O_RDONLY);
 	if ((result = read(random_data, &random_int, sizeof(random_int))) < 0)
 		NTRU_ABORT("Unable to read /dev/urandom");
-	close(random_int);
+	close(random_data);
 
 	if ((random_int % 2) == 0) {
 		random_int = 0;
