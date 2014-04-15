@@ -33,6 +33,8 @@ void init_polynom(pb_poly *new_poly, mp_int *chara);
 
 void init_polynom_size(pb_poly *new_poly, mp_int *chara, int size);
 
+void delete_polynom(pb_poly *new_poly);
+
 void draw_polynom(pb_poly * const poly);
 
 #endif /* NTRU_POLY_H */

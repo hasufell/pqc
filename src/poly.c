@@ -75,6 +75,20 @@ void init_polynom_size(pb_poly *new_poly, mp_int *chara, int size)
 }
 
 /**
+ * This deletes the internal structure of a polynomial,
+ * and frees the pointer. Don't call this on stack variables,
+ * this is intended for use after ntru_ functions, that
+ * return a polynomial pointer.
+ *
+ * @param poly the polynomial to delete
+ */
+void delete_polynom(pb_poly *poly)
+{
+	pb_clear(poly);
+	free(poly);
+}
+
+/**
  * Print the polynomial in a human readable format to stdout.
  *
  * @param poly to draw
