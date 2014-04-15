@@ -76,7 +76,7 @@ static mp_digit get_urnd_int_small(int *sign)
  * from the set {-1 ,0 ,1} using /dev/urandom.
  *
  * @param ctx the NTRU context
- * @return newly allocated polynomial
+ * @return newly allocated polynomial, must be freed with delete_polynom()
  */
 pb_poly *ntru_get_urnd_poly_small(ntru_context *ctx)
 {
