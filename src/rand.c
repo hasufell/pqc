@@ -80,10 +80,11 @@ static mp_digit get_urnd_int_small(int *sign)
  */
 pb_poly *ntru_get_urnd_poly_small(ntru_context *ctx)
 {
-	mp_int *chara = malloc(sizeof(mp_int));
-	init_integer(chara);
+	mp_int chara;
+	init_integer(&chara);
 	pb_poly *poly = malloc(sizeof(pb_poly));
-	init_polynom_size(poly, chara, ctx->N);
+	init_polynom_size(poly, &chara, ctx->N);
+	mp_clear(&chara);
 
 	for (int i = 0; i < ctx->N; i++) {
 		int sign;
