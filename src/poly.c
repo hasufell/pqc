@@ -58,7 +58,7 @@ void init_polynom(pb_poly *new_poly, mp_int *chara)
 }
 
 /**
- * Initialize a Polynom with a pb_poly adn a mp_int as characteristic
+ * Initialize a Polynom with a pb_poly and an mp_int as characteristic
  * with size. Checks if everything went fine. The caller must free
  * new_poly with pb_clear().
  *
