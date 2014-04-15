@@ -32,15 +32,15 @@ typedef struct {
 	 * maximal degree N - 1 for
 	 * all polynomials
 	 */
-	int N;
+	unsigned int N;
 	/**
 	 * large modulus
 	 */
-	int q;
+	unsigned int q;
 	/**
 	 * small modulus
 	 */
-	int p;
+	unsigned int p;
 } ntru_context;
 
 #endif /* NTRU_CONTEXT_H */
