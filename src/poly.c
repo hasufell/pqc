@@ -19,8 +19,10 @@
  * MA  02110-1301  USA
  */
 
+#include "context.h"
 #include "err.h"
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <tompoly.h>
 #include <tommath.h>
@@ -73,6 +75,55 @@ void init_polynom_size(pb_poly *new_poly, mp_int *chara, size_t size)
 		NTRU_ABORT("Error initializing the number. %s",
 				mp_error_to_string(result));
 	}
+}
+
+/**
+ * Initializes and builds a polynomial with the
+ * coefficient values of c[] of size len within NTRU
+ * context ctx and returns a newly allocated polynomial
+ * pointer.
+ *
+ * @param c array of polynomial coefficients, can be NULL
+ * @param len size of the coefficient array, can be 0
+ * @param ctx NTRU context
+ * @return newly allocated polynomial pointer, must be freed
+ * with delete_polynom()
+ */
+pb_poly *build_polynom(int const * const c,
+		const size_t len,
+		ntru_context *ctx)
+{
+	pb_poly *new_poly;
+	mp_int chara;
+
+	new_poly = malloc(sizeof(*new_poly));
+	init_integer(&chara);
+	init_polynom_size(new_poly, &chara, len);
+	mp_clear(&chara);
+
+	/* fill the polynom if c is not NULL */
+	if (c) {
+		for (unsigned int i = 0; i < len; i++) {
+			bool sign = false;
+			unsigned long unsigned_c;
+
+			if (c[i] < 0) {
+				unsigned_c = 0 - c[i];
+				sign = true;
+			} else {
+				unsigned_c = c[i];
+			}
+
+			mp_set_int(&(new_poly->terms[i]), unsigned_c);
+
+			if (sign == true)
+				new_poly->terms[i].sign = 1;
+		}
+		new_poly->used = len;
+		pb_clamp(new_poly);
+	}
+
+	return new_poly;
 }
 
 /**
