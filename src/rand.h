@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2014 hasufell
+ * Copyright (C) 2014 FH Bielefeld
  *
- * This file is part of a hasufell project.
+ * This file is part of a FH Bielefeld project.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
