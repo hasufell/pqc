@@ -41,6 +41,12 @@ pb_poly *build_polynom(int const * const c,
 
 void delete_polynom(pb_poly *new_poly);
 
+void pb_starmultiply(pb_poly *a,
+		pb_poly *b,
+		pb_poly *c,
+		ntru_context *ctx,
+		unsigned int modulus);
+
 void draw_polynom(pb_poly * const poly);
 
 #endif /* NTRU_POLY_H */
