@@ -42,7 +42,7 @@ void init_integer(mp_int *new_int)
 
 /**
  * Initialize a Polynom with a pb_poly and a mp_int as characteristic.
- * Checks if everything went fine.
+ * Checks if everything went fine. The caller must free new_poly.
  *
  * @param new_poly the pb_poly you want to initialize
  * @param chara the characteristic
@@ -58,8 +58,8 @@ void init_polynom(pb_poly *new_poly, mp_int *chara)
 
 /**
  * Initialize a Polynom with a pb_poly adn a mp_int as characteristic
- * with size.
- * Checks if everything went fine.
+ * with size. Checks if everything went fine. The caller must free
+ * new_poly.
  *
  * @param new_poly the pb_poly you want to initialize
  * @param chara the characteristic
