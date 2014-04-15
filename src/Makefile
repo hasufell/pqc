@@ -80,7 +80,7 @@ libpqc.so: libpqc.a $(PQC_HEADERS) $(LIBTOMMATH) $(LIBTOMPOLY)
 
 main: main.o libpqc.a $(LIBTOMMATH) $(LIBTOMPOLY)
 	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) \
-		main.o libpqc.a $(LIBTOMMATH) $(LIBTOMPOLY) $(LIBS)
+		main.o $(LIBTOMPOLY) libpqc.a $(LIBTOMMATH) $(LIBS)
 
 install:
 	$(INSTALL_DIR) "$(DESTDIR)$(INSTALL_BINDIR)"
