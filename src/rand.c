@@ -36,7 +36,7 @@
 /*
  * static declarations
  */
-static mp_digit get_urnd_int_small(int *sign);
+static unsigned long get_urnd_int_small(int *sign);
 
 
 /**
@@ -46,7 +46,7 @@ static mp_digit get_urnd_int_small(int *sign);
  * @param sign stores the signness [out]
  * @return random small integer
  */
-static mp_digit get_urnd_int_small(int *sign)
+static unsigned long get_urnd_int_small(int *sign)
 {
 	int random_data;
 	mp_digit random_int;
@@ -86,11 +86,11 @@ pb_poly *ntru_get_urnd_poly_small(ntru_context *ctx)
 	init_polynom_size(poly, &chara, ctx->N);
 	mp_clear(&chara);
 
-	for (int i = 0; i < ctx->N; i++) {
+	for (unsigned int i = 0; i < ctx->N; i++) {
 		int sign;
-		int c = get_urnd_int_small(&sign);
+		unsigned long c = get_urnd_int_small(&sign);
 
-		mp_set(&(poly->terms[i]), (mp_digit)c);
+		mp_set_int(&(poly->terms[i]), c);
 
 		if (sign == 1)
 			poly->terms[i].sign = 1;
