@@ -1,6 +1,9 @@
 all:
 	$(MAKE) -C src
 
+main:
+	$(MAKE) -C src main
+
 clean:
 	$(MAKE) -C src clean
 
