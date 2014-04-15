@@ -147,6 +147,60 @@ void delete_polynom(pb_poly *poly)
 }
 
 /**
+ * Starmultiplication, as follows:
+ * c = a * b mod x^(N − 1)
+ *
+ * @param a polynom to multiply
+ * @param b polynom to multiply
+ * @param c polynom [out]
+ * @param ctx NTRU context
+ * @param modulus whether we use p or q
+ */
+void pb_starmultiply(pb_poly *a,
+		pb_poly *b,
+		pb_poly *c,
+		ntru_context *ctx,
+		unsigned int modulus)
+{
+	for (int k = ctx->N - 1; k >= 0; k--) {
+		int j;
+		j = k + 1;
+
+		for (int i = ctx->N - 1; i >= 0; i--) {
+			if (j == (int)(ctx->N))
+				j = 0;
+			if (mp_cmp_d(&(a->terms[i]), (mp_digit)0) != MP_EQ &&
+					mp_cmp_d(&(b->terms[j]), (mp_digit)0) != MP_EQ) {
+				int result;
+				mp_int mp_modulus;
+				mp_int mp_tmp;
+
+				init_integer(&mp_tmp);
+				init_integer(&mp_modulus);
+				mp_set_int(&mp_modulus, (unsigned long)(modulus));
+
+				if ((result = mp_mul(&(a->terms[i]),
+								&(b->terms[j]), &mp_tmp)) != MP_OKAY)
+					NTRU_ABORT("Error multiplying terms. %s",
+							mp_error_to_string(result));
+				if ((result = mp_add(&(c->terms[k]),
+								&mp_tmp, &(c->terms[k]))) != MP_OKAY)
+					NTRU_ABORT("Error multiplying terms. %s",
+							mp_error_to_string(result));
+				if ((result = mp_mod(&(c->terms[k]),
+								&mp_modulus, &(c->terms[k]))) != MP_OKAY)
+					NTRU_ABORT("Error multiplying terms. %s",
+							mp_error_to_string(result));
+
+				mp_clear(&mp_modulus);
+				mp_clear(&mp_tmp);
+			}
+			j++;
+		}
+	}
+}
+
+/**
  * Print the polynomial in a human readable format to stdout.
  *
  * @param poly to draw
