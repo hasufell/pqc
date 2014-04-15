@@ -81,7 +81,10 @@ void init_polynom_size(pb_poly *new_poly, mp_int *chara, size_t size)
  * Initializes and builds a polynomial with the
  * coefficient values of c[] of size len within NTRU
  * context ctx and returns a newly allocated polynomial
- * pointer.
+ * pointer which is not clamped.
+ *
+ * If you want to fill a polyonmial of length 11 with zeros,
+ * call build_polynom(NULL, 11, ctx).
  *
  * @param c array of polynomial coefficients, can be NULL
  * @param len size of the coefficient array, can be 0
@@ -119,9 +122,12 @@ pb_poly *build_polynom(int const * const c,
 			if (sign == true)
 				new_poly->terms[i].sign = 1;
 		}
-		new_poly->used = len;
-		pb_clamp(new_poly);
+	} else { /* fill with zeros */
+		for (unsigned int i = 0; i < len; i++)
+			mp_set(&(new_poly->terms[i]), 0);
 	}
+
+	new_poly->used = len;
 
 	return new_poly;
 }
