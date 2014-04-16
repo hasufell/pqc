@@ -27,6 +27,7 @@
 
 #include <tompoly.h>
 #include <tommath.h>
+#include <stdbool.h>
 
 
 void init_integer(mp_int *new_int);
@@ -46,6 +47,15 @@ void pb_starmultiply(pb_poly *a,
 		pb_poly *c,
 		ntru_context *ctx,
 		unsigned int modulus);
+
+void pb_xor(pb_poly *a,
+		pb_poly *b,
+		pb_poly *c,
+		const size_t len);
+
+bool pb_inverse_poly_q(pb_poly *a,
+		pb_poly *Fq,
+		ntru_context *ctx);
 
 void draw_polynom(pb_poly * const poly);
 

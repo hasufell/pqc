@@ -21,11 +21,13 @@
 
 #include "context.h"
 #include "err.h"
+#include "poly.h"
 
 #include <stdbool.h>
 #include <stdio.h>
 #include <tompoly.h>
 #include <tommath.h>
+#include <stdbool.h>
 
 /**
  * Initialize a mp_int and check if this was successful, the
@@ -201,6 +203,138 @@ void pb_starmultiply(pb_poly *a,
 }
 
 /**
+ * c = a XOR b
+ *
+ * @param a polynom (is allowed to be the same as param c)
+ * @param b polynom
+ * @param c polynom [out]
+ * @param len max size of the polynoms, make sure all are
+ * properly allocated
+ */
+void pb_xor(pb_poly *a,
+		pb_poly *b,
+		pb_poly *c,
+		const size_t len)
+{
+	for (unsigned int i = 0; i < len; i++)
+		mp_xor(&(a->terms[i]), &(b->terms[i]), &(c->terms[i]));
+}
+
+/**
+ * Invert the polynomial a modulo q.
+ *
+ * @param a polynomial to invert (is allowed to be the same as param Fq)
+ * @param Fq polynomial [out]
+ * @param ctx NTRU context
+ * @return true/false for success/failure
+ */
+bool pb_inverse_poly_q(pb_poly * const a,
+		pb_poly *Fq,
+		ntru_context *ctx)
+{
+	int k = 0,
+		j = 0,
+		v = 2;
+	int zero_poly_val = 1;
+	pb_poly *a_tmp, *b, *c, *f, *g, *degree_zero_poly;
+
+	degree_zero_poly = build_polynom(&zero_poly_val, 1, ctx);
+	b = build_polynom(NULL, ctx->N, ctx);
+	mp_set(&(b->terms[0]), 1);
+	c = build_polynom(NULL, ctx->N, ctx);
+	f = build_polynom(NULL, ctx->N, ctx);
+	pb_copy(a, f);
+	a_tmp = build_polynom(NULL, ctx->N, ctx);
+	pb_copy(a, a_tmp);
+	g = build_polynom(NULL, ctx->N, ctx);
+	mp_set(&(g->terms[0]), 1);
+	g->terms[0].sign = 1;
+	mp_set(&(g->terms[ctx->N]), 1);
+
+	while (1) {
+		while (mp_cmp_d(&(f->terms[0]), 0) == MP_EQ) {
+			for (unsigned int i = 1; i <= ctx->N; i++) {
+				mp_copy(&(f->terms[i]), &(f->terms[i - 1]));
+				mp_copy(&(c->terms[ctx->N - i]), &(c->terms[ctx->N + 1 - i]));
+			}
+			mp_set(&(f->terms[ctx->N]), 0);
+			mp_set(&(c->terms[0]), 0);
+			k++;
+		}
+
+		/* hope this does not blow up in our face */
+		pb_clamp(degree_zero_poly);
+		pb_clamp(f);
+		if (pb_cmp(f, degree_zero_poly) == PB_DEG_EQ)
+			goto OUT_OF_LOOP;
+
+		pb_clamp(g);
+		if (pb_cmp(f, g) == PB_DEG_LT) {
+			pb_exch(f, g);
+			pb_exch(b, c);
+		}
+
+		/* draw_polynom(f); */
+		/* draw_polynom(b); */
+		pb_xor(f, g, f, ctx->N);
+		pb_xor(b, c, b, ctx->N);
+		/* draw_polynom(f); */
+		/* draw_polynom(b); */
+	}
+
+OUT_OF_LOOP:
+	k = k % ctx->N;
+
+	for (int i = ctx->N - 1; i >= 0; i--) {
+		j = i - k;
+		if (j < 0)
+			j = j + ctx->N;
+		mp_copy(&(b->terms[i]), &(Fq->terms[j]));
+	}
+	draw_polynom(Fq);
+
+	while (v < (int)(ctx->q)) {
+		pb_poly *pb_tmp,
+				*pb_tmp_v,
+				*pb_tmp2;
+		pb_tmp = build_polynom(NULL, ctx->N, ctx);
+		v = v * 2;
+		pb_tmp_v = build_polynom(NULL, ctx->N, ctx);
+		mp_set_int(&(pb_tmp_v->terms[0]), v);
+		pb_tmp2 = build_polynom(NULL, ctx->N, ctx);
+		mp_set_int(&(pb_tmp2->terms[0]), 2);
+
+		/* hope this does not blow up in our face */
+		pb_starmultiply(a_tmp, Fq, pb_tmp, ctx, v);
+		pb_sub(pb_tmp2, pb_tmp, pb_tmp);
+		pb_mod(pb_tmp, pb_tmp_v, pb_tmp);
+		pb_starmultiply(Fq, pb_tmp, Fq, ctx, v);
+
+		delete_polynom(pb_tmp);
+		delete_polynom(pb_tmp_v);
+		delete_polynom(pb_tmp2);
+	}
+
+	for (int i = ctx->N - 1; i >= 0; i--)
+		if (mp_cmp_d(&(Fq->terms[i]), 0) == MP_LT) {
+			mp_int mp_tmp;
+			init_integer(&mp_tmp);
+			mp_set_int(&mp_tmp, ctx->q);
+			mp_add(&(Fq->terms[i]), &mp_tmp, &(Fq->terms[i]));
+			mp_clear(&mp_tmp);
+		}
+
+	delete_polynom(a_tmp);
+	delete_polynom(b);
+	delete_polynom(c);
+	delete_polynom(f);
+	delete_polynom(g);
+	delete_polynom(degree_zero_poly);
+
+	/* TODO: check if the f * Fq = 1 (mod p) condition holds true */
+
+	return true;
+}
  * Print the polynomial in a human readable format to stdout.
  *
  * @param poly to draw
