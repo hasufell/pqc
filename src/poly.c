@@ -169,8 +169,8 @@ void pb_starmultiply(pb_poly *a,
 		for (int i = ctx->N - 1; i >= 0; i--) {
 			if (j == (int)(ctx->N))
 				j = 0;
-			if (mp_cmp_d(&(a->terms[i]), (mp_digit)0) != MP_EQ &&
-					mp_cmp_d(&(b->terms[j]), (mp_digit)0) != MP_EQ) {
+			if (mp_cmp_d(&(a->terms[i]), 0) != MP_EQ &&
+					mp_cmp_d(&(b->terms[j]), 0) != MP_EQ) {
 				int result;
 				mp_int mp_modulus;
 				mp_int mp_tmp;
