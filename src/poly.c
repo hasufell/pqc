@@ -189,7 +189,7 @@ void pb_starmultiply(pb_poly *a,
 							mp_error_to_string(result));
 				if ((result = mp_mod(&(c->terms[k]),
 								&mp_modulus, &(c->terms[k]))) != MP_OKAY)
-					NTRU_ABORT("Error redrucing term by modulo. %s",
+					NTRU_ABORT("Error reducing term by modulo. %s",
 							mp_error_to_string(result));
 
 				mp_clear(&mp_modulus);
