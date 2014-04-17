@@ -257,12 +257,15 @@ bool pb_inverse_poly_q(pb_poly * const a,
 	c = build_polynom(NULL, ctx->N, ctx);
 	f = build_polynom(NULL, ctx->N, ctx);
 	PB_COPY(a, f);
-	a_tmp = build_polynom(NULL, ctx->N, ctx);
-	PB_COPY(a, a_tmp);
 	g = build_polynom(NULL, ctx->N, ctx);
 	mp_set(&(g->terms[0]), 1);
 	mp_neg(&(g->terms[0]), &(g->terms[0]));
 	mp_set(&(g->terms[ctx->N]), 1);
+
+	/* avoid side effects */
+	a_tmp = build_polynom(NULL, ctx->N, ctx);
+	PB_COPY(a, a_tmp);
+	erase_polynom(Fq, ctx->N);
 
 	while (1) {
 		while (mp_cmp_d(&(f->terms[0]), 0) == MP_EQ) {
@@ -287,12 +290,8 @@ bool pb_inverse_poly_q(pb_poly * const a,
 			pb_exch(b, c);
 		}
 
-		/* draw_polynom(f); */
-		/* draw_polynom(b); */
 		pb_xor(f, g, f, ctx->N);
 		pb_xor(b, c, b, ctx->N);
-		/* draw_polynom(f); */
-		/* draw_polynom(b); */
 	}
 
 OUT_OF_LOOP:
@@ -304,7 +303,6 @@ OUT_OF_LOOP:
 			j = j + ctx->N;
 		MP_COPY(&(b->terms[i]), &(Fq->terms[j]));
 	}
-	draw_polynom(Fq);
 
 	while (v < (int)(ctx->q)) {
 		pb_poly *pb_tmp,
