@@ -37,7 +37,45 @@
  * static declarations
  */
 static mp_digit get_urnd_int_small(int *sign);
+static mp_digit get_rnd_int_small(int *sign);
 
+/**
+ * Gets randomly a small integer
+ * from the set {-1, 0, 1} using /dev/random.
+ *
+ * @param sign stores the signness [out]
+ * @return random small integer
+ */
+static mp_digit get_rnd_int_small(int *sign)
+{
+	int random_data;
+	mp_digit random_int;
+	size_t randomDataLen = 0;
+	random_data = open("/dev/random", O_RDONLY);
+
+	while (randomDataLen < sizeof(random_int)) {
+		ssize_t result = read(random_data,
+				((char*) &random_int) + randomDataLen,
+				(sizeof(random_int)) - randomDataLen);
+		if (result < 0) {
+			NTRU_ABORT("Unable to read /dev/random");
+		}
+		randomDataLen += result;
+	}
+	close(random_data);
+
+	random_int = random_int % 3;
+
+	if (random_int == 1) {
+		*sign = 0;
+	} else if (random_int == 2) {
+		random_int = 1;
+		*sign = 1;
+	} else {
+		*sign = 0;
+	}
+	return random_int;
+}
 
 /**
  * Gets randomly a small integer
@@ -57,14 +95,14 @@ static mp_digit get_urnd_int_small(int *sign)
 		NTRU_ABORT("Unable to read /dev/urandom");
 	close(random_data);
 
-	if ((random_int % 2) == 0) {
-		random_int = 0;
+	random_int = random_int % 3;
+
+	if (random_int == 1) {
 		*sign = 0;
-	} else if (random_int % 3) {
+	} else if (random_int == 2) {
 		random_int = 1;
 		*sign = 1;
 	} else {
-		random_int = 1;
 		*sign = 0;
 	}
 
@@ -90,7 +128,7 @@ pb_poly *ntru_get_urnd_poly_small(ntru_context *ctx)
 		int sign;
 		int c = get_urnd_int_small(&sign);
 
-		mp_set(&(poly->terms[i]), (mp_digit)c);
+		mp_set(&(poly->terms[i]), (mp_digit) c);
 
 		if (sign == 1)
 			poly->terms[i].sign = 1;

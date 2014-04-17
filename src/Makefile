@@ -57,7 +57,7 @@ endif
 %.o: %.c
 	$(CC) -fPIC $(CFLAGS) $(CPPFLAGS) $(INCS) -c $*.c
 
-all: libpqc.a libpqc.so
+all: libpqc.a libpqc.so main
 
 
 # test: $(CUNIT_OBJS) $(PQC_LIBS)
