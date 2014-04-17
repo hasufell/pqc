@@ -38,6 +38,14 @@
 				mp_error_to_string(result)); \
 }
 
+#define MP_DIV(...) \
+{ \
+	int result; \
+	if ((result = mp_div(__VA_ARGS__)) != MP_OKAY) \
+			NTRU_ABORT("Error dividing terms. %s", \
+				mp_error_to_string(result)); \
+}
+
 #define MP_ADD(...) \
 { \
 	int result; \
