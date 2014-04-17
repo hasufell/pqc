@@ -181,18 +181,9 @@ void pb_starmultiply(pb_poly *a,
 				init_integer(&mp_modulus);
 				mp_set_int(&mp_modulus, (unsigned long)(modulus));
 
-				if ((result = mp_mul(&(a->terms[i]),
-								&(b->terms[j]), &mp_tmp)) != MP_OKAY)
-					NTRU_ABORT("Error multiplying terms. %s",
-							mp_error_to_string(result));
-				if ((result = mp_add(&(c->terms[k]),
-								&mp_tmp, &(c->terms[k]))) != MP_OKAY)
-					NTRU_ABORT("Error adding terms. %s",
-							mp_error_to_string(result));
-				if ((result = mp_mod(&(c->terms[k]),
-								&mp_modulus, &(c->terms[k]))) != MP_OKAY)
-					NTRU_ABORT("Error reducing term by modulo. %s",
-							mp_error_to_string(result));
+				MP_MUL(&(a->terms[i]), &(b->terms[j]), &mp_tmp);
+				MP_ADD(&(c->terms[k]), &mp_tmp, &(c->terms[k]));
+				MP_MOD(&(c->terms[k]), &mp_modulus, &(c->terms[k]));
 
 				mp_clear(&mp_modulus);
 				mp_clear(&mp_tmp);
@@ -217,7 +208,7 @@ void pb_xor(pb_poly *a,
 		const size_t len)
 {
 	for (unsigned int i = 0; i < len; i++)
-		mp_xor(&(a->terms[i]), &(b->terms[i]), &(c->terms[i]));
+		MP_XOR(&(a->terms[i]), &(b->terms[i]), &(c->terms[i]));
 }
 
 /**
@@ -243,9 +234,9 @@ bool pb_inverse_poly_q(pb_poly * const a,
 	mp_set(&(b->terms[0]), 1);
 	c = build_polynom(NULL, ctx->N, ctx);
 	f = build_polynom(NULL, ctx->N, ctx);
-	pb_copy(a, f);
+	PB_COPY(a, f);
 	a_tmp = build_polynom(NULL, ctx->N, ctx);
-	pb_copy(a, a_tmp);
+	PB_COPY(a, a_tmp);
 	g = build_polynom(NULL, ctx->N, ctx);
 	mp_set(&(g->terms[0]), 1);
 	g->terms[0].sign = 1;
@@ -254,8 +245,8 @@ bool pb_inverse_poly_q(pb_poly * const a,
 	while (1) {
 		while (mp_cmp_d(&(f->terms[0]), 0) == MP_EQ) {
 			for (unsigned int i = 1; i <= ctx->N; i++) {
-				mp_copy(&(f->terms[i]), &(f->terms[i - 1]));
-				mp_copy(&(c->terms[ctx->N - i]), &(c->terms[ctx->N + 1 - i]));
+				MP_COPY(&(f->terms[i]), &(f->terms[i - 1]));
+				MP_COPY(&(c->terms[ctx->N - i]), &(c->terms[ctx->N + 1 - i]));
 			}
 			mp_set(&(f->terms[ctx->N]), 0);
 			mp_set(&(c->terms[0]), 0);
@@ -289,29 +280,29 @@ OUT_OF_LOOP:
 		j = i - k;
 		if (j < 0)
 			j = j + ctx->N;
-		mp_copy(&(b->terms[i]), &(Fq->terms[j]));
+		MP_COPY(&(b->terms[i]), &(Fq->terms[j]));
 	}
 	draw_polynom(Fq);
 
 	while (v < (int)(ctx->q)) {
 		pb_poly *pb_tmp,
-				*pb_tmp_v,
 				*pb_tmp2;
+		mp_int tmp_v;
 		pb_tmp = build_polynom(NULL, ctx->N, ctx);
 		v = v * 2;
-		pb_tmp_v = build_polynom(NULL, ctx->N, ctx);
-		mp_set_int(&(pb_tmp_v->terms[0]), v);
+		init_integer(&tmp_v);
+		mp_set_int(&tmp_v, v);
 		pb_tmp2 = build_polynom(NULL, ctx->N, ctx);
 		mp_set_int(&(pb_tmp2->terms[0]), 2);
 
 		/* hope this does not blow up in our face */
 		pb_starmultiply(a_tmp, Fq, pb_tmp, ctx, v);
-		pb_sub(pb_tmp2, pb_tmp, pb_tmp);
-		pb_mod(pb_tmp, pb_tmp_v, pb_tmp);
+		PB_SUB(pb_tmp2, pb_tmp, pb_tmp);
+		PB_MOD(pb_tmp, &tmp_v, pb_tmp, ctx);
 		pb_starmultiply(Fq, pb_tmp, Fq, ctx, v);
 
+		mp_clear(&tmp_v);
 		delete_polynom(pb_tmp);
-		delete_polynom(pb_tmp_v);
 		delete_polynom(pb_tmp2);
 	}
 
@@ -320,7 +311,7 @@ OUT_OF_LOOP:
 			mp_int mp_tmp;
 			init_integer(&mp_tmp);
 			mp_set_int(&mp_tmp, ctx->q);
-			mp_add(&(Fq->terms[i]), &mp_tmp, &(Fq->terms[i]));
+			MP_ADD(&(Fq->terms[i]), &mp_tmp, &(Fq->terms[i]));
 			mp_clear(&mp_tmp);
 		}
 

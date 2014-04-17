@@ -24,11 +24,97 @@
 #define NTRU_POLY_H
 
 #include "context.h"
+#include "err.h"
 
 #include <tompoly.h>
 #include <tommath.h>
 #include <stdbool.h>
 
+#define MP_MUL(...) \
+{ \
+	int result; \
+	if ((result = mp_mul(__VA_ARGS__)) != MP_OKAY) \
+			NTRU_ABORT("Error multiplying terms. %s", \
+				mp_error_to_string(result)); \
+}
+
+#define MP_ADD(...) \
+{ \
+	int result; \
+	if ((result = mp_add(__VA_ARGS__)) != MP_OKAY) \
+			NTRU_ABORT("Error adding terms. %s", \
+				mp_error_to_string(result)); \
+}
+
+#define MP_SUB(...) \
+{ \
+	int result; \
+	if ((result = mp_sub(__VA_ARGS__)) != MP_OKAY) \
+			NTRU_ABORT("Error substracting terms. %s", \
+				mp_error_to_string(result)); \
+}
+
+#define MP_MOD(...) \
+{ \
+	int result; \
+	if ((result = mp_mod(__VA_ARGS__)) != MP_OKAY) \
+			NTRU_ABORT("Error reducing term by modulo. %s", \
+				mp_error_to_string(result)); \
+}
+
+#define MP_COPY(...) \
+{ \
+	int result; \
+	if ((result = mp_copy(__VA_ARGS__)) != MP_OKAY) \
+			NTRU_ABORT("Error copying terms. %s", \
+				mp_error_to_string(result)); \
+}
+
+#define MP_XOR(...) \
+{ \
+	int result; \
+	if ((result = mp_xor(__VA_ARGS__)) != MP_OKAY) \
+			NTRU_ABORT("Error XORing terms. %s", \
+				mp_error_to_string(result)); \
+}
+
+#define PB_MUL(...) \
+{ \
+	int result; \
+	if ((result = pb_mul(__VA_ARGS__)) != MP_OKAY) \
+			NTRU_ABORT("Error multiplying polynomials. %s", \
+				mp_error_to_string(result)); \
+}
+
+#define PB_ADD(...) \
+{ \
+	int result; \
+	if ((result = pb_add(__VA_ARGS__)) != MP_OKAY) \
+			NTRU_ABORT("Error adding polynomials. %s", \
+				mp_error_to_string(result)); \
+}
+
+#define PB_SUB(...) \
+{ \
+	int result; \
+	if ((result = pb_sub(__VA_ARGS__)) != MP_OKAY) \
+			NTRU_ABORT("Error substracting polynomials. %s", \
+				mp_error_to_string(result)); \
+}
+
+#define PB_MOD(poly_a, mp_int, poly_out, context) \
+{ \
+	for (unsigned int i = 0; i < context->N; i++) \
+		MP_MOD(&(poly_a->terms[i]), mp_int, &(poly_out->terms[i])); \
+}
+
+#define PB_COPY(...) \
+{ \
+	int result; \
+	if ((result = pb_copy(__VA_ARGS__)) != MP_OKAY) \
+			NTRU_ABORT("Error copying polynomial. %s", \
+				mp_error_to_string(result)); \
+}
 
 void init_integer(mp_int *new_int);
 
