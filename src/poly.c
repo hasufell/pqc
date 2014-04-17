@@ -122,7 +122,7 @@ pb_poly *build_polynom(int const * const c,
 			mp_set_int(&(new_poly->terms[i]), unsigned_c);
 
 			if (sign == true)
-				new_poly->terms[i].sign = 1;
+				mp_neg(&(new_poly->terms[i]), &(new_poly->terms[i]));
 		}
 	} else { /* fill with zeros */
 		for (unsigned int i = 0; i < len; i++)
@@ -239,7 +239,7 @@ bool pb_inverse_poly_q(pb_poly * const a,
 	PB_COPY(a, a_tmp);
 	g = build_polynom(NULL, ctx->N, ctx);
 	mp_set(&(g->terms[0]), 1);
-	g->terms[0].sign = 1;
+	mp_neg(&(g->terms[0]), &(g->terms[0]));
 	mp_set(&(g->terms[ctx->N]), 1);
 
 	while (1) {
