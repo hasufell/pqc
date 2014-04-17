@@ -126,6 +126,8 @@ pb_poly *build_polynom(int const * const c,
 		const size_t len,
 		ntru_context *ctx);
 
+void erase_polynom(pb_poly *poly, size_t len);
+
 void delete_polynom(pb_poly *new_poly);
 
 void pb_starmultiply(pb_poly *a,

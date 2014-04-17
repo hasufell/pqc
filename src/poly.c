@@ -135,6 +135,20 @@ pb_poly *build_polynom(int const * const c,
 }
 
 /**
+ * Sets all the polynomial coefficients to +0.
+ *
+ * @param poly the polynomial
+ * @param len the length of the polynomial
+ */
+void erase_polynom(pb_poly *poly, size_t len)
+{
+	for (unsigned int i = 0; i < len ; i++) {
+		mp_set(&(poly->terms[i]), 0);
+		mp_abs(&(poly->terms[i]), &(poly->terms[i]));
+	}
+}
+
+/**
  * This deletes the internal structure of a polynomial,
  * and frees the pointer. Don't call this on stack variables,
  * this is intended for use after ntru_ functions, that
