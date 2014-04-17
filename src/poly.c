@@ -178,6 +178,17 @@ void pb_starmultiply(pb_poly *a,
 		ntru_context *ctx,
 		unsigned int modulus)
 {
+	pb_poly *a_tmp;
+	mp_int mp_modulus;
+
+	init_integer(&mp_modulus);
+	mp_set_int(&mp_modulus, (unsigned long)(modulus));
+
+	/* avoid side effects */
+	a_tmp = build_polynom(NULL, ctx->N, ctx);
+	PB_COPY(a, a_tmp);
+	erase_polynom(c, ctx->N);
+
 	for (int k = ctx->N - 1; k >= 0; k--) {
 		int j;
 		j = k + 1;
@@ -185,26 +196,23 @@ void pb_starmultiply(pb_poly *a,
 		for (int i = ctx->N - 1; i >= 0; i--) {
 			if (j == (int)(ctx->N))
 				j = 0;
-			if (mp_cmp_d(&(a->terms[i]), 0) != MP_EQ &&
+			if (mp_cmp_d(&(a_tmp->terms[i]), 0) != MP_EQ &&
 					mp_cmp_d(&(b->terms[j]), 0) != MP_EQ) {
-				int result;
-				mp_int mp_modulus;
 				mp_int mp_tmp;
 
 				init_integer(&mp_tmp);
-				init_integer(&mp_modulus);
-				mp_set_int(&mp_modulus, (unsigned long)(modulus));
 
-				MP_MUL(&(a->terms[i]), &(b->terms[j]), &mp_tmp);
+				MP_MUL(&(a_tmp->terms[i]), &(b->terms[j]), &mp_tmp);
 				MP_ADD(&(c->terms[k]), &mp_tmp, &(c->terms[k]));
-				MP_MOD(&(c->terms[k]), &mp_modulus, &(c->terms[k]));
+				MP_DIV(&(c->terms[k]), &mp_modulus, NULL, &(c->terms[k]));
 
-				mp_clear(&mp_modulus);
 				mp_clear(&mp_tmp);
 			}
 			j++;
 		}
 	}
+	mp_clear(&mp_modulus);
+	delete_polynom(a_tmp);
 }
 
 /**
