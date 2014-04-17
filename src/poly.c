@@ -164,9 +164,9 @@ void delete_polynom(pb_poly *poly)
 
 /**
  * Starmultiplication, as follows:
- * c = a * b mod x^(N − 1)
+ * c = a * b mod (x^N − 1)
  *
- * @param a polynom to multiply
+ * @param a polynom to multiply (can be the same as c)
  * @param b polynom to multiply
  * @param c polynom [out]
  * @param ctx NTRU context
