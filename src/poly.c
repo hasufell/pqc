@@ -29,6 +29,13 @@
 #include <tommath.h>
 #include <stdbool.h>
 
+
+/*
+ * static declarations
+ */
+static unsigned int get_degree(pb_poly const * const poly);
+
+
 /**
  * Initialize a mp_int and check if this was successful, the
  * caller must free new_int with mp_clear().
@@ -234,6 +241,23 @@ void pb_xor(pb_poly *a,
 }
 
 /**
+ * Get the degree of the polynomial.
+ *
+ * @param poly the polynomial
+ * @return the degree
+ */
+static unsigned int get_degree(pb_poly const * const poly)
+{
+	unsigned int count = 0;
+
+	for (int i = 0; i < poly->alloc; i++)
+		if (mp_iszero(&(poly->terms[i])) == MP_NO)
+			count = i;
+
+	return count;
+}
+
+/**
  * Invert the polynomial a modulo q.
  *
  * @param a polynomial to invert (is allowed to be the same as param Fq)
@@ -248,20 +272,17 @@ bool pb_inverse_poly_q(pb_poly * const a,
 	int k = 0,
 		j = 0,
 		v = 2;
-	int zero_poly_val = 1;
-	pb_poly *a_tmp, *b, *c, *f, *g, *degree_zero_poly;
+	pb_poly *a_tmp, *b, *c, *f, *g;
 
-	degree_zero_poly = build_polynom(&zero_poly_val, 1, ctx);
-	b = build_polynom(NULL, ctx->N, ctx);
+	b = build_polynom(NULL, ctx->N + 1, ctx);
 	mp_set(&(b->terms[0]), 1);
-	c = build_polynom(NULL, ctx->N, ctx);
-	f = build_polynom(NULL, ctx->N, ctx);
+	c = build_polynom(NULL, ctx->N + 1, ctx);
+	f = build_polynom(NULL, ctx->N + 1, ctx);
 	PB_COPY(a, f);
-	g = build_polynom(NULL, ctx->N, ctx);
+	g = build_polynom(NULL, ctx->N + 1, ctx);
 	mp_set(&(g->terms[0]), 1);
 	mp_neg(&(g->terms[0]), &(g->terms[0]));
 	mp_set(&(g->terms[ctx->N]), 1);
-
 	/* avoid side effects */
 	a_tmp = build_polynom(NULL, ctx->N, ctx);
 	PB_COPY(a, a_tmp);
@@ -278,14 +299,10 @@ bool pb_inverse_poly_q(pb_poly * const a,
 			k++;
 		}
 
-		/* hope this does not blow up in our face */
-		pb_clamp(degree_zero_poly);
-		pb_clamp(f);
-		if (pb_cmp(f, degree_zero_poly) == PB_DEG_EQ)
+		if (get_degree(f) == 0)
 			goto OUT_OF_LOOP;
 
-		pb_clamp(g);
-		if (pb_cmp(f, g) == PB_DEG_LT) {
+		if (get_degree(f) < get_degree(g)) {
 			pb_exch(f, g);
 			pb_exch(b, c);
 		}
@@ -318,7 +335,7 @@ OUT_OF_LOOP:
 		/* hope this does not blow up in our face */
 		pb_starmultiply(a_tmp, Fq, pb_tmp, ctx, v);
 		PB_SUB(pb_tmp2, pb_tmp, pb_tmp);
-		PB_MOD(pb_tmp, &tmp_v, pb_tmp, ctx);
+		PB_MOD(pb_tmp, &tmp_v, pb_tmp, ctx->N);
 		pb_starmultiply(Fq, pb_tmp, Fq, ctx, v);
 
 		mp_clear(&tmp_v);
@@ -340,7 +357,6 @@ OUT_OF_LOOP:
 	delete_polynom(c);
 	delete_polynom(f);
 	delete_polynom(g);
-	delete_polynom(degree_zero_poly);
 
 	/* TODO: check if the f * Fq = 1 (mod p) condition holds true */
 

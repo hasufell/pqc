@@ -110,10 +110,10 @@
 				mp_error_to_string(result)); \
 }
 
-#define PB_MOD(poly_a, mp_int, poly_out, context) \
+#define PB_MOD(poly_a, mp_int, poly_out, len) \
 { \
-	for (unsigned int i = 0; i < context->N; i++) \
-		MP_MOD(&(poly_a->terms[i]), mp_int, &(poly_out->terms[i])); \
+	for (unsigned int i = 0; i < len; i++) \
+		MP_DIV(&(poly_a->terms[i]), mp_int, NULL, &(poly_out->terms[i])); \
 }
 
 #define PB_COPY(...) \
