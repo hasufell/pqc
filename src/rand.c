@@ -42,6 +42,7 @@ static mp_digit get_rnd_int_small(int *sign);
 /**
  * Gets randomly a small integer
  * from the set {-1, 0, 1} using /dev/random.
+ * A zero is signed positiv.
  *
  * @param sign stores the signness [out]
  * @return random small integer
@@ -78,8 +79,40 @@ static mp_digit get_rnd_int_small(int *sign)
 }
 
 /**
+ * Gets a random polynomial with coefficients
+ * from the set {-1 ,0 ,1} using /dev/random.
+ *
+ *
+ * @param ctx the NTRU context
+ * @return newly allocated polynomial, must be freed with delete_polynom()
+ */
+pb_poly *ntru_get_rnd_poly_small(ntru_context *ctx)
+{
+	mp_int chara;
+	init_integer(&chara);
+	pb_poly *poly = malloc(sizeof(pb_poly));
+	init_polynom_size(poly, &chara, ctx->N);
+	mp_clear(&chara);
+
+	for (int i = 0; i < ctx->N; i++) {
+		int sign;
+		int c = get_rnd_int_small(&sign);
+
+		mp_set(&(poly->terms[i]), (mp_digit) c);
+
+		if (sign == 1)
+			poly->terms[i].sign = 1;
+	}
+	poly->used = ctx->N;
+	//pb_clamp(poly);
+
+	return poly;
+}
+
+/**
  * Gets randomly a small integer
  * from the set {-1, 0, 1} using /dev/urandom.
+ * A zero is signed positiv.
  *
  * @param sign stores the signness [out]
  * @return random small integer
@@ -134,8 +167,7 @@ pb_poly *ntru_get_urnd_poly_small(ntru_context *ctx)
 			poly->terms[i].sign = 1;
 	}
 	poly->used = ctx->N;
-	pb_clamp(poly);
+	//pb_clamp(poly);
 
 	return poly;
 }
-
