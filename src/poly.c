@@ -36,6 +36,9 @@
  * static declarations
  */
 static unsigned int get_degree(pb_poly const * const poly);
+static void pb_mod2_to_modq(pb_poly * const a,
+		pb_poly *Fq,
+		ntru_context *ctx);
 
 
 /**
@@ -284,6 +287,43 @@ static unsigned int get_degree(pb_poly const * const poly)
 }
 
 /**
+ * Find the inverse polynomial modulo a power of 2,
+ * which is q.
+ *
+ * @param a polynomial to invert (is allowed to be the same as param Fq)
+ * @param Fq polynomial [out]
+ * @param ctx NTRU context
+ * @return true/false for success/failure
+ */
+static void pb_mod2_to_modq(pb_poly * const a,
+		pb_poly *Fq,
+		ntru_context *ctx)
+{
+	int v = 2;
+
+	while (v < (int)(ctx->q)) {
+		pb_poly *pb_tmp,
+				*pb_tmp2;
+		mp_int tmp_v;
+		pb_tmp = build_polynom(NULL, ctx->N, ctx);
+		v = v * 2;
+		init_integer(&tmp_v);
+		MP_SET_INT(&tmp_v, v);
+		pb_tmp2 = build_polynom(NULL, ctx->N, ctx);
+		MP_SET_INT(&(pb_tmp2->terms[0]), 2);
+
+		/* mod after sub or before? */
+		pb_starmultiply(a, Fq, pb_tmp, ctx, v);
+		PB_SUB(pb_tmp2, pb_tmp, pb_tmp);
+		PB_MOD(pb_tmp, &tmp_v, pb_tmp, ctx->N);
+		pb_starmultiply(Fq, pb_tmp, Fq, ctx, v);
+
+		mp_clear(&tmp_v);
+		delete_polynom_multi(pb_tmp, pb_tmp2, NULL);
+	}
+}
+
+/**
  * Invert the polynomial a modulo q.
  *
  * @param a polynomial to invert (is allowed to be the same as param Fq)
@@ -296,8 +336,7 @@ bool pb_inverse_poly_q(pb_poly * const a,
 		ntru_context *ctx)
 {
 	int k = 0,
-		j = 0,
-		v = 2;
+		j = 0;
 	pb_poly *a_tmp, *b, *c, *f, *g;
 
 	b = build_polynom(NULL, ctx->N + 1, ctx);
@@ -347,27 +386,7 @@ OUT_OF_LOOP:
 		MP_COPY(&(b->terms[i]), &(Fq->terms[j]));
 	}
 
-	while (v < (int)(ctx->q)) {
-		pb_poly *pb_tmp,
-				*pb_tmp2;
-		mp_int tmp_v;
-		pb_tmp = build_polynom(NULL, ctx->N, ctx);
-		v = v * 2;
-		init_integer(&tmp_v);
-		mp_set_int(&tmp_v, v);
-		pb_tmp2 = build_polynom(NULL, ctx->N, ctx);
-		mp_set_int(&(pb_tmp2->terms[0]), 2);
-
-		/* hope this does not blow up in our face */
-		pb_starmultiply(a_tmp, Fq, pb_tmp, ctx, v);
-		PB_SUB(pb_tmp2, pb_tmp, pb_tmp);
-		PB_MOD(pb_tmp, &tmp_v, pb_tmp, ctx->N);
-		pb_starmultiply(Fq, pb_tmp, Fq, ctx, v);
-
-		mp_clear(&tmp_v);
-		delete_polynom(pb_tmp);
-		delete_polynom(pb_tmp2);
-	}
+	pb_mod2_to_modq(a_tmp, Fq, ctx);
 
 	for (int i = ctx->N - 1; i >= 0; i--)
 		if (mp_cmp_d(&(Fq->terms[i]), 0) == MP_LT) {
