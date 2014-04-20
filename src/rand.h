@@ -19,7 +19,6 @@
  * MA  02110-1301  USA
  */
 
-
 #ifndef NTRU_RAND_H
 #define NTRU_RAND_H
 
@@ -27,8 +26,21 @@
 
 #include <tompoly.h>
 
+/**
+ * The maximal integer that is given by
+ * ntru_get_urnd_poly_big and ntru_get_rnd_poly_big
+ */
+#define BIG_RAND_MAX 100
+
+/**
+ * The minimal integer that is given by
+ * ntru_get_urnd_poly_big and ntru_get_rnd_poly_big
+ */
+#define BIG_RAND_MIN -100
 
 pb_poly *ntru_get_urnd_poly_small(ntru_context *ctx);
 pb_poly *ntru_get_rnd_poly_small(ntru_context *ctx);
+pb_poly *ntru_get_urnd_poly_big(ntru_context *ctx);
+pb_poly *ntru_get_rnd_poly_big(ntru_context *ctx);
 
 #endif /* NTRU_RAND_H */

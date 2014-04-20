@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <tompoly.h>
 #include <tommath.h>
+#include <math.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -36,12 +37,14 @@
 /*
  * static declarations
  */
-static unsigned long get_urnd_int_small(int *sign);
+static mp_digit get_urnd_int_small(int *sign);
+static mp_digit get_rnd_int_small(int *sign);
 
 /**
- * Gets randomly a small integer
+ * Gets a random small integer
  * from the set {-1, 0, 1} using /dev/random.
  * A zero is signed positiv.
+ * *sig == 1 means positiv integer.
  *
  * @param sign stores the signness [out]
  * @return random small integer
@@ -58,7 +61,7 @@ static mp_digit get_rnd_int_small(int *sign)
 				((char*) &random_int) + randomDataLen,
 				(sizeof(random_int)) - randomDataLen);
 		if (result < 0) {
-			NTRU_ABORT("Unable to read /dev/random");
+			NTRU_ABORT("Unable to read /dev/random.\n");
 		}
 		randomDataLen += result;
 	}
@@ -93,7 +96,7 @@ pb_poly *ntru_get_rnd_poly_small(ntru_context *ctx)
 	init_polynom_size(poly, &chara, ctx->N);
 	mp_clear(&chara);
 
-	for (int i = 0; i < ctx->N; i++) {
+	for (unsigned int i = 0; i < ctx->N; i++) {
 		int sign;
 		int c = get_rnd_int_small(&sign);
 
@@ -109,13 +112,15 @@ pb_poly *ntru_get_rnd_poly_small(ntru_context *ctx)
 }
 
 /**
- * Gets randomly a small integer
+ * Gets a random small integer
  * from the set {-1, 0, 1} using /dev/urandom.
+ * A zero is signed positiv.
+ * *sig == 1 means positiv integer.
  *
  * @param sign stores the signness [out]
  * @return random small integer
  */
-static unsigned long get_urnd_int_small(int *sign)
+static mp_digit get_urnd_int_small(int *sign)
 {
 	int random_data;
 	mp_digit random_int;
@@ -123,13 +128,14 @@ static unsigned long get_urnd_int_small(int *sign)
 
 	random_data = open("/dev/urandom", O_RDONLY);
 	if ((result = read(random_data, &random_int, sizeof(random_int))) < 0)
-		NTRU_ABORT("Unable to read /dev/urandom");
+		NTRU_ABORT("Unable to read /dev/urandom.\n");
 	close(random_data);
 
-	if ((random_int % 2) == 0) {
-		random_int = 0;
+	random_int = random_int % 3;
+
+	if (random_int == 1) {
 		*sign = 0;
-	} else if (random_int % 3) {
+	} else if (random_int == 2) {
 		random_int = 1;
 		*sign = 1;
 	} else {
@@ -159,7 +165,7 @@ pb_poly *ntru_get_urnd_poly_small(ntru_context *ctx)
 		int sign;
 		unsigned long c = get_urnd_int_small(&sign);
 
-		mp_set_int(&(poly->terms[i]), c);
+		mp_set(&(poly->terms[i]), (mp_digit) c);
 
 		if (sign == 1)
 			poly->terms[i].sign = 1;
