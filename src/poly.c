@@ -21,6 +21,7 @@
 
 #include "context.h"
 #include "err.h"
+#include "mem.h"
 #include "poly.h"
 
 #include <stdbool.h>
@@ -108,7 +109,7 @@ pb_poly *build_polynom(int const * const c,
 	pb_poly *new_poly;
 	mp_int chara;
 
-	new_poly = malloc(sizeof(*new_poly));
+	new_poly = ntru_malloc(sizeof(*new_poly));
 	init_integer(&chara);
 	init_polynom_size(new_poly, &chara, len);
 	mp_clear(&chara);
