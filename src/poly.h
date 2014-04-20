@@ -30,6 +30,16 @@
 #include <tommath.h>
 #include <stdbool.h>
 
+#define MP_SET(...) mp_set(__VA_ARGS__)
+
+#define MP_SET_INT(...) \
+{ \
+	int result; \
+	if ((result = mp_set_int(__VA_ARGS__)) != MP_OKAY) \
+			NTRU_ABORT("Error setting long constant. %s", \
+				mp_error_to_string(result)); \
+}
+
 #define MP_MUL(...) \
 { \
 	int result; \
@@ -83,6 +93,22 @@
 	int result; \
 	if ((result = mp_xor(__VA_ARGS__)) != MP_OKAY) \
 			NTRU_ABORT("Error XORing terms. %s", \
+				mp_error_to_string(result)); \
+}
+
+#define MP_EXPTMOD(...) \
+{ \
+	int result; \
+	if ((result = mp_exptmod(__VA_ARGS__)) != MP_OKAY) \
+			NTRU_ABORT("Error computing modular exponentiation. %s", \
+				mp_error_to_string(result)); \
+}
+
+#define MP_EXPT_D(...) \
+{ \
+	int result; \
+	if ((result = mp_expt_d(__VA_ARGS__)) != MP_OKAY) \
+			NTRU_ABORT("Error computing modular exponentiation. %s", \
 				mp_error_to_string(result)); \
 }
 
