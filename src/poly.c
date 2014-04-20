@@ -290,10 +290,9 @@ static unsigned int get_degree(pb_poly const * const poly)
  * Find the inverse polynomial modulo a power of 2,
  * which is q.
  *
- * @param a polynomial to invert (is allowed to be the same as param Fq)
+ * @param a polynomial to invert
  * @param Fq polynomial [out]
  * @param ctx NTRU context
- * @return true/false for success/failure
  */
 static void pb_mod2_to_modq(pb_poly * const a,
 		pb_poly *Fq,
