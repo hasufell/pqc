@@ -4,7 +4,7 @@ PKG_CONFIG ?= pkg-config
 
 # flags
 CFLAGS ?= -march=native -O2 -pipe
-CFLAGS += -std=c99 -pedantic -Wall -Wextra -Werror -Wno-unused-variable
+CFLAGS += -std=c99 -pedantic -Wall -Wextra -Werror -Wno-unused-variable -Wno-unused-parameter
 ifeq ($(shell $(CC) -v 2>&1 | grep 'gcc version' &>/dev/null && echo 1),1)
 CFLAGS += -Wno-unused-but-set-variable
 endif
@@ -80,7 +80,7 @@ libpqc.so: libpqc.a $(PQC_HEADERS) $(LIBTOMMATH) $(LIBTOMPOLY)
 
 main: main.o libpqc.a $(LIBTOMMATH) $(LIBTOMPOLY)
 	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) \
-		main.o libpqc.a $(LIBTOMMATH) $(LIBTOMPOLY) $(LIBS)
+		main.o $(LIBTOMPOLY) libpqc.a $(LIBTOMPOLY) $(LIBTOMMATH) $(LIBS)
 
 install:
 	$(INSTALL_DIR) "$(DESTDIR)$(INSTALL_BINDIR)"
