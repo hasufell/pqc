@@ -28,6 +28,7 @@
 
 #include <tompoly.h>
 #include <tommath.h>
+#include <stdarg.h>
 #include <stdbool.h>
 
 #define MP_SET(...) mp_set(__VA_ARGS__)
@@ -163,6 +164,8 @@ pb_poly *build_polynom(int const * const c,
 void erase_polynom(pb_poly *poly, size_t len);
 
 void delete_polynom(pb_poly *new_poly);
+
+void delete_polynom_multi(pb_poly *poly, ...);
 
 void pb_starmultiply(pb_poly *a,
 		pb_poly *b,
