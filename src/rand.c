@@ -37,11 +37,9 @@
 /*
  * static declarations
  */
-static mp_digit get_urnd_int_small(int *sign);
-static mp_digit get_rnd_int_small(int *sign);
-static mp_digit get_urnd_int_big(int *sign);
-static mp_digit get_rnd_int_big(int *sign);
 static mp_digit read_int_dev_random();
+static mp_digit read_int_dev_urandom();
+
 static mp_digit make_small_int(mp_digit random_int, int* sign);
 static mp_digit make_big_int(mp_digit random_int, int* sign);
 
@@ -71,8 +69,27 @@ static mp_digit read_int_dev_random()
 }
 
 /**
+ * Reads a single mp_digit out of /dev/urandom and returns this mp_digit
+ *
+ * @return the randomly chosen integer
+ */
+static mp_digit read_int_dev_urandom()
+{
+	int random_data;
+	mp_digit random_int;
+	ssize_t result;
+	random_data = open("/dev/urandom", O_RDONLY);
+
+	if ((result = read(random_data, &random_int, sizeof(random_int))) < 0)
+		NTRU_ABORT("Unable to read /dev/urandom.\n");
+	close(random_data);
+	return random_int;
+}
+
+/**
  * Makes a small integer from the set {-1, 0, 1}
  * out of a randomly chosen integer.
+ * A zero is signed positiv.
  *
  * @param random_int a randomly chosen mp_digit
  * @param sign a integer to store the sign (1==positiv)
@@ -90,118 +107,7 @@ static mp_digit make_small_int(mp_digit random_int, int* sign)
 	} else {
 		*sign = 0;
 	}
-
 	return random_int;
-}
-
-/**
- * Gets a random small integer
- * from the set {-1, 0, 1} using /dev/random.
- * A zero is signed positiv.
- * *sig == 1 means positiv integer.
- *
- * @param sign stores the signness [out]
- * @return random small integer
- */
-static mp_digit get_rnd_int_small(int *sign)
-{
-	mp_digit random_int = read_int_dev_random();
-	random_int = make_small_int(random_int, sign);
-	return random_int;
-}
-
-/**
- * Gets a random polynomial with coefficients
- * from the set {-1 ,0 ,1} using /dev/random.
- *
- * @param ctx the NTRU context
- * @return newly allocated polynomial, must be freed with delete_polynom()
- */
-pb_poly *ntru_get_rnd_poly_small(ntru_context *ctx)
-{
-	mp_int chara;
-	init_integer(&chara);
-	pb_poly *poly = malloc(sizeof(pb_poly));
-	init_polynom_size(poly, &chara, ctx->N);
-	mp_clear(&chara);
-
-	for (unsigned int i = 0; i < ctx->N; i++) {
-		int sign;
-		int c = get_rnd_int_small(&sign);
-
-		mp_set(&(poly->terms[i]), (mp_digit) c);
-
-		if (sign == 1)
-			poly->terms[i].sign = 1;
-	}
-	poly->used = ctx->N;
-	pb_clamp(poly);
-
-	return poly;
-}
-
-/**
- * Reads a single mp_digit out of /dev/urandom and returns this mp_digit
- *
- * @return the randomly chosen integer
- */
-static mp_digit read_int_dev_urandom()
-{
-	int random_data;
-	mp_digit random_int;
-	ssize_t result;
-
-	random_data = open("/dev/urandom", O_RDONLY);
-	if ((result = read(random_data, &random_int, sizeof(random_int))) < 0)
-		NTRU_ABORT("Unable to read /dev/urandom.\n");
-	close(random_data);
-	return random_int;
-}
-
-/**
- * Gets a random small integer
- * from the set {-1, 0, 1} using /dev/urandom.
- * A zero is signed positiv.
- * *sig == 1 means positiv integer.
- *
- * @param sign stores the signness [out]
- * @return random small integer
- */
-static mp_digit get_urnd_int_small(int *sign)
-{
-	mp_digit random_int = read_int_dev_urandom();
-	random_int = make_small_int(random_int, sign);
-	return random_int;
-}
-
-/**
- * Gets a random polynomial with coefficients
- * from the set {-1 ,0 ,1} using /dev/urandom.
- *
- * @param ctx the NTRU context
- * @return newly allocated polynomial, must be freed with delete_polynom()
- */
-pb_poly *ntru_get_urnd_poly_small(ntru_context *ctx)
-{
-	mp_int chara;
-	init_integer(&chara);
-	pb_poly *poly = malloc(sizeof(pb_poly));
-	init_polynom_size(poly, &chara, ctx->N);
-	mp_clear(&chara);
-
-	for (unsigned int i = 0; i < ctx->N; i++) {
-		int sign;
-		int c = get_urnd_int_small(&sign);
-
-		mp_set(&(poly->terms[i]), (mp_digit) c);
-
-		if (sign == 1)
-			poly->terms[i].sign = 1;
-	}
-	poly->used = ctx->N;
-	pb_clamp(poly);
-
-	return poly;
 }
 
 /**
@@ -210,7 +116,7 @@ pb_poly *ntru_get_urnd_poly_small(ntru_context *ctx)
  *
  * @param random_int a randomly chosen mp_digit
  * @param sign a integer to store the sign (1==positiv)
- * @return random small integer from the set {-1, 0, 1}
+ * @return random big integer from the borders of BIG_RAND_MAX and BIG_RAND_MIN
  */
 static mp_digit make_big_int(mp_digit random_int, int* sign)
 {
@@ -232,20 +138,62 @@ static mp_digit make_big_int(mp_digit random_int, int* sign)
 }
 
 /**
- * Gets a random big integer
- * from the borders of BIG_RAND_MAX and
- * BIG_RAND_MIN using /dev/random.
- * A zero is signed positiv.
- * *sig == 1 means positiv integer.
+ * Gets a random polynomial with coefficients
+ * from the set {-1 ,0 ,1} using /dev/random.
  *
- * @param sign stores the signness [out]
- * @return random small integer
+ * @param ctx the NTRU context
+ * @return newly allocated polynomial, must be freed with delete_polynom()
  */
-static mp_digit get_rnd_int_big(int *sign)
+pb_poly *ntru_get_rnd_poly_small(ntru_context *ctx)
 {
-	mp_digit random_int = read_int_dev_random();
-	random_int = make_big_int(random_int, sign);
-	return random_int;
+	mp_int chara;
+	init_integer(&chara);
+	pb_poly *poly = malloc(sizeof(pb_poly));
+	init_polynom_size(poly, &chara, ctx->N);
+	mp_clear(&chara);
+
+	for (unsigned int i = 0; i < ctx->N; i++) {
+		int sign;
+		mp_digit c = read_int_dev_random();
+		c = make_small_int(c, &sign);
+		mp_set(&(poly->terms[i]), c);
+		if (sign == 1)
+			poly->terms[i].sign = 1;
+	}
+	poly->used = ctx->N;
+	pb_clamp(poly);
+
+	return poly;
+}
+
+/**
+ * Gets a random polynomial with coefficients
+ * from the set {-1 ,0 ,1} using /dev/urandom.
+ *
+ * @param ctx the NTRU context
+ * @return newly allocated polynomial, must be freed with delete_polynom()
+ */
+pb_poly *ntru_get_urnd_poly_small(ntru_context *ctx)
+{
+	mp_int chara;
+	init_integer(&chara);
+	pb_poly *poly = malloc(sizeof(pb_poly));
+	init_polynom_size(poly, &chara, ctx->N);
+	mp_clear(&chara);
+
+	for (unsigned int i = 0; i < ctx->N; i++) {
+		int sign;
+		mp_digit c = read_int_dev_urandom();
+		c = make_small_int(c, &sign);
+		mp_set(&(poly->terms[i]), c);
+
+		if (sign == 1)
+			poly->terms[i].sign = 1;
+	}
+	poly->used = ctx->N;
+	pb_clamp(poly);
+
+	return poly;
 }
 
 /**
@@ -266,9 +214,9 @@ pb_poly *ntru_get_rnd_poly_big(ntru_context *ctx)
 
 	for (unsigned int i = 0; i < ctx->N; i++) {
 		int sign;
-		int c = get_rnd_int_big(&sign);
-
-		mp_set(&(poly->terms[i]), (mp_digit) c);
+		mp_digit c = read_int_dev_random();
+		c = make_big_int(c, &sign);
+		mp_set(&(poly->terms[i]), c);
 
 		if (sign == 1)
 			poly->terms[i].sign = 1;
@@ -277,24 +225,6 @@ pb_poly *ntru_get_rnd_poly_big(ntru_context *ctx)
 	pb_clamp(poly);
 
 	return poly;
-}
-
-/**
- * Gets a random big integer
- * from the borders of BIG_RAND_MAX and
- * BIG_RAND_MIN using /dev/urandom.
- * A zero is signed positiv.
- * *sig == 1 means positiv integer.
- *
- * @param sign stores the signness [out]
- * @return random small integer
- */
-static mp_digit get_urnd_int_big(int *sign)
-{
-	mp_digit random_int = read_int_dev_urandom();
-	random_int = random_int % abs(BIG_RAND_MAX - BIG_RAND_MIN);
-	random_int = make_big_int(random_int, sign);
-	return random_int;
 }
 
 /**
@@ -315,9 +245,9 @@ pb_poly *ntru_get_urnd_poly_big(ntru_context *ctx)
 
 	for (unsigned int i = 0; i < ctx->N; i++) {
 		int sign;
-		int c = get_urnd_int_big(&sign);
-
-		mp_set(&(poly->terms[i]), (mp_digit) c);
+		mp_digit c = read_int_dev_urandom();
+		c = make_big_int(c, &sign);
+		mp_set(&(poly->terms[i]), c);
 
 		if (sign == 1)
 			poly->terms[i].sign = 1;
