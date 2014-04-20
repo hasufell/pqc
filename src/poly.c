@@ -24,6 +24,7 @@
 #include "mem.h"
 #include "poly.h"
 
+#include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <tompoly.h>
@@ -168,6 +169,30 @@ void delete_polynom(pb_poly *poly)
 {
 	pb_clear(poly);
 	free(poly);
+}
+
+/**
+ * This deletes the internal structure of all polynomials,
+ * and frees the pointers. Don't call this on stack variables,
+ * this is intended for use after ntru_ functions, that
+ * return a polynomial pointer.
+ * You must call this with NULL as last argument!
+ *
+ * @param poly the polynomial to delete
+ * @param ... follow up polynomials
+ */
+void delete_polynom_multi(pb_poly *poly, ...)
+{
+	pb_poly *next_poly;
+	va_list args;
+
+	next_poly = poly;
+	va_start(args, poly);
+	while (next_poly != NULL) {
+		delete_polynom(next_poly);
+		next_poly = va_arg(args, pb_poly*);
+	}
+	va_end(args);
 }
 
 /**
@@ -353,11 +378,7 @@ OUT_OF_LOOP:
 			mp_clear(&mp_tmp);
 		}
 
-	delete_polynom(a_tmp);
-	delete_polynom(b);
-	delete_polynom(c);
-	delete_polynom(f);
-	delete_polynom(g);
+	delete_polynom_multi(a_tmp, b, c, f, g, NULL);
 
 	/* TODO: check if the f * Fq = 1 (mod p) condition holds true */
 
