@@ -362,6 +362,8 @@ OUT_OF_LOOP:
 
 	return true;
 }
+
+/**
  * Print the polynomial in a human readable format to stdout.
  *
  * @param poly to draw
