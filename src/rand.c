@@ -33,12 +33,13 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include "../include/rdrand.h"
 
 /*
  * static declarations
  */
-static mp_digit read_int_dev_random();
-static mp_digit read_int_dev_urandom();
+static mp_digit read_int_dev_random(void);
+static mp_digit read_int_dev_urandom(void);
 
 static mp_digit make_small_int(mp_digit random_int, int* sign);
 static mp_digit make_big_int(mp_digit random_int, int* sign);
@@ -48,7 +49,7 @@ static mp_digit make_big_int(mp_digit random_int, int* sign);
  * 
  * @return the randomly chosen integer
  */
-static mp_digit read_int_dev_random()
+static mp_digit read_int_dev_random(void)
 {
 	int random_data;
 	mp_digit random_int;
@@ -73,7 +74,7 @@ static mp_digit read_int_dev_random()
  *
  * @return the randomly chosen integer
  */
-static mp_digit read_int_dev_urandom()
+static mp_digit read_int_dev_urandom(void)
 {
 	int random_data;
 	mp_digit random_int;
