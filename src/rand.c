@@ -33,7 +33,6 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include "../include/rdrand.h"
 
 /*
  * static declarations
