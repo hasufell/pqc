@@ -21,17 +21,16 @@
 
 #include "context.h"
 #include "err.h"
+#include <fcntl.h>
 #include "rand.h"
+#include <math.h>
 #include "poly.h"
-
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <tompoly.h>
 #include <tommath.h>
-#include <math.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 #include <unistd.h>
 
 /*
@@ -41,7 +40,10 @@ static mp_digit read_int_dev_random(void);
 static mp_digit read_int_dev_urandom(void);
 
 static mp_digit make_small_int(mp_digit random_int, int* sign);
-static mp_digit make_big_int(mp_digit random_int, int* sign);
+
+static mp_int *make_big_int(mp_int *upper_bound, mp_int *lower_bound,
+		mp_digit randim_int);
+static int check_polynom(pb_poly *polynom);
 
 /**
  * Reads a single mp_digit out of /dev/random and returns this mp_digit
@@ -91,8 +93,8 @@ static mp_digit read_int_dev_urandom(void)
  * out of a randomly chosen integer.
  * A zero is signed positiv.
  *
- * @param random_int a randomly chosen mp_digit
- * @param sign a integer to store the sign (1==positiv)
+ * @param random_int a randomly chosen mp_digit [out]
+ * @param sign a integer to store the sign (1==positiv) [out]
  * @return random small integer from the set {-1, 0, 1}
  */
 static mp_digit make_small_int(mp_digit random_int, int* sign)
@@ -111,37 +113,74 @@ static mp_digit make_small_int(mp_digit random_int, int* sign)
 }
 
 /**
- * Makes a big integer from the borders of BIG_RAND_MAX
- * and BIG_RAND_MIN out of a randomly chosen integer.
+ * Makes a big integer from the borders of upper_bound
+ * and lower_bound out of a randomly chosen integer.
  *
- * @param random_int a randomly chosen mp_digit
- * @param sign a integer to store the sign (1==positiv)
- * @return random big integer from the borders of BIG_RAND_MAX and BIG_RAND_MIN
+ * @param upper_bound the maximal upper border of the resulting mp_int [out]
+ * @param lower_bound the minimal lower border of the resulting mp_int [out]
+ * @param randim_int TODO
+ * @return a mp_int with the random number
  */
-static mp_digit make_big_int(mp_digit random_int, int* sign)
+static mp_int *make_big_int(mp_int *upper_bound, mp_int *lower_bound,
+		mp_digit randim_int)
 {
-	random_int = random_int % abs(BIG_RAND_MAX - BIG_RAND_MIN);
+	mp_int result;
+	init_integer(&result);
 
-	if (random_int < BIG_RAND_MAX) {
-		*sign = 1;
-	} else if (random_int > BIG_RAND_MAX) {
-		*sign = 0;
-		random_int -= BIG_RAND_MAX;
-	} else if (random_int == BIG_RAND_MAX) {
-		random_int = abs(BIG_RAND_MIN);
-		*sign = 0;
-	} else {
-		NTRU_ABORT("Error while parsing big random Integer.\n");
-	}
+	//TODO
 
-	return random_int;
+	return result;
 }
+
+/**
+ * Checks if the coefficients of a polynom are less then
+ * PERCENTAGE_OF_ZERO_ALLOWED zero
+ *
+ * @param polynom a pointer to the polynom you want to test [out]
+ * @return 0 if the polynom zero coefficients are under
+ *         PERCENTAGE_OF_ZERO_ALLOWED percent
+ *         -1 if the polynom zero coefficients are over
+ *         PERCENTAGE_OF_ZERO_ALLOWED percent
+ */
+static int check_polynom(pb_poly *polynom)
+{
+	int result = -1;
+	//TODO
+	return result;
+}
+
+///**
+// * Makes a big integer from the borders of BIG_RAND_MAX
+// * and BIG_RAND_MIN out of a randomly chosen integer.
+// *
+// * @param random_int a randomly chosen mp_digit [out]
+// * @param sign a integer to store the sign (1==positiv) [out]
+// * @return random big integer from the borders of BIG_RAND_MAX and BIG_RAND_MIN
+// */
+//static mp_digit make_big_int(mp_digit random_int, int* sign)
+//{
+//	random_int = random_int % abs(BIG_RAND_MAX - BIG_RAND_MIN);
+//
+//	if (random_int < BIG_RAND_MAX) {
+//		*sign = 1;
+//	} else if (random_int > BIG_RAND_MAX) {
+//		*sign = 0;
+//		random_int -= BIG_RAND_MAX;
+//	} else if (random_int == BIG_RAND_MAX) {
+//		random_int = abs(BIG_RAND_MIN);
+//		*sign = 0;
+//	} else {
+//		NTRU_ABORT("Error while parsing big random Integer.\n");
+//	}
+//
+//	return random_int;
+//}
 
 /**
  * Gets a random polynomial with coefficients
  * from the set {-1 ,0 ,1} using /dev/random.
  *
- * @param ctx the NTRU context
+ * @param ctx the NTRU context [out]
  * @return newly allocated polynomial, must be freed with delete_polynom()
  */
 pb_poly *ntru_get_rnd_poly_small(ntru_context *ctx)
@@ -170,7 +209,7 @@ pb_poly *ntru_get_rnd_poly_small(ntru_context *ctx)
  * Gets a random polynomial with coefficients
  * from the set {-1 ,0 ,1} using /dev/urandom.
  *
- * @param ctx the NTRU context
+ * @param ctx the NTRU context [out]
  * @return newly allocated polynomial, must be freed with delete_polynom()
  */
 pb_poly *ntru_get_urnd_poly_small(ntru_context *ctx)
@@ -201,7 +240,7 @@ pb_poly *ntru_get_urnd_poly_small(ntru_context *ctx)
  * from the borders of BIG_RAND_MAX and
  * BIG_RAND_MIN using /dev/random.
  *
- * @param ctx the NTRU context
+ * @param ctx the NTRU context [out]
  * @return newly allocated polynomial, must be freed with delete_polynom()
  */
 pb_poly *ntru_get_rnd_poly_big(ntru_context *ctx)
@@ -232,7 +271,7 @@ pb_poly *ntru_get_rnd_poly_big(ntru_context *ctx)
  * from the borders of BIG_RAND_MAX and
  * BIG_RAND_MIN using /dev/urandom.
  *
- * @param ctx the NTRU context
+ * @param ctx the NTRU context [out]
  * @return newly allocated polynomial, must be freed with delete_polynom()
  */
 pb_poly *ntru_get_urnd_poly_big(ntru_context *ctx)

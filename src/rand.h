@@ -26,20 +26,6 @@
 
 #include <tompoly.h>
 
-/**
- * The maximal integer that is given by
- * ntru_get_urnd_poly_big and ntru_get_rnd_poly_big
- * this number must be positiv
- */
-#define BIG_RAND_MAX 100
-
-/**
- * The minimal integer that is given by
- * ntru_get_urnd_poly_big and ntru_get_rnd_poly_big
- * this number must be negativ
- */
-#define BIG_RAND_MIN -100
-
 pb_poly *ntru_get_urnd_poly_small(ntru_context *ctx);
 pb_poly *ntru_get_rnd_poly_small(ntru_context *ctx);
 pb_poly *ntru_get_urnd_poly_big(ntru_context *ctx);
