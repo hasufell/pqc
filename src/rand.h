@@ -26,9 +26,18 @@
 
 #include <tompoly.h>
 
-pb_poly *ntru_get_urnd_poly_small(ntru_context *ctx);
-pb_poly *ntru_get_rnd_poly_small(ntru_context *ctx);
-pb_poly *ntru_get_urnd_poly_big(ntru_context *ctx);
-pb_poly *ntru_get_rnd_poly_big(ntru_context *ctx);
+/**
+ * Use the /dev/urandom device as entropy source.
+ */
+#define GET_INT_FROM_URAND 2
+
+/**
+ * Use the /dev/random device as entropy source.
+ */
+#define GET_INT_FROM_RRAND 3
+
+pb_poly *ntru_get_poly_small(int length, int entropy_source);
+pb_poly *ntru_get_poly_big(int length, int entropy_source, mp_int *upper_bound,
+		mp_int *lower_bound);
 
 #endif /* NTRU_RAND_H */

@@ -38,11 +38,9 @@
  */
 static mp_digit read_int_dev_random(void);
 static mp_digit read_int_dev_urandom(void);
-
 static mp_digit make_small_int(mp_digit random_int, int* sign);
-
 static mp_int *make_big_int(mp_int *upper_bound, mp_int *lower_bound,
-		mp_digit randim_int);
+		int entropy_source);
 static int check_polynom(pb_poly *polynom);
 
 /**
@@ -118,11 +116,11 @@ static mp_digit make_small_int(mp_digit random_int, int* sign)
  *
  * @param upper_bound the maximal upper border of the resulting mp_int [out]
  * @param lower_bound the minimal lower border of the resulting mp_int [out]
- * @param randim_int TODO
+ * entropy_source random_int TODO
  * @return a mp_int with the random number
  */
 static mp_int *make_big_int(mp_int *upper_bound, mp_int *lower_bound,
-		mp_digit randim_int)
+		int entropy_source)
 {
 	mp_int result;
 	init_integer(&result);
@@ -145,154 +143,59 @@ static mp_int *make_big_int(mp_int *upper_bound, mp_int *lower_bound,
 static int check_polynom(pb_poly *polynom)
 {
 	int result = -1;
+
 	//TODO
+
 	return result;
 }
 
-///**
-// * Makes a big integer from the borders of BIG_RAND_MAX
-// * and BIG_RAND_MIN out of a randomly chosen integer.
-// *
-// * @param random_int a randomly chosen mp_digit [out]
-// * @param sign a integer to store the sign (1==positiv) [out]
-// * @return random big integer from the borders of BIG_RAND_MAX and BIG_RAND_MIN
-// */
-//static mp_digit make_big_int(mp_digit random_int, int* sign)
-//{
-//	random_int = random_int % abs(BIG_RAND_MAX - BIG_RAND_MIN);
-//
-//	if (random_int < BIG_RAND_MAX) {
-//		*sign = 1;
-//	} else if (random_int > BIG_RAND_MAX) {
-//		*sign = 0;
-//		random_int -= BIG_RAND_MAX;
-//	} else if (random_int == BIG_RAND_MAX) {
-//		random_int = abs(BIG_RAND_MIN);
-//		*sign = 0;
-//	} else {
-//		NTRU_ABORT("Error while parsing big random Integer.\n");
-//	}
-//
-//	return random_int;
-//}
-
 /**
  * Gets a random polynomial with coefficients
- * from the set {-1 ,0 ,1} using /dev/random.
+ * from the set {-1 ,0 ,1} using the given entropy source
  *
- * @param ctx the NTRU context [out]
+ * @param length the amount of coefficients
+ * @param entropy_source the source of entropy you want
  * @return newly allocated polynomial, must be freed with delete_polynom()
  */
-pb_poly *ntru_get_rnd_poly_small(ntru_context *ctx)
+pb_poly *ntru_get_poly_small(int length, int entropy_source)
 {
 	mp_int chara;
 	init_integer(&chara);
+
+	mp_digit c;
 	pb_poly *poly = malloc(sizeof(pb_poly));
-	init_polynom_size(poly, &chara, ctx->N);
+
+	init_polynom_size(poly, &chara, length);
 	mp_clear(&chara);
 
-	for (unsigned int i = 0; i < ctx->N; i++) {
+	for (unsigned int i = 0; i < length; i++) {
 		int sign;
-		mp_digit c = read_int_dev_random();
+		if (entropy_source == GET_INT_FROM_RRAND) {
+			c = read_int_dev_random();
+		} else if (entropy_source == GET_INT_FROM_URAND) {
+			c = read_int_dev_urandom();
+		} else {
+			NTRU_ABORT("No suitable entropy source selectetd.\n");
+		}
 		c = make_small_int(c, &sign);
 		mp_set(&(poly->terms[i]), c);
 		if (sign == 1)
 			poly->terms[i].sign = 1;
 	}
-	poly->used = ctx->N;
-	pb_clamp(poly);
-
+	poly->used = length;
 	return poly;
 }
 
 /**
  * Gets a random polynomial with coefficients
- * from the set {-1 ,0 ,1} using /dev/urandom.
+ * from the the borders of lower_bound to upper_bound using the given entropy source
  *
- * @param ctx the NTRU context [out]
+ * @param length the amount of coefficients
+ * @param entropy_source the source of entropy you want
  * @return newly allocated polynomial, must be freed with delete_polynom()
  */
-pb_poly *ntru_get_urnd_poly_small(ntru_context *ctx)
+pb_poly *ntru_get_poly_big(int length, int entropy_source, mp_int *upper_bound,
+		mp_int *lower_bound)
 {
-	mp_int chara;
-	init_integer(&chara);
-	pb_poly *poly = malloc(sizeof(pb_poly));
-	init_polynom_size(poly, &chara, ctx->N);
-	mp_clear(&chara);
-
-	for (unsigned int i = 0; i < ctx->N; i++) {
-		int sign;
-		mp_digit c = read_int_dev_urandom();
-		c = make_small_int(c, &sign);
-		mp_set(&(poly->terms[i]), c);
-
-		if (sign == 1)
-			poly->terms[i].sign = 1;
-	}
-	poly->used = ctx->N;
-	pb_clamp(poly);
-
-	return poly;
-}
-
-/**
- * Gets a random polynomial with coefficients
- * from the borders of BIG_RAND_MAX and
- * BIG_RAND_MIN using /dev/random.
- *
- * @param ctx the NTRU context [out]
- * @return newly allocated polynomial, must be freed with delete_polynom()
- */
-pb_poly *ntru_get_rnd_poly_big(ntru_context *ctx)
-{
-	mp_int chara;
-	init_integer(&chara);
-	pb_poly *poly = malloc(sizeof(pb_poly));
-	init_polynom_size(poly, &chara, ctx->N);
-	mp_clear(&chara);
-
-	for (unsigned int i = 0; i < ctx->N; i++) {
-		int sign;
-		mp_digit c = read_int_dev_random();
-		c = make_big_int(c, &sign);
-		mp_set(&(poly->terms[i]), c);
-
-		if (sign == 1)
-			poly->terms[i].sign = 1;
-	}
-	poly->used = ctx->N;
-	pb_clamp(poly);
-
-	return poly;
-}
-
-/**
- * Gets a random polynomial with coefficients
- * from the borders of BIG_RAND_MAX and
- * BIG_RAND_MIN using /dev/urandom.
- *
- * @param ctx the NTRU context [out]
- * @return newly allocated polynomial, must be freed with delete_polynom()
- */
-pb_poly *ntru_get_urnd_poly_big(ntru_context *ctx)
-{
-	mp_int chara;
-	init_integer(&chara);
-	pb_poly *poly = malloc(sizeof(pb_poly));
-	init_polynom_size(poly, &chara, ctx->N);
-	mp_clear(&chara);
-
-	for (unsigned int i = 0; i < ctx->N; i++) {
-		int sign;
-		mp_digit c = read_int_dev_urandom();
-		c = make_big_int(c, &sign);
-		mp_set(&(poly->terms[i]), c);
-
-		if (sign == 1)
-			poly->terms[i].sign = 1;
-	}
-	poly->used = ctx->N;
-	pb_clamp(poly);
-
-	return poly;
+	//TODO
 }
