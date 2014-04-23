@@ -19,3 +19,5 @@ latex/
 # currently masked
 src/main.c
 src/main
+
+.settings/org.eclipse*
