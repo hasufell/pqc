@@ -28,7 +28,18 @@
 
 #include <tompoly.h>
 #include <tommath.h>
+#include <stdarg.h>
 #include <stdbool.h>
+
+#define MP_SET(...) mp_set(__VA_ARGS__)
+
+#define MP_SET_INT(...) \
+{ \
+	int result; \
+	if ((result = mp_set_int(__VA_ARGS__)) != MP_OKAY) \
+			NTRU_ABORT("Error setting long constant. %s", \
+				mp_error_to_string(result)); \
+}
 
 #define MP_MUL(...) \
 { \
@@ -86,6 +97,22 @@
 				mp_error_to_string(result)); \
 }
 
+#define MP_EXPTMOD(...) \
+{ \
+	int result; \
+	if ((result = mp_exptmod(__VA_ARGS__)) != MP_OKAY) \
+			NTRU_ABORT("Error computing modular exponentiation. %s", \
+				mp_error_to_string(result)); \
+}
+
+#define MP_EXPT_D(...) \
+{ \
+	int result; \
+	if ((result = mp_expt_d(__VA_ARGS__)) != MP_OKAY) \
+			NTRU_ABORT("Error computing modular exponentiation. %s", \
+				mp_error_to_string(result)); \
+}
+
 #define PB_MUL(...) \
 { \
 	int result; \
@@ -137,6 +164,8 @@ pb_poly *build_polynom(int const * const c,
 void erase_polynom(pb_poly *poly, size_t len);
 
 void delete_polynom(pb_poly *new_poly);
+
+void delete_polynom_multi(pb_poly *poly, ...);
 
 void pb_starmultiply(pb_poly *a,
 		pb_poly *b,

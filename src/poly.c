@@ -21,8 +21,10 @@
 
 #include "context.h"
 #include "err.h"
+#include "mem.h"
 #include "poly.h"
 
+#include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <tompoly.h>
@@ -34,6 +36,9 @@
  * static declarations
  */
 static unsigned int get_degree(pb_poly const * const poly);
+static void pb_mod2_to_modq(pb_poly * const a,
+		pb_poly *Fq,
+		ntru_context *ctx);
 
 
 /**
@@ -108,7 +113,7 @@ pb_poly *build_polynom(int const * const c,
 	pb_poly *new_poly;
 	mp_int chara;
 
-	new_poly = malloc(sizeof(*new_poly));
+	new_poly = ntru_malloc(sizeof(*new_poly));
 	init_integer(&chara);
 	init_polynom_size(new_poly, &chara, len);
 	mp_clear(&chara);
@@ -126,14 +131,14 @@ pb_poly *build_polynom(int const * const c,
 				unsigned_c = c[i];
 			}
 
-			mp_set_int(&(new_poly->terms[i]), unsigned_c);
+			MP_SET_INT(&(new_poly->terms[i]), unsigned_c);
 
 			if (sign == true)
 				mp_neg(&(new_poly->terms[i]), &(new_poly->terms[i]));
 		}
 	} else { /* fill with zeros */
 		for (unsigned int i = 0; i < len; i++)
-			mp_set(&(new_poly->terms[i]), 0);
+			MP_SET(&(new_poly->terms[i]), 0);
 	}
 
 	new_poly->used = len;
@@ -150,7 +155,7 @@ pb_poly *build_polynom(int const * const c,
 void erase_polynom(pb_poly *poly, size_t len)
 {
 	for (unsigned int i = 0; i < len ; i++) {
-		mp_set(&(poly->terms[i]), 0);
+		MP_SET(&(poly->terms[i]), 0);
 		mp_abs(&(poly->terms[i]), &(poly->terms[i]));
 	}
 }
@@ -167,6 +172,30 @@ void delete_polynom(pb_poly *poly)
 {
 	pb_clear(poly);
 	free(poly);
+}
+
+/**
+ * This deletes the internal structure of all polynomials,
+ * and frees the pointers. Don't call this on stack variables,
+ * this is intended for use after ntru_ functions, that
+ * return a polynomial pointer.
+ * You must call this with NULL as last argument!
+ *
+ * @param poly the polynomial to delete
+ * @param ... follow up polynomials
+ */
+void delete_polynom_multi(pb_poly *poly, ...)
+{
+	pb_poly *next_poly;
+	va_list args;
+
+	next_poly = poly;
+	va_start(args, poly);
+	while (next_poly != NULL) {
+		delete_polynom(next_poly);
+		next_poly = va_arg(args, pb_poly*);
+	}
+	va_end(args);
 }
 
 /**
@@ -189,7 +218,7 @@ void pb_starmultiply(pb_poly *a,
 	mp_int mp_modulus;
 
 	init_integer(&mp_modulus);
-	mp_set_int(&mp_modulus, (unsigned long)(modulus));
+	MP_SET_INT(&mp_modulus, (unsigned long)(modulus));
 
 	/* avoid side effects */
 	a_tmp = build_polynom(NULL, ctx->N, ctx);
@@ -258,6 +287,42 @@ static unsigned int get_degree(pb_poly const * const poly)
 }
 
 /**
+ * Find the inverse polynomial modulo a power of 2,
+ * which is q.
+ *
+ * @param a polynomial to invert
+ * @param Fq polynomial [out]
+ * @param ctx NTRU context
+ */
+static void pb_mod2_to_modq(pb_poly * const a,
+		pb_poly *Fq,
+		ntru_context *ctx)
+{
+	int v = 2;
+
+	while (v < (int)(ctx->q)) {
+		pb_poly *pb_tmp,
+				*pb_tmp2;
+		mp_int tmp_v;
+		pb_tmp = build_polynom(NULL, ctx->N, ctx);
+		v = v * 2;
+		init_integer(&tmp_v);
+		MP_SET_INT(&tmp_v, v);
+		pb_tmp2 = build_polynom(NULL, ctx->N, ctx);
+		MP_SET_INT(&(pb_tmp2->terms[0]), 2);
+
+		/* mod after sub or before? */
+		pb_starmultiply(a, Fq, pb_tmp, ctx, v);
+		PB_SUB(pb_tmp2, pb_tmp, pb_tmp);
+		PB_MOD(pb_tmp, &tmp_v, pb_tmp, ctx->N);
+		pb_starmultiply(Fq, pb_tmp, Fq, ctx, v);
+
+		mp_clear(&tmp_v);
+		delete_polynom_multi(pb_tmp, pb_tmp2, NULL);
+	}
+}
+
+/**
  * Invert the polynomial a modulo q.
  *
  * @param a polynomial to invert (is allowed to be the same as param Fq)
@@ -270,19 +335,18 @@ bool pb_inverse_poly_q(pb_poly * const a,
 		ntru_context *ctx)
 {
 	int k = 0,
-		j = 0,
-		v = 2;
+		j = 0;
 	pb_poly *a_tmp, *b, *c, *f, *g;
 
 	b = build_polynom(NULL, ctx->N + 1, ctx);
-	mp_set(&(b->terms[0]), 1);
+	MP_SET(&(b->terms[0]), 1);
 	c = build_polynom(NULL, ctx->N + 1, ctx);
 	f = build_polynom(NULL, ctx->N + 1, ctx);
 	PB_COPY(a, f);
 	g = build_polynom(NULL, ctx->N + 1, ctx);
-	mp_set(&(g->terms[0]), 1);
+	MP_SET(&(g->terms[0]), 1);
 	mp_neg(&(g->terms[0]), &(g->terms[0]));
-	mp_set(&(g->terms[ctx->N]), 1);
+	MP_SET(&(g->terms[ctx->N]), 1);
 	/* avoid side effects */
 	a_tmp = build_polynom(NULL, ctx->N, ctx);
 	PB_COPY(a, a_tmp);
@@ -294,8 +358,8 @@ bool pb_inverse_poly_q(pb_poly * const a,
 				MP_COPY(&(f->terms[i]), &(f->terms[i - 1]));
 				MP_COPY(&(c->terms[ctx->N - i]), &(c->terms[ctx->N + 1 - i]));
 			}
-			mp_set(&(f->terms[ctx->N]), 0);
-			mp_set(&(c->terms[0]), 0);
+			MP_SET(&(f->terms[ctx->N]), 0);
+			MP_SET(&(c->terms[0]), 0);
 			k++;
 		}
 
@@ -321,42 +385,18 @@ OUT_OF_LOOP:
 		MP_COPY(&(b->terms[i]), &(Fq->terms[j]));
 	}
 
-	while (v < (int)(ctx->q)) {
-		pb_poly *pb_tmp,
-				*pb_tmp2;
-		mp_int tmp_v;
-		pb_tmp = build_polynom(NULL, ctx->N, ctx);
-		v = v * 2;
-		init_integer(&tmp_v);
-		mp_set_int(&tmp_v, v);
-		pb_tmp2 = build_polynom(NULL, ctx->N, ctx);
-		mp_set_int(&(pb_tmp2->terms[0]), 2);
-
-		/* hope this does not blow up in our face */
-		pb_starmultiply(a_tmp, Fq, pb_tmp, ctx, v);
-		PB_SUB(pb_tmp2, pb_tmp, pb_tmp);
-		PB_MOD(pb_tmp, &tmp_v, pb_tmp, ctx->N);
-		pb_starmultiply(Fq, pb_tmp, Fq, ctx, v);
-
-		mp_clear(&tmp_v);
-		delete_polynom(pb_tmp);
-		delete_polynom(pb_tmp2);
-	}
+	pb_mod2_to_modq(a_tmp, Fq, ctx);
 
 	for (int i = ctx->N - 1; i >= 0; i--)
 		if (mp_cmp_d(&(Fq->terms[i]), 0) == MP_LT) {
 			mp_int mp_tmp;
 			init_integer(&mp_tmp);
-			mp_set_int(&mp_tmp, ctx->q);
+			MP_SET_INT(&mp_tmp, ctx->q);
 			MP_ADD(&(Fq->terms[i]), &mp_tmp, &(Fq->terms[i]));
 			mp_clear(&mp_tmp);
 		}
 
-	delete_polynom(a_tmp);
-	delete_polynom(b);
-	delete_polynom(c);
-	delete_polynom(f);
-	delete_polynom(g);
+	delete_polynom_multi(a_tmp, b, c, f, g, NULL);
 
 	/* TODO: check if the f * Fq = 1 (mod p) condition holds true */
 
