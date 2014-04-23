@@ -19,3 +19,6 @@
  * MA  02110-1301  USA
  */
 
+int ntru_decrypt(char *encr_msg, pb_poly *private_key, ntru_context *context, char ** decr_msg){
+	return 0;
+}
