@@ -22,6 +22,9 @@
 #ifndef NTRU_DECRYPT_H
 #define NTRU_DECRYPT_H
 
-/*int ntru_decrypt(char* encr_msg, pb_poly private_key);*/
+#include "poly.h"
+#include "context.h"
+
+int ntru_decrypt(char *encr_msg, pb_poly *private_key, ntru_context *context, char ** decr_msg);
 
 #endif /* NTRU_DECRYPT */
