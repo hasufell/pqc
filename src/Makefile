@@ -4,7 +4,7 @@ PKG_CONFIG ?= pkg-config
 
 # flags
 CFLAGS ?= -march=native -O2 -pipe
-CFLAGS += -std=c99 -pedantic -Wall -Wextra -Werror -Wno-unused-variable -Wno-unused-parameter
+CFLAGS += -std=c99 -pedantic -Wall -Wextra -Werror -Wno-unused-variable -Wno-unused-parameter -Wno-unused-function
 ifeq ($(shell $(CC) -v 2>&1 | grep 'gcc version' &>/dev/null && echo 1),1)
 CFLAGS += -Wno-unused-but-set-variable
 endif
@@ -37,8 +37,8 @@ endif
 LIBS += -L.
 
 # objects
-PQC_OBJS = rand.o poly.o
-PQC_HEADERS = err.h rand.h poly.h context.h
+PQC_OBJS = rand.o poly.o keypair.o mem.o
+PQC_HEADERS = err.h rand.h poly.h context.h keypair.h
 # CUNIT_OBJS = cunit.o
 
 # includes
