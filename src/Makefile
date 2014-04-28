@@ -38,7 +38,7 @@ LIBS += -L.
 
 # objects
 PQC_OBJS = rand.o poly.o keypair.o mem.o
-PQC_HEADERS = err.h rand.h poly.h context.h keypair.h
+PQC_HEADERS = err.h rand.h poly.h context.h
 # CUNIT_OBJS = cunit.o
 
 # includes
