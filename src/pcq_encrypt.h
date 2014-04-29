@@ -18,3 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301  USA
  */
+
+#ifndef PCQ_ENCRYPT_H
+#define PCQ_ENCRYPT_H
+
+#include <tommath.h>
+#include <tompoly.h>
+
+#endif
