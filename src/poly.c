@@ -136,7 +136,7 @@ pb_poly *build_polynom(int const * const c,
 			if (sign == true)
 				mp_neg(&(new_poly->terms[i]), &(new_poly->terms[i]));
 		}
-	} else { /* fill with zeros */
+	} else { /* fill with 0 */
 		for (unsigned int i = 0; i < len; i++)
 			MP_SET(&(new_poly->terms[i]), 0);
 	}
@@ -311,7 +311,6 @@ static void pb_mod2_to_modq(pb_poly * const a,
 		pb_tmp2 = build_polynom(NULL, ctx->N, ctx);
 		MP_SET_INT(&(pb_tmp2->terms[0]), 2);
 
-		/* mod after sub or before? */
 		pb_starmultiply(a, Fq, pb_tmp, ctx, v);
 		PB_SUB(pb_tmp2, pb_tmp, pb_tmp);
 		PB_MOD(pb_tmp, &tmp_v, pb_tmp, ctx->N);
@@ -338,15 +337,19 @@ bool pb_inverse_poly_q(pb_poly * const a,
 		j = 0;
 	pb_poly *a_tmp, *b, *c, *f, *g;
 
+	/* general initialization of temp variables */
 	b = build_polynom(NULL, ctx->N + 1, ctx);
 	MP_SET(&(b->terms[0]), 1);
 	c = build_polynom(NULL, ctx->N + 1, ctx);
 	f = build_polynom(NULL, ctx->N + 1, ctx);
 	PB_COPY(a, f);
+
+	/* set g(x) = x^N − 1 */
 	g = build_polynom(NULL, ctx->N + 1, ctx);
 	MP_SET(&(g->terms[0]), 1);
 	mp_neg(&(g->terms[0]), &(g->terms[0]));
 	MP_SET(&(g->terms[ctx->N]), 1);
+
 	/* avoid side effects */
 	a_tmp = build_polynom(NULL, ctx->N, ctx);
 	PB_COPY(a, a_tmp);
@@ -355,7 +358,9 @@ bool pb_inverse_poly_q(pb_poly * const a,
 	while (1) {
 		while (mp_cmp_d(&(f->terms[0]), 0) == MP_EQ) {
 			for (unsigned int i = 1; i <= ctx->N; i++) {
+				/* f(x) = f(x) / x */
 				MP_COPY(&(f->terms[i]), &(f->terms[i - 1]));
+				/* c(x) = c(x) * x */
 				MP_COPY(&(c->terms[ctx->N - i]), &(c->terms[ctx->N + 1 - i]));
 			}
 			MP_SET(&(f->terms[ctx->N]), 0);
@@ -378,6 +383,7 @@ bool pb_inverse_poly_q(pb_poly * const a,
 OUT_OF_LOOP:
 	k = k % ctx->N;
 
+	/* Fq(x) = x^(N-k) * b(x) */
 	for (int i = ctx->N - 1; i >= 0; i--) {
 		j = i - k;
 		if (j < 0)
@@ -387,6 +393,7 @@ OUT_OF_LOOP:
 
 	pb_mod2_to_modq(a_tmp, Fq, ctx);
 
+	/* pull into positive space */
 	for (int i = ctx->N - 1; i >= 0; i--)
 		if (mp_cmp_d(&(Fq->terms[i]), 0) == MP_LT) {
 			mp_int mp_tmp;
