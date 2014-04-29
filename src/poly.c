@@ -369,7 +369,7 @@ bool pb_inverse_poly_q(pb_poly * const a,
 		}
 
 		if (get_degree(f) == 0)
-			goto OUT_OF_LOOP;
+			goto OUT_OF_LOOP_Q;
 
 		if (get_degree(f) < get_degree(g)) {
 			pb_exch(f, g);
@@ -380,7 +380,7 @@ bool pb_inverse_poly_q(pb_poly * const a,
 		pb_xor(b, c, b, ctx->N);
 	}
 
-OUT_OF_LOOP:
+OUT_OF_LOOP_Q:
 	k = k % ctx->N;
 
 	/* Fq(x) = x^(N-k) * b(x) */
@@ -424,14 +424,11 @@ bool pb_inverse_poly_p(pb_poly *a,
 	int k = 0,
 		j = 0;
 	pb_poly *a_tmp, *b, *c, *f, *g;
-	mp_int mp_modulus, mp_minus;
+	mp_int mp_modulus;
 
 	/* general initialization of temp variables */
 	init_integer(&mp_modulus);
-	init_integer(&mp_minus);
 	MP_SET_INT(&mp_modulus, (unsigned long)(ctx->p));
-	MP_SET_INT(&mp_minus, 1);
-	mp_neg(&mp_minus, &mp_minus);
 	b = build_polynom(NULL, ctx->N + 1, ctx);
 	MP_SET(&(b->terms[0]), 1);
 	c = build_polynom(NULL, ctx->N + 1, ctx);
@@ -454,7 +451,6 @@ bool pb_inverse_poly_p(pb_poly *a,
 
 	while (1) {
 		while (mp_cmp_d(&(f->terms[0]), 0) == MP_EQ) {
-			printf("blah\n");
 			for (unsigned int i = 1; i <= ctx->N; i++) {
 				/* f(x) = f(x) / x */
 				MP_COPY(&(f->terms[i]), &(f->terms[i - 1]));
@@ -467,9 +463,10 @@ bool pb_inverse_poly_p(pb_poly *a,
 		}
 
 		if (get_degree(f) == 0)
-			goto OUT_OF_LOOP2;
+			goto OUT_OF_LOOP_P;
 
 		if (get_degree(f) < get_degree(g)) {
+			/* exchange f and g and exchange b and c */
 			pb_exch(f, g);
 			pb_exch(b, c);
 		}
@@ -485,36 +482,30 @@ bool pb_inverse_poly_p(pb_poly *a,
 			c_tmp = build_polynom(NULL, ctx->N + 1, ctx);
 			PB_COPY(c, c_tmp);
 
-			/* u = ((f[0] mod p) * (g[0] inverse mod p) mod p) */
-			printf("u before: "); draw_polynom(u);
-			MP_COPY(&(f->terms[0]), &mp_tmp); /*  don't change f[0] */
+			/* u = f[0] * g[0]^(-1) mod p
+			 *   = (f[0] mod p) * (g[0] inverse mod p) mod p */
+			MP_COPY(&(f->terms[0]), &mp_tmp); /* don't change f[0] */
 			MP_INVMOD(&(g->terms[0]), &mp_modulus, &(u->terms[0]));
 			MP_MOD(&mp_tmp, &mp_modulus, &mp_tmp);
 			MP_MUL(&(u->terms[0]), &mp_tmp, &(u->terms[0]));
 			MP_MOD(&(u->terms[0]), &mp_modulus, &(u->terms[0]));
 
 			/* f = f - u * g mod p */
-			printf("f before: "); draw_polynom(f);
 			PB_MUL(g_tmp, u, g_tmp);
 			PB_SUB(f, g_tmp, f);
 			PB_MOD(f, &mp_modulus, f, ctx->N + 1);
 
 			/* b = b - u * c mod p */
-			printf("b before: "); draw_polynom(b);
 			PB_MUL(c_tmp, u, c_tmp);
 			PB_SUB(b, c_tmp, b);
 			PB_MOD(b, &mp_modulus, b, ctx->N + 1);
-			printf("u after: "); draw_polynom(u);
-			printf("f after: "); draw_polynom(f);
-			printf("g after: "); draw_polynom(g);
-			printf("b after: "); draw_polynom(b);
 
 			mp_clear(&mp_tmp);
 			delete_polynom_multi(u, c_tmp, g_tmp, NULL);
 		}
 	}
 
-OUT_OF_LOOP2:
+OUT_OF_LOOP_P:
 	k = k % ctx->N;
 
 	/* Fp(x) = x^(N-k) * b(x) */
