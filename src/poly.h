@@ -105,6 +105,14 @@
 				mp_error_to_string(result)); \
 }
 
+#define MP_INVMOD(...) \
+{ \
+	int result; \
+	if ((result = mp_invmod(__VA_ARGS__)) != MP_OKAY) \
+			NTRU_ABORT("Error computing modular inverse. %s", \
+				mp_error_to_string(result)); \
+}
+
 #define MP_EXPT_D(...) \
 { \
 	int result; \
@@ -180,6 +188,10 @@ void pb_xor(pb_poly *a,
 
 bool pb_inverse_poly_q(pb_poly *a,
 		pb_poly *Fq,
+		ntru_context *ctx);
+
+bool pb_inverse_poly_p(pb_poly *a,
+		pb_poly *Fp,
 		ntru_context *ctx);
 
 void draw_polynom(pb_poly * const poly);
