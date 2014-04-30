@@ -511,11 +511,10 @@ bool pb_inverse_poly_p(pb_poly *a,
 		}
 
 		{
-			pb_poly *u, *c_tmp, *g_tmp;
-			mp_int mp_tmp;
+			pb_poly *c_tmp, *g_tmp;
+			mp_int u, mp_tmp;
 
-			init_integer(&mp_tmp);
-			u = build_polynom(NULL, ctx->N, ctx);
+			init_integers(&u, &mp_tmp, NULL);
 			g_tmp = build_polynom(NULL, ctx->N + 1);
 			PB_COPY(g, g_tmp);
 			c_tmp = build_polynom(NULL, ctx->N + 1);
@@ -523,24 +522,24 @@ bool pb_inverse_poly_p(pb_poly *a,
 
 			/* u = f[0] * g[0]^(-1) mod p
 			 *   = (f[0] mod p) * (g[0] inverse mod p) mod p */
-			MP_COPY(&(f->terms[0]), &mp_tmp); /* don't change f[0] */
-			MP_INVMOD(&(g->terms[0]), &mp_modulus, &(u->terms[0]));
+			MP_COPY(&(f->terms[0]), &mp_tmp);
+			MP_INVMOD(&(g->terms[0]), &mp_modulus, &u);
 			MP_MOD(&mp_tmp, &mp_modulus, &mp_tmp);
-			MP_MUL(&(u->terms[0]), &mp_tmp, &(u->terms[0]));
-			MP_MOD(&(u->terms[0]), &mp_modulus, &(u->terms[0]));
+			MP_MUL(&u, &mp_tmp, &u);
+			MP_MOD(&u, &mp_modulus, &u);
 
 			/* f = f - u * g mod p */
-			PB_MUL(g_tmp, u, g_tmp);
+			PB_MP_MUL(g_tmp, &u, g_tmp);
 			PB_SUB(f, g_tmp, f);
 			PB_MOD(f, &mp_modulus, f, ctx->N + 1);
 
 			/* b = b - u * c mod p */
-			PB_MUL(c_tmp, u, c_tmp);
+			PB_MP_MUL(c_tmp, &u, c_tmp);
 			PB_SUB(b, c_tmp, b);
 			PB_MOD(b, &mp_modulus, b, ctx->N + 1);
 
 			mp_clear(&mp_tmp);
-			delete_polynom_multi(u, c_tmp, g_tmp, NULL);
+			delete_polynom_multi(c_tmp, g_tmp, NULL);
 		}
 	}
 
