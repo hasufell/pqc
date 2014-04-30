@@ -117,7 +117,7 @@ void init_polynom_size(pb_poly *new_poly, mp_int *chara, size_t size)
  * pointer which is not clamped.
  *
  * If you want to fill a polyonmial of length 11 with zeros,
- * call build_polynom(NULL, 11, ctx).
+ * call build_polynom(NULL, 11).
  *
  * @param c array of polynomial coefficients, can be NULL
  * @param len size of the coefficient array, can be 0
@@ -126,8 +126,7 @@ void init_polynom_size(pb_poly *new_poly, mp_int *chara, size_t size)
  * with delete_polynom()
  */
 pb_poly *build_polynom(int const * const c,
-		const size_t len,
-		ntru_context *ctx)
+		const size_t len)
 {
 	pb_poly *new_poly;
 	mp_int chara;
@@ -240,7 +239,7 @@ void pb_starmultiply(pb_poly *a,
 	MP_SET_INT(&mp_modulus, (unsigned long)(modulus));
 
 	/* avoid side effects */
-	a_tmp = build_polynom(NULL, ctx->N, ctx);
+	a_tmp = build_polynom(NULL, ctx->N);
 	PB_COPY(a, a_tmp);
 	erase_polynom(c, ctx->N);
 
@@ -346,11 +345,11 @@ static void pb_mod2_to_modq(pb_poly * const a,
 		pb_poly *pb_tmp,
 				*pb_tmp2;
 		mp_int tmp_v;
-		pb_tmp = build_polynom(NULL, ctx->N, ctx);
+		pb_tmp = build_polynom(NULL, ctx->N);
 		v = v * 2;
 		init_integer(&tmp_v);
 		MP_SET_INT(&tmp_v, v);
-		pb_tmp2 = build_polynom(NULL, ctx->N, ctx);
+		pb_tmp2 = build_polynom(NULL, ctx->N);
 		MP_SET_INT(&(pb_tmp2->terms[0]), 2);
 
 		pb_starmultiply(a, Fq, pb_tmp, ctx, v);
@@ -380,20 +379,20 @@ bool pb_inverse_poly_q(pb_poly * const a,
 	pb_poly *a_tmp, *b, *c, *f, *g;
 
 	/* general initialization of temp variables */
-	b = build_polynom(NULL, ctx->N + 1, ctx);
+	b = build_polynom(NULL, ctx->N + 1);
 	MP_SET(&(b->terms[0]), 1);
-	c = build_polynom(NULL, ctx->N + 1, ctx);
-	f = build_polynom(NULL, ctx->N + 1, ctx);
+	c = build_polynom(NULL, ctx->N + 1);
+	f = build_polynom(NULL, ctx->N + 1);
 	PB_COPY(a, f);
 
 	/* set g(x) = x^N − 1 */
-	g = build_polynom(NULL, ctx->N + 1, ctx);
+	g = build_polynom(NULL, ctx->N + 1);
 	MP_SET(&(g->terms[0]), 1);
 	mp_neg(&(g->terms[0]), &(g->terms[0]));
 	MP_SET(&(g->terms[ctx->N]), 1);
 
 	/* avoid side effects */
-	a_tmp = build_polynom(NULL, ctx->N, ctx);
+	a_tmp = build_polynom(NULL, ctx->N);
 	PB_COPY(a, a_tmp);
 	erase_polynom(Fq, ctx->N);
 
@@ -471,20 +470,20 @@ bool pb_inverse_poly_p(pb_poly *a,
 	/* general initialization of temp variables */
 	init_integer(&mp_modulus);
 	MP_SET_INT(&mp_modulus, (unsigned long)(ctx->p));
-	b = build_polynom(NULL, ctx->N + 1, ctx);
+	b = build_polynom(NULL, ctx->N + 1);
 	MP_SET(&(b->terms[0]), 1);
-	c = build_polynom(NULL, ctx->N + 1, ctx);
-	f = build_polynom(NULL, ctx->N + 1, ctx);
+	c = build_polynom(NULL, ctx->N + 1);
+	f = build_polynom(NULL, ctx->N + 1);
 	PB_COPY(a, f);
 
 	/* set g(x) = x^N − 1 */
-	g = build_polynom(NULL, ctx->N + 1, ctx);
+	g = build_polynom(NULL, ctx->N + 1);
 	MP_SET(&(g->terms[0]), 1);
 	mp_neg(&(g->terms[0]), &(g->terms[0]));
 	MP_SET(&(g->terms[ctx->N]), 1);
 
 	/* avoid side effects */
-	a_tmp = build_polynom(NULL, ctx->N, ctx);
+	a_tmp = build_polynom(NULL, ctx->N);
 	PB_COPY(a, a_tmp);
 	erase_polynom(Fp, ctx->N);
 
@@ -519,9 +518,9 @@ bool pb_inverse_poly_p(pb_poly *a,
 
 			init_integer(&mp_tmp);
 			u = build_polynom(NULL, ctx->N, ctx);
-			g_tmp = build_polynom(NULL, ctx->N + 1, ctx);
+			g_tmp = build_polynom(NULL, ctx->N + 1);
 			PB_COPY(g, g_tmp);
-			c_tmp = build_polynom(NULL, ctx->N + 1, ctx);
+			c_tmp = build_polynom(NULL, ctx->N + 1);
 			PB_COPY(c, c_tmp);
 
 			/* u = f[0] * g[0]^(-1) mod p
@@ -557,7 +556,7 @@ OUT_OF_LOOP_P:
 		{
 			pb_poly *poly_tmp;
 
-			poly_tmp = build_polynom(NULL, ctx->N + 1, ctx);
+			poly_tmp = build_polynom(NULL, 1);
 
 			MP_INVMOD(&(f->terms[0]), &mp_modulus, &(poly_tmp->terms[0]));
 			MP_MOD(&(b->terms[i]), &mp_modulus, &(b->terms[i]));

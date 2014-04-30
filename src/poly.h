@@ -180,8 +180,7 @@ void init_polynom(pb_poly *new_poly, mp_int *chara);
 void init_polynom_size(pb_poly *new_poly, mp_int *chara, size_t size);
 
 pb_poly *build_polynom(int const * const c,
-		const size_t len,
-		ntru_context *ctx);
+		const size_t len);
 
 void erase_polynom(pb_poly *poly, size_t len);
 
