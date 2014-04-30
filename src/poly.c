@@ -410,7 +410,7 @@ bool pb_inverse_poly_q(pb_poly * const a,
 		}
 
 		if (get_degree(f) == 0)
-			goto OUT_OF_LOOP_Q;
+			break;
 
 		if (get_degree(f) < get_degree(g)) {
 			pb_exch(f, g);
@@ -421,7 +421,6 @@ bool pb_inverse_poly_q(pb_poly * const a,
 		pb_xor(b, c, b, ctx->N);
 	}
 
-OUT_OF_LOOP_Q:
 	k = k % ctx->N;
 
 	/* Fq(x) = x^(N-k) * b(x) */
@@ -504,7 +503,7 @@ bool pb_inverse_poly_p(pb_poly *a,
 		}
 
 		if (get_degree(f) == 0)
-			goto OUT_OF_LOOP_P;
+			break;
 
 		if (get_degree(f) < get_degree(g)) {
 			/* exchange f and g and exchange b and c */
@@ -546,7 +545,6 @@ bool pb_inverse_poly_p(pb_poly *a,
 		}
 	}
 
-OUT_OF_LOOP_P:
 	k = k % ctx->N;
 
 	/* Fp(x) = x^(N-k) * b(x) */
