@@ -56,6 +56,26 @@ void init_integer(mp_int *new_int)
 }
 
 /**
+ * Initialize one ore more mp_int and check if this was successful, the
+ * caller must free new_int with mp_clear().
+ *
+ * @param new_int a pointer to the mp_int you want to initialize
+ */
+void init_integers(mp_int *new_int, ...)
+{
+	mp_int *next_mp;
+	va_list args;
+
+	next_mp = new_int;
+	va_start(args, new_int);
+	while (next_mp != NULL) {
+		init_integer(next_mp);
+		next_mp = va_arg(args, mp_int*);
+	}
+	va_end(args);
+}
+
+/**
  * Initialize a Polynom with a pb_poly and a mp_int as characteristic.
  * Checks if everything went fine. The caller must free new_poly
  * with pb_clear().

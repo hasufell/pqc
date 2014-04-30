@@ -32,6 +32,9 @@
 #include <stdbool.h>
 
 
+
+void init_integers(mp_int *new_int, ...);
+
 unsigned int get_degree(pb_poly const * const poly);
 
 #define MP_SET(...) mp_set(__VA_ARGS__)
