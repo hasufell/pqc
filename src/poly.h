@@ -32,11 +32,6 @@
 #include <stdbool.h>
 
 
-
-void init_integers(mp_int *new_int, ...);
-
-unsigned int get_degree(pb_poly const * const poly);
-
 #define MP_SET(...) mp_set(__VA_ARGS__)
 
 #define MP_SET_INT(...) \
@@ -173,7 +168,10 @@ unsigned int get_degree(pb_poly const * const poly);
 				mp_error_to_string(result)); \
 }
 
+
 void init_integer(mp_int *new_int);
+
+void init_integers(mp_int *new_int, ...);
 
 void init_polynom(pb_poly *new_poly, mp_int *chara);
 
@@ -201,6 +199,8 @@ void pb_xor(pb_poly *a,
 		pb_poly *c,
 		const size_t len);
 
+unsigned int get_degree(pb_poly const * const poly);
+
 bool pb_inverse_poly_q(pb_poly *a,
 		pb_poly *Fq,
 		ntru_context *ctx);
@@ -210,5 +210,6 @@ bool pb_inverse_poly_p(pb_poly *a,
 		ntru_context *ctx);
 
 void draw_polynom(pb_poly * const poly);
+
 
 #endif /* NTRU_POLY_H */
