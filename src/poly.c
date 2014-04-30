@@ -377,8 +377,11 @@ bool pb_inverse_poly_q(pb_poly * const a,
 	int k = 0,
 		j = 0;
 	pb_poly *a_tmp, *b, *c, *f, *g;
+	mp_int mp_modulus;
 
 	/* general initialization of temp variables */
+	init_integer(&mp_modulus);
+	MP_SET_INT(&mp_modulus, (unsigned long)(ctx->q));
 	b = build_polynom(NULL, ctx->N + 1);
 	MP_SET(&(b->terms[0]), 1);
 	c = build_polynom(NULL, ctx->N + 1);
@@ -435,15 +438,11 @@ bool pb_inverse_poly_q(pb_poly * const a,
 
 	/* pull into positive space */
 	for (int i = ctx->N - 1; i >= 0; i--)
-		if (mp_cmp_d(&(Fq->terms[i]), 0) == MP_LT) {
-			mp_int mp_tmp;
-			init_integer(&mp_tmp);
-			MP_SET_INT(&mp_tmp, ctx->q);
-			MP_ADD(&(Fq->terms[i]), &mp_tmp, &(Fq->terms[i]));
-			mp_clear(&mp_tmp);
-		}
+		if (mp_cmp_d(&(Fq->terms[i]), 0) == MP_LT)
+			MP_ADD(&(Fq->terms[i]), &mp_modulus, &(Fq->terms[i]));
 
 	delete_polynom_multi(a_tmp, b, c, f, g, NULL);
+	mp_clear(&mp_modulus);
 
 	/* TODO: check if the f * Fq = 1 (mod p) condition holds true */
 
