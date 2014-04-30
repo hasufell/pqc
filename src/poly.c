@@ -35,7 +35,6 @@
 /*
  * static declarations
  */
-static unsigned int get_degree(pb_poly const * const poly);
 static void pb_mod2_to_modq(pb_poly * const a,
 		pb_poly *Fq,
 		ntru_context *ctx);
@@ -275,7 +274,7 @@ void pb_xor(pb_poly *a,
  * @param poly the polynomial
  * @return the degree
  */
-static unsigned int get_degree(pb_poly const * const poly)
+unsigned int get_degree(pb_poly const * const poly)
 {
 	unsigned int count = 0;
 
