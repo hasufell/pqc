@@ -135,6 +135,14 @@ unsigned int get_degree(pb_poly const * const poly);
 				mp_error_to_string(result)); \
 }
 
+#define PB_MP_MUL(...) \
+{ \
+	int result; \
+	if ((result = pb_mp_mul(__VA_ARGS__)) != MP_OKAY) \
+			NTRU_ABORT("Error multiplying polynomial with mp_int. %s", \
+				mp_error_to_string(result)); \
+}
+
 #define PB_ADD(...) \
 { \
 	int result; \
@@ -186,6 +194,8 @@ void pb_starmultiply(pb_poly *a,
 		pb_poly *c,
 		ntru_context *ctx,
 		unsigned int modulus);
+
+int pb_mp_mul(pb_poly *a, mp_int *b, pb_poly *c);
 
 void pb_xor(pb_poly *a,
 		pb_poly *b,

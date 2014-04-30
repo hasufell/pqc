@@ -271,6 +271,29 @@ void pb_starmultiply(pb_poly *a,
 }
 
 /**
+ * Calculate c = a * b where c and a are polynomials
+ * and b is an mp_int.
+ *
+ * @param a polynom
+ * @param b mp_int
+ * @param c polynom [out]
+ * @return error code of pb_mul()
+ */
+int pb_mp_mul(pb_poly *a, mp_int *b, pb_poly *c)
+{
+	int result;
+
+	pb_poly *b_poly = build_polynom(NULL, 1);
+	MP_COPY(b, &(b_poly->terms[0]));
+	printf("u converted to poly: "); draw_polynom(b_poly);
+	result = pb_mul(a, b_poly, c);
+
+	delete_polynom(b_poly);
+
+	return result;
+}
+
+/**
  * c = a XOR b
  *
  * @param a polynom (is allowed to be the same as param c)
