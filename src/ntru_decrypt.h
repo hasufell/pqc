@@ -26,5 +26,7 @@
 #include "context.h"
 
 int ntru_decrypt(char *encr_msg, pb_poly *private_key, ntru_context *context, char ** decr_msg);
+pb_poly* first_multiply(pb_poly*, char*, int);
+char* first_multiply(pb_poly*, pb_poly*, int);
 
 #endif /* NTRU_DECRYPT */
