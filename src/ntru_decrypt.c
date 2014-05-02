@@ -19,6 +19,18 @@
  * MA  02110-1301  USA
  */
 
+// Require: N , q, p, secret key f , inverse polynomial Fp , and encrypted message e.
 int ntru_decrypt(char *encr_msg, pb_poly *private_key, ntru_context *context, char ** decr_msg){
+	// StarMultiply(f, e, a, N, q)
+	for(int i = 0, i < N, i++){
+		if(a[i] < 0 ) {
+			a[i] = a[i] + q; // Make all coefficients positive
+		}
+		if(a[i] > q/2) {
+			a[i] = a[i] - q // Shift coefficients of a into range (−q/2, q/2)
+		}
+	}
+	// StarMultiply(a, Fp , d, N, p)
+	// {Decode returns the decrypted message, d, through the argument list.}
 	return 0;
 }
