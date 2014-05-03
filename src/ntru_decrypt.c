@@ -20,6 +20,7 @@
  */
 
 #include "ntru_decrypt.h"
+#include "poly.h"
 
 /*
  * Legend
@@ -38,7 +39,7 @@
 int ntru_decrypt(char *encr_msg, pb_poly *private_key, ntru_context *context, char ** decr_msg){
 	// toDo q = ?, p = ?, fp = ?
 
-	pb_poly *a = first_multiply(private_key, encr_msg, q);// StarMultiply(f, e, a, N, q)
+	//toDO StarMultiply(f, e, a, N, q)
 
 	for(int i = 0, i < N, i++){
 		if(a[i] < 0 ) {
@@ -48,20 +49,8 @@ int ntru_decrypt(char *encr_msg, pb_poly *private_key, ntru_context *context, ch
 			a[i] = a[i] - q // Shift coefficients of a into range (−q/2, q/2)
 		}
 	}
-	char* d = second_multiply(a, fp, p)// StarMultiply(a, Fp , d, N, p)
+	//toDo StarMultiply(a, Fp , d, N, p)
 
 	// {Decode returns the decrypted message, d, through the argument list.}
 	return d;
-}
-
-// toDo fix header file definition and types if needed!
-pb_poly* first_multiply(pb_poly *private_key, char *encr_msg, int q) {
-	// toDo a= f*e mod q
-	return NULL;
-}
-
-// toDo fix header file definition and types if needed!
-char* second_multiply(pb_poly *a, pb_poly *fp, int p) {
-	//toDo a*Fp mod p
-	return NULL;
 }
