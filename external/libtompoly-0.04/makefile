@@ -1,5 +1,5 @@
 #Makefile for GCC by Tom St Denis
-CFLAGS += -fPIC -I. -Os -Wall -W 
+CFLAGS += -fPIC -I. -Os -Wall -W -I../libtommath-0.42.0
 
 VERSION=0.04
 
