@@ -37,8 +37,7 @@
  * */
 
 // Require: N , q, p, secret key f , inverse polynomial Fp , and encrypted message e.
-int ntru_decrypt(pb_poly *encr_msg, pb_poly *private_key, ntru_context *context, char ** decr_msg){
-	// toDo fp = ?
+pb_poly* ntru_decrypt(pb_poly *encr_msg, pb_poly *private_key, pb_poly *Fp, ntru_context *context, char ** decr_msg){
 
 	unsigned int q = context->q;
 	unsigned int p = context->p;
@@ -62,13 +61,19 @@ int ntru_decrypt(pb_poly *encr_msg, pb_poly *private_key, ntru_context *context,
 
 	for(int i = 0, i < N, i++){
 		if(mp_cmp(&(a->terms[i]),&zero) == MP_LT) {		// Make all coefficients positive
-			a->terms[i] = a->terms[i] + q;
+			//a->terms[i] = a->terms[i] + q;
+			mp_add((&a->terms[i]),&mp_q,(&a->terms[i]));
 		}
 		if(mp_cmp(&(a->terms[i]), &mp_qdiv2) == MP_GT) {	// Shift coefficients of a into range (−q/2, q/2)
-			a->terms[i] = a->terms[i] - mp_q;
+			//a->terms[i] = a->terms[i] - mp_q;
+			mp_sub((&a->terms[i]),&mp_q,(&a->terms[i]));
 		}
 	}
-	//toDo StarMultiply(a, Fp , d, N, p)
+
+	pb_poly *d = build_polynom(NULL, N, context);
+
+	// StarMultiply(a, Fp , d, N, p)
+	pb_starmultiply(a, Fp, d, N, p);
 
 	// {Decode returns the decrypted message, d, through the argument list.}
 	return d;
