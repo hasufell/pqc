@@ -21,11 +21,12 @@
 
 #include "ntru_decrypt.h"
 #include "poly.h"
+#include "context.h"
 
 /*
  * Legend
  *
- * N : highest degree of the polynom
+ * N : maximal degree of the polynom
  * q : "is given" (... mod q)
  * p : "is given" (... mod p)
  * f : private key
@@ -36,10 +37,15 @@
  * */
 
 // Require: N , q, p, secret key f , inverse polynomial Fp , and encrypted message e.
-int ntru_decrypt(char *encr_msg, pb_poly *private_key, ntru_context *context, char ** decr_msg){
+int ntru_decrypt(pb_poly *encr_msg, pb_poly *private_key, ntru_context *context, char ** decr_msg){
 	// toDo q = ?, p = ?, fp = ?
+	unsigned int q = *context->q;
+	unsigned int p = *context->p;
+	unsigned int N = *context->N;
 
 	//toDO StarMultiply(f, e, a, N, q)
+	pb_poly *a;
+	pb_starmultiply(private_key, encr_msg, a, context, q);
 
 	for(int i = 0, i < N, i++){
 		if(a[i] < 0 ) {
