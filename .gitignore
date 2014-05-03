@@ -21,3 +21,5 @@ src/main.c
 src/main
 
 ./.settings/org.eclipse*
+
+.project
