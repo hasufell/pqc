@@ -19,18 +19,64 @@
  * MA  02110-1301  USA
  */
 
+#include "ntru_decrypt.h"
+
+/*
+ * Legend
+ *
+ * N : maximal degree of the polynom
+ * q : "is given" (... mod q)
+ * p : "is given" (... mod p)
+ * f : private key
+ * Fp: inverse of "modulo p"
+ * e : encrypted message
+ * a : result of first multiplication (StarMultiply(f, e, a, N, q))
+ * d : result of second multiplication (StarMultiply(a, Fp , d, N, p)), decrypted message
+ * */
+
 // Require: N , q, p, secret key f , inverse polynomial Fp , and encrypted message e.
-int ntru_decrypt(char *encr_msg, pb_poly *private_key, ntru_context *context, char ** decr_msg){
+pb_poly* ntru_decrypt(pb_poly *encr_msg, pb_poly *private_key, pb_poly *Fp, ntru_context *context, char ** decr_msg){
+
+	unsigned int q = context->q;
+	unsigned int p = context->p;
+	unsigned int N = context->N;
+	unsigned int i;
+
 	// StarMultiply(f, e, a, N, q)
-	for(int i = 0, i < N, i++){
-		if(a[i] < 0 ) {
-			a[i] = a[i] + q; // Make all coefficients positive
+	pb_poly *a = build_polynom(NULL, N, context);
+	pb_starmultiply(private_key, encr_msg, a, context, q);
+
+	mp_int mp_q;
+	mp_int mp_qdiv2;
+	mp_int zero;
+
+	init_integer(&mp_q);
+	init_integer(&mp_qdiv2);
+	init_integer(&zero);
+
+	MP_SET_INT(&mp_q, q);
+	mp_div_2(&mp_q, &mp_qdiv2);
+	mp_zero(&zero);
+
+	for(i = 0; i < N; i++){
+		if(mp_cmp(&(a->terms[i]),&zero) == MP_LT) {		// Make all coefficients positive
+			//a->terms[i] = a->terms[i] + q;
+			mp_add((&a->terms[i]),&mp_q,(&a->terms[i]));
 		}
-		if(a[i] > q/2) {
-			a[i] = a[i] - q // Shift coefficients of a into range (−q/2, q/2)
+		if(mp_cmp(&(a->terms[i]), &mp_qdiv2) == MP_GT) {	// Shift coefficients of a into range (−q/2, q/2)
+			//a->terms[i] = a->terms[i] - mp_q;
+			mp_sub((&a->terms[i]),&mp_q,(&a->terms[i]));
 		}
 	}
+
+	printf("%s\np:%d", "Nach dem StarMultiply: ", p);
+	draw_polynom(a);
+
+	pb_poly *d = build_polynom(NULL, N, context);
+
 	// StarMultiply(a, Fp , d, N, p)
+	pb_starmultiply(a, Fp, d, context, p);
+
 	// {Decode returns the decrypted message, d, through the argument list.}
-	return 0;
+	return d;
 }

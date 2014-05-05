@@ -25,6 +25,10 @@
 #include "poly.h"
 #include "context.h"
 
-int ntru_decrypt(char *encr_msg, pb_poly *private_key, ntru_context *context, char ** decr_msg);
+pb_poly* ntru_decrypt(pb_poly*,
+		pb_poly*,
+		pb_poly*,
+		ntru_context*,
+		char**);
 
 #endif /* NTRU_DECRYPT */
