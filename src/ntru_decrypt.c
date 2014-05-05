@@ -64,7 +64,7 @@ pb_poly* ntru_decrypt(pb_poly *encr_msg, pb_poly *priv_key,
 		if(mp_cmp(&(a->terms[i]),&zero) == MP_LT) {
 			mp_add((&a->terms[i]),&mp_q,(&a->terms[i]));
 		}
-		if(mp_cmp(&(a->terms[i]), &mp_qdiv2) == MP_GT) 
+		if(mp_cmp(&(a->terms[i]), &mp_qdiv2) == MP_GT) {
 			mp_sub((&a->terms[i]),&mp_q,(&a->terms[i]));
 		}
 	}
