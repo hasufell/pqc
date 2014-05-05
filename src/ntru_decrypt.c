@@ -37,6 +37,8 @@
  * 
  * 
  */
+pb_poly* ntru_decrypt(pb_poly *encr_msg, pb_poly *priv_key, 
+	pb_poly *priv_key_inv, ntru_context *context, char ** decr_msg){
 
 	unsigned int q = context->q;
 	unsigned int p = context->p;
@@ -44,7 +46,7 @@
 	unsigned int i;
 
 	pb_poly *a = build_polynom(NULL, N, context);
-	pb_starmultiply(private_key, encr_msg, a, context, q);
+	pb_starmultiply(priv_key, encr_msg, a, context, q);
 
 	mp_int mp_q;
 	mp_int mp_qdiv2;
@@ -69,7 +71,7 @@
 
 	pb_poly *d = build_polynom(NULL, N, context);
 
-	pb_starmultiply(a, Fp, d, context, p);
+	pb_starmultiply(a, priv_key_inv, d, context, p);
 	
 	return d;
 }
