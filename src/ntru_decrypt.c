@@ -45,8 +45,7 @@ pb_poly* ntru_decrypt(pb_poly *encr_msg, pb_poly *private_key, pb_poly *Fp, ntru
 	// StarMultiply(f, e, a, N, q)
 	pb_poly *a = build_polynom(NULL, N, context);
 	pb_starmultiply(private_key, encr_msg, a, context, q);
-	printf("%s\n", "Nach dem StarMultiply: ");
-	draw_polynom(a);
+
 	mp_int mp_q;
 	mp_int mp_qdiv2;
 	mp_int zero;
@@ -69,6 +68,9 @@ pb_poly* ntru_decrypt(pb_poly *encr_msg, pb_poly *private_key, pb_poly *Fp, ntru
 			mp_sub((&a->terms[i]),&mp_q,(&a->terms[i]));
 		}
 	}
+
+	printf("%s\np:%d", "Nach dem StarMultiply: ", p);
+	draw_polynom(a);
 
 	pb_poly *d = build_polynom(NULL, N, context);
 
