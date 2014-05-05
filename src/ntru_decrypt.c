@@ -21,28 +21,28 @@
 
 #include "ntru_decrypt.h"
 
-/*
- * Legend
- *
- * N : maximal degree of the polynom
- * q : "is given" (... mod q)
- * p : "is given" (... mod p)
- * f : private key
- * Fp: inverse of "modulo p"
- * e : encrypted message
- * a : result of first multiplication (StarMultiply(f, e, a, N, q))
- * d : result of second multiplication (StarMultiply(a, Fp , d, N, p)), decrypted message
- * */
 
-// Require: N , q, p, secret key f , inverse polynomial Fp , and encrypted message e.
-pb_poly* ntru_decrypt(pb_poly *encr_msg, pb_poly *private_key, pb_poly *Fp, ntru_context *context, char ** decr_msg){
+/** 
+ * Decryption of the given Polynom with the private key, its inverse
+ * and the fitting ntru_context
+ *
+ * @param encr_msg encrypted polynom with maximum length of N from
+ * 		the given context
+ * @param priv_key the polynom containing the private key to decrypt
+ * 		the message
+ * @param priv_key_inv the inverse polynome to the private key
+ * @param context the ntru_context 
+ * @param decr_msg may contain the decrypted polynome at some point
+ * @returns the decrypted polynome at the moment
+ * 
+ * 
+ */
 
 	unsigned int q = context->q;
 	unsigned int p = context->p;
 	unsigned int N = context->N;
 	unsigned int i;
 
-	// StarMultiply(f, e, a, N, q)
 	pb_poly *a = build_polynom(NULL, N, context);
 	pb_starmultiply(private_key, encr_msg, a, context, q);
 
@@ -59,24 +59,17 @@ pb_poly* ntru_decrypt(pb_poly *encr_msg, pb_poly *private_key, pb_poly *Fp, ntru
 	mp_zero(&zero);
 
 	for(i = 0; i < N; i++){
-		if(mp_cmp(&(a->terms[i]),&zero) == MP_LT) {		// Make all coefficients positive
-			//a->terms[i] = a->terms[i] + q;
+		if(mp_cmp(&(a->terms[i]),&zero) == MP_LT) {
 			mp_add((&a->terms[i]),&mp_q,(&a->terms[i]));
 		}
-		if(mp_cmp(&(a->terms[i]), &mp_qdiv2) == MP_GT) {	// Shift coefficients of a into range (−q/2, q/2)
-			//a->terms[i] = a->terms[i] - mp_q;
+		if(mp_cmp(&(a->terms[i]), &mp_qdiv2) == MP_GT) 
 			mp_sub((&a->terms[i]),&mp_q,(&a->terms[i]));
 		}
 	}
 
-	printf("%s\np:%d", "Nach dem StarMultiply: ", p);
-	draw_polynom(a);
-
 	pb_poly *d = build_polynom(NULL, N, context);
 
-	// StarMultiply(a, Fp , d, N, p)
 	pb_starmultiply(a, Fp, d, context, p);
-
-	// {Decode returns the decrypted message, d, through the argument list.}
+	
 	return d;
 }
