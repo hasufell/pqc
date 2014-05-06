@@ -155,12 +155,12 @@ static unsigned int check_allowed_zeros(pb_poly *polynom)
  * @param entropy_source the source of entropy you want
  * @return newly allocated polynomial, must be freed with delete_polynom()
  */
-pb_poly *ntru_get_random_poly_ternary(int length, int entropy_source)
+pb_poly *ntru_get_random_poly_ternary(size_t length, int entropy_source)
 {
 	mp_int chara;
 	init_integer(&chara);
 
-	mp_digit c;
+	mp_digit coefficient;
 	pb_poly *poly = malloc(sizeof(pb_poly));
 
 	init_polynom_size(poly, &chara, length);
@@ -169,14 +169,14 @@ pb_poly *ntru_get_random_poly_ternary(int length, int entropy_source)
 	for (unsigned int i = 0; i < length; i++) {
 		int sign;
 		if (entropy_source == GET_INT_FROM_RRAND) {
-			c = read_int_dev_random();
+			coefficient = read_int_dev_random();
 		} else if (entropy_source == GET_INT_FROM_URAND) {
-			c = read_int_dev_urandom();
+			coefficient = read_int_dev_urandom();
 		} else {
 			NTRU_ABORT("No suitable entropy source selectetd.\n");
 		}
-		c = get_random_ternary(c, &sign);
-		mp_set(&(poly->terms[i]), c);
+		coefficient = get_random_ternary(coefficient, &sign);
+		mp_set(&(poly->terms[i]), coefficient);
 		if (sign == 1)
 			poly->terms[i].sign = 1;
 	}
