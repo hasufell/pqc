@@ -131,7 +131,7 @@ static mp_int *get_random_bigint(mp_int *upper_bound, mp_int *lower_bound,
 }
 
 /**
- * Checks if the coefficients of a polynom are less then
+ * Checks if the coefficients of a polynom are less than
  * PERCENTAGE_OF_ZERO_ALLOWED zero
  *
  * @param polynom a pointer to the polynom you want to test [out]
