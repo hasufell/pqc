@@ -52,17 +52,17 @@ static mp_digit read_int_dev_random(void)
 {
 	int random_data;
 	mp_digit random_int;
-	size_t randomDataLen = 0;
+	size_t random_DataLen = 0;
 	random_data = open("/dev/random", O_RDONLY);
 
-	while (randomDataLen < sizeof(random_int)) {
+	while (random_DataLen < sizeof(random_int)) {
 		ssize_t result = read(random_data,
-				((char*) &random_int) + randomDataLen,
-				(sizeof(random_int)) - randomDataLen);
+				((char*) &random_int) + random_DataLen,
+				(sizeof(random_int)) - random_DataLen);
 		if (result < 0) {
 			NTRU_ABORT("Unable to read /dev/random.\n");
 		}
-		randomDataLen += result;
+		random_DataLen += result;
 	}
 	close(random_data);
 	return random_int;
