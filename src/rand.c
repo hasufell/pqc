@@ -91,7 +91,7 @@ static mp_digit read_int_dev_urandom(void)
  * out of a randomly chosen integer.
  * A zero is signed positiv.
  *
- * @param random_int a randomly chosen mp_digit [out]
+ * @param random_int a randomly chosen mp_digit
  * @param sign a integer to store the sign (1==positiv) [out]
  * @return random small integer from the set {-1, 0, 1}
  */
