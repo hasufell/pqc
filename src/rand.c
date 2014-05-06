@@ -36,7 +36,7 @@
 /*
  * static declarations
  */
-static mp_digit read_int_dev_random(void);
+static mp_digit get_int_dev_random(void);
 static mp_digit read_int_dev_urandom(void);
 static mp_digit get_random_ternary(mp_digit random_int, int* sign);
 static mp_int *get_random_bigint(mp_int *upper_bound, mp_int *lower_bound,
@@ -48,7 +48,7 @@ static unsigned int check_allowed_zeros(pb_poly *polynom);
  * 
  * @return the randomly chosen integer
  */
-static mp_digit read_int_dev_random(void)
+static mp_digit get_int_dev_random(void)
 {
 	int random_data;
 	mp_digit random_int;
@@ -169,7 +169,7 @@ pb_poly *ntru_get_random_poly_ternary(size_t length, int entropy_source)
 	for (unsigned int i = 0; i < length; i++) {
 		int sign;
 		if (entropy_source == GET_INT_FROM_RRAND) {
-			coefficient = read_int_dev_random();
+			coefficient = get_int_dev_random();
 		} else if (entropy_source == GET_INT_FROM_URAND) {
 			coefficient = read_int_dev_urandom();
 		} else {
