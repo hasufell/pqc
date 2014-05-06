@@ -92,7 +92,7 @@ static mp_digit get_int_dev_urandom(void)
  * A zero is signed positiv.
  *
  * @param random_int a randomly chosen mp_digit
- * @param sign a integer to store the sign (1==positiv) [out]
+ * @param sign an integer to store the sign (1==positiv) [out]
  * @return random small integer from the set {-1, 0, 1}
  */
 static mp_digit get_random_ternary(mp_digit random_int, int* sign)
