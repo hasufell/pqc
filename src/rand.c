@@ -39,7 +39,7 @@
 static mp_digit read_int_dev_random(void);
 static mp_digit read_int_dev_urandom(void);
 static mp_digit get_random_ternary(mp_digit random_int, int* sign);
-static mp_int *make_big_int(mp_int *upper_bound, mp_int *lower_bound,
+static mp_int *get_random_bigint(mp_int *upper_bound, mp_int *lower_bound,
 		int entropy_source);
 static int check_polynom(pb_poly *polynom);
 
@@ -119,7 +119,7 @@ static mp_digit get_random_ternary(mp_digit random_int, int* sign)
  * entropy_source random_int TODO
  * @return a mp_int with the random number
  */
-static mp_int *make_big_int(mp_int *upper_bound, mp_int *lower_bound,
+static mp_int *get_random_bigint(mp_int *upper_bound, mp_int *lower_bound,
 		int entropy_source)
 {
 	mp_int result;
