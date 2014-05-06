@@ -38,7 +38,7 @@
  */
 static mp_digit read_int_dev_random(void);
 static mp_digit read_int_dev_urandom(void);
-static mp_digit make_small_int(mp_digit random_int, int* sign);
+static mp_digit get_random_ternary(mp_digit random_int, int* sign);
 static mp_int *make_big_int(mp_int *upper_bound, mp_int *lower_bound,
 		int entropy_source);
 static int check_polynom(pb_poly *polynom);
@@ -95,7 +95,7 @@ static mp_digit read_int_dev_urandom(void)
  * @param sign a integer to store the sign (1==positiv) [out]
  * @return random small integer from the set {-1, 0, 1}
  */
-static mp_digit make_small_int(mp_digit random_int, int* sign)
+static mp_digit get_random_ternary(mp_digit random_int, int* sign)
 {
 	random_int = random_int % 3;
 
@@ -177,7 +177,7 @@ pb_poly *ntru_get_poly_small(int length, int entropy_source)
 		} else {
 			NTRU_ABORT("No suitable entropy source selectetd.\n");
 		}
-		c = make_small_int(c, &sign);
+		c = get_random_ternary(c, &sign);
 		mp_set(&(poly->terms[i]), c);
 		if (sign == 1)
 			poly->terms[i].sign = 1;
