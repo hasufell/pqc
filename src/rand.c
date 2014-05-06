@@ -155,7 +155,7 @@ static unsigned int check_allowed_zeros(pb_poly *polynom)
  * @param entropy_source the source of entropy you want
  * @return newly allocated polynomial, must be freed with delete_polynom()
  */
-pb_poly *ntru_get_poly_small(int length, int entropy_source)
+pb_poly *ntru_get_random_poly_ternary(int length, int entropy_source)
 {
 	mp_int chara;
 	init_integer(&chara);
