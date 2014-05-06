@@ -41,7 +41,7 @@ static mp_digit read_int_dev_urandom(void);
 static mp_digit get_random_ternary(mp_digit random_int, int* sign);
 static mp_int *get_random_bigint(mp_int *upper_bound, mp_int *lower_bound,
 		int entropy_source);
-static int check_polynom(pb_poly *polynom);
+static unsigned int check_allowed_zeros(pb_poly *polynom);
 
 /**
  * Reads a single mp_digit out of /dev/random and returns this mp_digit
@@ -140,12 +140,10 @@ static mp_int *get_random_bigint(mp_int *upper_bound, mp_int *lower_bound,
  *         -1 if the polynom zero coefficients are over
  *         PERCENTAGE_OF_ZERO_ALLOWED percent
  */
-static int check_polynom(pb_poly *polynom)
+static unsigned int check_allowed_zeros(pb_poly *polynom)
 {
-	int result = -1;
-
+	unsigned int result = -1;
 	//TODO
-
 	return result;
 }
 
