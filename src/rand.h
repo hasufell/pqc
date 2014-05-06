@@ -37,7 +37,7 @@
 #define GET_INT_FROM_RRAND 3
 
 pb_poly *ntru_get_random_poly_ternary(int length, int entropy_source);
-pb_poly *ntru_get_poly_big(size_t length, int entropy_source, mp_int *upper_bound,
+pb_poly *ntru_get_random_poly(size_t length, int entropy_source, mp_int *upper_bound,
 		mp_int *lower_bound);
 
 #endif /* NTRU_RAND_H */

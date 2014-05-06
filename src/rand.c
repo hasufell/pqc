@@ -192,7 +192,7 @@ pb_poly *ntru_get_random_poly_ternary(size_t length, int entropy_source)
  * @param entropy_source the source of entropy you want
  * @return newly allocated polynomial, must be freed with delete_polynom()
  */
-pb_poly *ntru_get_poly_big(int length, int entropy_source, mp_int *upper_bound,
+pb_poly *ntru_get_random_poly(int length, int entropy_source, mp_int *upper_bound,
 		mp_int *lower_bound)
 {
 	//TODO
