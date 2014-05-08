@@ -19,10 +19,18 @@
  * MA  02110-1301  USA
  */
 
-#ifndef PCQ_ENCRYPT_H
-#define PCQ_ENCRYPT_H
+#ifndef PQC_ENCRYPT_H
+#define PQC_ENCRYPT_H
 
 #include <tommath.h>
 #include <tompoly.h>
+#include "context.h"
+#include "poly.h"
 
-#endif
+void pb_encrypt(ntru_context *ctx, 
+		pb_poly *rnd,
+		pb_poly *msg,
+		pb_poly *pubKey,
+		pb_poly *out);
+
+#endif /* PQC_ENCRYPT_H */
