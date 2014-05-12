@@ -41,8 +41,8 @@ void pb_encrypt(ntru_context *ctx,
 		pb_poly *rnd,
 		pb_poly *msg,
 		pb_poly *pubKey,
-		pb_poly *out) {
-
+		pb_poly *out) 
+{
 		mp_int *tmpOut;
 		mp_int *tmpMsg;
 		mp_int mp_mod;
