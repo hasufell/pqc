@@ -30,16 +30,19 @@
 #include <tommath.h>
 #include <stdarg.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 
 #define MP_SET(...) mp_set(__VA_ARGS__)
 
-#define MP_SET_INT(...) \
+#define MP_SET_INT(a, b) \
 { \
 	int result; \
-	if ((result = mp_set_int(__VA_ARGS__)) != MP_OKAY) \
+	if ((result = mp_set_int(a, (unsigned long)abs(b))) != MP_OKAY) \
 			NTRU_ABORT("Error setting long constant. %s", \
 				mp_error_to_string(result)); \
+	if ((int)b < 0) \
+		mp_neg(a, a); \
 }
 
 #define MP_MUL(...) \

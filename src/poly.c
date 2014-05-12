@@ -138,22 +138,8 @@ pb_poly *build_polynom(int const * const c,
 
 	/* fill the polynom if c is not NULL */
 	if (c) {
-		for (unsigned int i = 0; i < len; i++) {
-			bool sign = false;
-			unsigned long unsigned_c;
-
-			if (c[i] < 0) {
-				unsigned_c = 0 - c[i];
-				sign = true;
-			} else {
-				unsigned_c = c[i];
-			}
-
-			MP_SET_INT(&(new_poly->terms[i]), unsigned_c);
-
-			if (sign == true)
-				mp_neg(&(new_poly->terms[i]), &(new_poly->terms[i]));
-		}
+		for (unsigned int i = 0; i < len; i++)
+			MP_SET_INT(&(new_poly->terms[i]), c[i]);
 	} else { /* fill with 0 */
 		for (unsigned int i = 0; i < len; i++)
 			MP_SET(&(new_poly->terms[i]), 0);
@@ -391,7 +377,6 @@ bool pb_inverse_poly_q(pb_poly * const a,
 	/* set g(x) = x^N − 1 */
 	g = build_polynom(NULL, ctx->N + 1);
 	MP_SET(&(g->terms[0]), 1);
-	mp_neg(&(g->terms[0]), &(g->terms[0]));
 	MP_SET(&(g->terms[ctx->N]), 1);
 
 	/* avoid side effects */
@@ -476,8 +461,7 @@ bool pb_inverse_poly_p(pb_poly *a,
 
 	/* set g(x) = x^N − 1 */
 	g = build_polynom(NULL, ctx->N + 1);
-	MP_SET(&(g->terms[0]), 1);
-	mp_neg(&(g->terms[0]), &(g->terms[0]));
+	MP_SET_INT(&(g->terms[0]), -1);
 	MP_SET(&(g->terms[ctx->N]), 1);
 
 	/* avoid side effects */
