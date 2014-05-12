@@ -35,7 +35,6 @@
 /*
  * static declarations
  */
-static unsigned int get_degree(pb_poly const * const poly);
 static void pb_mod2_to_modq(pb_poly * const a,
 		pb_poly *Fq,
 		ntru_context *ctx);
@@ -54,6 +53,26 @@ void init_integer(mp_int *new_int)
 		NTRU_ABORT("Error initializing the number. %s",
 				mp_error_to_string(result));
 	}
+}
+
+/**
+ * Initialize one ore more mp_int and check if this was successful, the
+ * caller must free new_int with mp_clear().
+ *
+ * @param new_int a pointer to the mp_int you want to initialize
+ */
+void init_integers(mp_int *new_int, ...)
+{
+	mp_int *next_mp;
+	va_list args;
+
+	next_mp = new_int;
+	va_start(args, new_int);
+	while (next_mp != NULL) {
+		init_integer(next_mp);
+		next_mp = va_arg(args, mp_int*);
+	}
+	va_end(args);
 }
 
 /**
@@ -98,7 +117,7 @@ void init_polynom_size(pb_poly *new_poly, mp_int *chara, size_t size)
  * pointer which is not clamped.
  *
  * If you want to fill a polyonmial of length 11 with zeros,
- * call build_polynom(NULL, 11, ctx).
+ * call build_polynom(NULL, 11).
  *
  * @param c array of polynomial coefficients, can be NULL
  * @param len size of the coefficient array, can be 0
@@ -107,8 +126,7 @@ void init_polynom_size(pb_poly *new_poly, mp_int *chara, size_t size)
  * with delete_polynom()
  */
 pb_poly *build_polynom(int const * const c,
-		const size_t len,
-		ntru_context *ctx)
+		const size_t len)
 {
 	pb_poly *new_poly;
 	mp_int chara;
@@ -120,23 +138,9 @@ pb_poly *build_polynom(int const * const c,
 
 	/* fill the polynom if c is not NULL */
 	if (c) {
-		for (unsigned int i = 0; i < len; i++) {
-			bool sign = false;
-			unsigned long unsigned_c;
-
-			if (c[i] < 0) {
-				unsigned_c = 0 - c[i];
-				sign = true;
-			} else {
-				unsigned_c = c[i];
-			}
-
-			MP_SET_INT(&(new_poly->terms[i]), unsigned_c);
-
-			if (sign == true)
-				mp_neg(&(new_poly->terms[i]), &(new_poly->terms[i]));
-		}
-	} else { /* fill with zeros */
+		for (unsigned int i = 0; i < len; i++)
+			MP_SET_INT(&(new_poly->terms[i]), c[i]);
+	} else { /* fill with 0 */
 		for (unsigned int i = 0; i < len; i++)
 			MP_SET(&(new_poly->terms[i]), 0);
 	}
@@ -221,7 +225,7 @@ void pb_starmultiply(pb_poly *a,
 	MP_SET_INT(&mp_modulus, (unsigned long)(modulus));
 
 	/* avoid side effects */
-	a_tmp = build_polynom(NULL, ctx->N, ctx);
+	a_tmp = build_polynom(NULL, ctx->N);
 	PB_COPY(a, a_tmp);
 	erase_polynom(c, ctx->N);
 
@@ -252,6 +256,29 @@ void pb_starmultiply(pb_poly *a,
 }
 
 /**
+ * Calculate c = a * b where c and a are polynomials
+ * and b is an mp_int.
+ *
+ * @param a polynom
+ * @param b mp_int
+ * @param c polynom [out]
+ * @return error code of pb_mul()
+ */
+int pb_mp_mul(pb_poly *a, mp_int *b, pb_poly *c)
+{
+	int result;
+
+	pb_poly *b_poly = build_polynom(NULL, 1);
+	MP_COPY(b, &(b_poly->terms[0]));
+	printf("u converted to poly: "); draw_polynom(b_poly);
+	result = pb_mul(a, b_poly, c);
+
+	delete_polynom(b_poly);
+
+	return result;
+}
+
+/**
  * c = a XOR b
  *
  * @param a polynom (is allowed to be the same as param c)
@@ -273,11 +300,11 @@ void pb_xor(pb_poly *a,
  * Get the degree of the polynomial.
  *
  * @param poly the polynomial
- * @return the degree
+ * @return the degree, -1 if polynom is empty
  */
-static unsigned int get_degree(pb_poly const * const poly)
+int get_degree(pb_poly const * const poly)
 {
-	unsigned int count = 0;
+	int count = -1;
 
 	for (int i = 0; i < poly->alloc; i++)
 		if (mp_iszero(&(poly->terms[i])) == MP_NO)
@@ -304,14 +331,13 @@ static void pb_mod2_to_modq(pb_poly * const a,
 		pb_poly *pb_tmp,
 				*pb_tmp2;
 		mp_int tmp_v;
-		pb_tmp = build_polynom(NULL, ctx->N, ctx);
+		pb_tmp = build_polynom(NULL, ctx->N);
 		v = v * 2;
 		init_integer(&tmp_v);
 		MP_SET_INT(&tmp_v, v);
-		pb_tmp2 = build_polynom(NULL, ctx->N, ctx);
+		pb_tmp2 = build_polynom(NULL, ctx->N);
 		MP_SET_INT(&(pb_tmp2->terms[0]), 2);
 
-		/* mod after sub or before? */
 		pb_starmultiply(a, Fq, pb_tmp, ctx, v);
 		PB_SUB(pb_tmp2, pb_tmp, pb_tmp);
 		PB_MOD(pb_tmp, &tmp_v, pb_tmp, ctx->N);
@@ -328,7 +354,7 @@ static void pb_mod2_to_modq(pb_poly * const a,
  * @param a polynomial to invert (is allowed to be the same as param Fq)
  * @param Fq polynomial [out]
  * @param ctx NTRU context
- * @return true/false for success/failure
+ * @return true if invertible, false if not
  */
 bool pb_inverse_poly_q(pb_poly * const a,
 		pb_poly *Fq,
@@ -337,34 +363,44 @@ bool pb_inverse_poly_q(pb_poly * const a,
 	int k = 0,
 		j = 0;
 	pb_poly *a_tmp, *b, *c, *f, *g;
+	mp_int mp_modulus;
 
-	b = build_polynom(NULL, ctx->N + 1, ctx);
+	/* general initialization of temp variables */
+	init_integer(&mp_modulus);
+	MP_SET_INT(&mp_modulus, (unsigned long)(ctx->q));
+	b = build_polynom(NULL, ctx->N + 1);
 	MP_SET(&(b->terms[0]), 1);
-	c = build_polynom(NULL, ctx->N + 1, ctx);
-	f = build_polynom(NULL, ctx->N + 1, ctx);
+	c = build_polynom(NULL, ctx->N + 1);
+	f = build_polynom(NULL, ctx->N + 1);
 	PB_COPY(a, f);
-	g = build_polynom(NULL, ctx->N + 1, ctx);
+
+	/* set g(x) = x^N − 1 */
+	g = build_polynom(NULL, ctx->N + 1);
 	MP_SET(&(g->terms[0]), 1);
-	mp_neg(&(g->terms[0]), &(g->terms[0]));
 	MP_SET(&(g->terms[ctx->N]), 1);
+
 	/* avoid side effects */
-	a_tmp = build_polynom(NULL, ctx->N, ctx);
+	a_tmp = build_polynom(NULL, ctx->N);
 	PB_COPY(a, a_tmp);
 	erase_polynom(Fq, ctx->N);
 
 	while (1) {
 		while (mp_cmp_d(&(f->terms[0]), 0) == MP_EQ) {
 			for (unsigned int i = 1; i <= ctx->N; i++) {
+				/* f(x) = f(x) / x */
 				MP_COPY(&(f->terms[i]), &(f->terms[i - 1]));
+				/* c(x) = c(x) * x */
 				MP_COPY(&(c->terms[ctx->N - i]), &(c->terms[ctx->N + 1 - i]));
 			}
 			MP_SET(&(f->terms[ctx->N]), 0);
 			MP_SET(&(c->terms[0]), 0);
 			k++;
+			if (get_degree(f) == -1)
+				return false;
 		}
 
 		if (get_degree(f) == 0)
-			goto OUT_OF_LOOP;
+			break;
 
 		if (get_degree(f) < get_degree(g)) {
 			pb_exch(f, g);
@@ -375,9 +411,12 @@ bool pb_inverse_poly_q(pb_poly * const a,
 		pb_xor(b, c, b, ctx->N);
 	}
 
-OUT_OF_LOOP:
 	k = k % ctx->N;
 
+	if (mp_cmp_d(&(b->terms[ctx->N]), 0) != MP_EQ)
+		return false;
+
+	/* Fq(x) = x^(N-k) * b(x) */
 	for (int i = ctx->N - 1; i >= 0; i--) {
 		j = i - k;
 		if (j < 0)
@@ -387,15 +426,144 @@ OUT_OF_LOOP:
 
 	pb_mod2_to_modq(a_tmp, Fq, ctx);
 
+	/* pull into positive space */
 	for (int i = ctx->N - 1; i >= 0; i--)
-		if (mp_cmp_d(&(Fq->terms[i]), 0) == MP_LT) {
-			mp_int mp_tmp;
-			init_integer(&mp_tmp);
-			MP_SET_INT(&mp_tmp, ctx->q);
-			MP_ADD(&(Fq->terms[i]), &mp_tmp, &(Fq->terms[i]));
-			mp_clear(&mp_tmp);
+		if (mp_cmp_d(&(Fq->terms[i]), 0) == MP_LT)
+			MP_ADD(&(Fq->terms[i]), &mp_modulus, &(Fq->terms[i]));
+
+	delete_polynom_multi(a_tmp, b, c, f, g, NULL);
+	mp_clear(&mp_modulus);
+
+	/* TODO: check if the f * Fq = 1 (mod p) condition holds true */
+
+	return true;
+}
+
+/**
+ * Invert the polynomial a modulo p.
+ *
+ * @param a polynomial to invert
+ * @param Fq polynomial [out]
+ * @param ctx NTRU context
+ */
+bool pb_inverse_poly_p(pb_poly *a,
+		pb_poly *Fp,
+		ntru_context *ctx)
+{
+	int k = 0,
+		j = 0;
+	pb_poly *a_tmp, *b, *c, *f, *g;
+	mp_int mp_modulus;
+
+	/* general initialization of temp variables */
+	init_integer(&mp_modulus);
+	MP_SET_INT(&mp_modulus, (unsigned long)(ctx->p));
+	b = build_polynom(NULL, ctx->N + 1);
+	MP_SET(&(b->terms[0]), 1);
+	c = build_polynom(NULL, ctx->N + 1);
+	f = build_polynom(NULL, ctx->N + 1);
+	PB_COPY(a, f);
+
+	/* set g(x) = x^N − 1 */
+	g = build_polynom(NULL, ctx->N + 1);
+	MP_SET_INT(&(g->terms[0]), -1);
+	MP_SET(&(g->terms[ctx->N]), 1);
+
+	/* avoid side effects */
+	a_tmp = build_polynom(NULL, ctx->N);
+	PB_COPY(a, a_tmp);
+	erase_polynom(Fp, ctx->N);
+
+	printf("f: "); draw_polynom(f);
+	printf("g: "); draw_polynom(g);
+
+	while (1) {
+		while (mp_cmp_d(&(f->terms[0]), 0) == MP_EQ) {
+			for (unsigned int i = 1; i <= ctx->N; i++) {
+				/* f(x) = f(x) / x */
+				MP_COPY(&(f->terms[i]), &(f->terms[i - 1]));
+				/* c(x) = c(x) * x */
+				MP_COPY(&(c->terms[ctx->N - i]), &(c->terms[ctx->N + 1 - i]));
+			}
+			MP_SET(&(f->terms[ctx->N]), 0);
+			MP_SET(&(c->terms[0]), 0);
+			k++;
 		}
 
+		if (get_degree(f) == 0)
+			break;
+
+		if (get_degree(f) < get_degree(g)) {
+			/* exchange f and g and exchange b and c */
+			pb_exch(f, g);
+			pb_exch(b, c);
+		}
+
+		{
+			pb_poly *c_tmp, *g_tmp;
+			mp_int u, mp_tmp;
+
+			init_integers(&u, &mp_tmp, NULL);
+			g_tmp = build_polynom(NULL, ctx->N + 1);
+			PB_COPY(g, g_tmp);
+			c_tmp = build_polynom(NULL, ctx->N + 1);
+			PB_COPY(c, c_tmp);
+
+			/* u = f[0] * g[0]^(-1) mod p
+			 *   = (f[0] mod p) * (g[0] inverse mod p) mod p */
+			MP_COPY(&(f->terms[0]), &mp_tmp);
+			MP_INVMOD(&(g->terms[0]), &mp_modulus, &u);
+			MP_MOD(&mp_tmp, &mp_modulus, &mp_tmp);
+			MP_MUL(&u, &mp_tmp, &u);
+			MP_MOD(&u, &mp_modulus, &u);
+
+			/* f = f - u * g mod p */
+			PB_MP_MUL(g_tmp, &u, g_tmp);
+			PB_SUB(f, g_tmp, f);
+			PB_MOD(f, &mp_modulus, f, ctx->N + 1);
+
+			/* b = b - u * c mod p */
+			PB_MP_MUL(c_tmp, &u, c_tmp);
+			PB_SUB(b, c_tmp, b);
+			PB_MOD(b, &mp_modulus, b, ctx->N + 1);
+
+			mp_clear(&mp_tmp);
+			delete_polynom_multi(c_tmp, g_tmp, NULL);
+		}
+	}
+
+	k = k % ctx->N;
+
+	/* Fp(x) = x^(N-k) * b(x) */
+	for (int i = ctx->N - 1; i >= 0; i--) {
+
+		/* b(X) = f[0]^(-1) * b(X) (mod p) */
+		{
+			pb_poly *poly_tmp;
+
+			poly_tmp = build_polynom(NULL, 1);
+
+			MP_INVMOD(&(f->terms[0]), &mp_modulus, &(poly_tmp->terms[0]));
+			MP_MOD(&(b->terms[i]), &mp_modulus, &(b->terms[i]));
+			MP_MUL(&(b->terms[i]), &(poly_tmp->terms[0]), &(b->terms[i]));
+
+			delete_polynom(poly_tmp);
+		}
+
+		j = i - k;
+		if (j < 0)
+			j = j + ctx->N;
+		MP_COPY(&(b->terms[i]), &(Fp->terms[j]));
+
+		/* delete_polynom(f_tmp); */
+	}
+
+	/* pull into positive space */
+	for (int i = ctx->N - 1; i >= 0; i--)
+		if (mp_cmp_d(&(Fp->terms[i]), 0) == MP_LT)
+			MP_ADD(&(Fp->terms[i]), &mp_modulus, &(Fp->terms[i]));
+
+	mp_clear(&mp_modulus);
 	delete_polynom_multi(a_tmp, b, c, f, g, NULL);
 
 	/* TODO: check if the f * Fq = 1 (mod p) condition holds true */
