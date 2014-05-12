@@ -73,5 +73,7 @@ pb_poly* ntru_decrypt(pb_poly *encr_msg, pb_poly *priv_key,
 
 	pb_starmultiply(a, priv_key_inv, d, context, p);
 	
+	pb_normalize(d,-1,1,context);
+
 	return d;
 }
