@@ -300,11 +300,11 @@ void pb_xor(pb_poly *a,
  * Get the degree of the polynomial.
  *
  * @param poly the polynomial
- * @return the degree
+ * @return the degree, -1 if polynom is empty
  */
-unsigned int get_degree(pb_poly const * const poly)
+int get_degree(pb_poly const * const poly)
 {
-	unsigned int count = 0;
+	int count = -1;
 
 	for (int i = 0; i < poly->alloc; i++)
 		if (mp_iszero(&(poly->terms[i])) == MP_NO)
@@ -354,7 +354,7 @@ static void pb_mod2_to_modq(pb_poly * const a,
  * @param a polynomial to invert (is allowed to be the same as param Fq)
  * @param Fq polynomial [out]
  * @param ctx NTRU context
- * @return true/false for success/failure
+ * @return true if invertible, false if not
  */
 bool pb_inverse_poly_q(pb_poly * const a,
 		pb_poly *Fq,
@@ -395,6 +395,8 @@ bool pb_inverse_poly_q(pb_poly * const a,
 			MP_SET(&(f->terms[ctx->N]), 0);
 			MP_SET(&(c->terms[0]), 0);
 			k++;
+			if (get_degree(f) == -1)
+				return false;
 		}
 
 		if (get_degree(f) == 0)
@@ -410,6 +412,9 @@ bool pb_inverse_poly_q(pb_poly * const a,
 	}
 
 	k = k % ctx->N;
+
+	if (mp_cmp_d(&(b->terms[ctx->N]), 0) != MP_EQ)
+		return false;
 
 	/* Fq(x) = x^(N-k) * b(x) */
 	for (int i = ctx->N - 1; i >= 0; i--) {

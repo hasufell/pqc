@@ -202,7 +202,7 @@ void pb_xor(pb_poly *a,
 		pb_poly *c,
 		const size_t len);
 
-unsigned int get_degree(pb_poly const * const poly);
+int get_degree(pb_poly const * const poly);
 
 bool pb_inverse_poly_q(pb_poly *a,
 		pb_poly *Fq,
