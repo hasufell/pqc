@@ -25,12 +25,16 @@
 #include "rand.h"
 #include <math.h>
 #include "poly.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <tompoly.h>
 #include <tommath.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <unistd.h>
 
 /*
@@ -80,6 +84,7 @@ static mp_digit get_int_dev_urandom(void)
 	ssize_t result;
 	random_data = open("/dev/urandom", O_RDONLY);
 
+	random_data = open("/dev/urandom", O_RDONLY);
 	if ((result = read(random_data, &random_int, sizeof(random_int))) < 0)
 		NTRU_ABORT("Unable to read /dev/urandom.\n");
 	close(random_data);
@@ -105,8 +110,10 @@ static mp_digit get_random_ternary(mp_digit random_int, int* sign)
 		random_int = 1;
 		*sign = 1;
 	} else {
+		random_int = 1;
 		*sign = 0;
 	}
+
 	return random_int;
 }
 
