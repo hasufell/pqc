@@ -30,15 +30,19 @@
 #include <tommath.h>
 #include <stdarg.h>
 #include <stdbool.h>
+#include <stdlib.h>
+
 
 #define MP_SET(...) mp_set(__VA_ARGS__)
 
-#define MP_SET_INT(...) \
+#define MP_SET_INT(a, b) \
 { \
 	int result; \
-	if ((result = mp_set_int(__VA_ARGS__)) != MP_OKAY) \
+	if ((result = mp_set_int(a, (unsigned long)abs(b))) != MP_OKAY) \
 			NTRU_ABORT("Error setting long constant. %s", \
 				mp_error_to_string(result)); \
+	if ((int)b < 0) \
+		mp_neg(a, a); \
 }
 
 #define MP_MUL(...) \
@@ -105,6 +109,14 @@
 				mp_error_to_string(result)); \
 }
 
+#define MP_INVMOD(...) \
+{ \
+	int result; \
+	if ((result = mp_invmod(__VA_ARGS__)) != MP_OKAY) \
+			NTRU_ABORT("Error computing modular inverse. %s", \
+				mp_error_to_string(result)); \
+}
+
 #define MP_EXPT_D(...) \
 { \
 	int result; \
@@ -118,6 +130,14 @@
 	int result; \
 	if ((result = pb_mul(__VA_ARGS__)) != MP_OKAY) \
 			NTRU_ABORT("Error multiplying polynomials. %s", \
+				mp_error_to_string(result)); \
+}
+
+#define PB_MP_MUL(...) \
+{ \
+	int result; \
+	if ((result = pb_mp_mul(__VA_ARGS__)) != MP_OKAY) \
+			NTRU_ABORT("Error multiplying polynomial with mp_int. %s", \
 				mp_error_to_string(result)); \
 }
 
@@ -151,15 +171,17 @@
 				mp_error_to_string(result)); \
 }
 
+
 void init_integer(mp_int *new_int);
+
+void init_integers(mp_int *new_int, ...);
 
 void init_polynom(pb_poly *new_poly, mp_int *chara);
 
 void init_polynom_size(pb_poly *new_poly, mp_int *chara, size_t size);
 
 pb_poly *build_polynom(int const * const c,
-		const size_t len,
-		ntru_context *ctx);
+		const size_t len);
 
 void erase_polynom(pb_poly *poly, size_t len);
 
@@ -173,13 +195,21 @@ void pb_starmultiply(pb_poly *a,
 		ntru_context *ctx,
 		unsigned int modulus);
 
+int pb_mp_mul(pb_poly *a, mp_int *b, pb_poly *c);
+
 void pb_xor(pb_poly *a,
 		pb_poly *b,
 		pb_poly *c,
 		const size_t len);
 
+int get_degree(pb_poly const * const poly);
+
 bool pb_inverse_poly_q(pb_poly *a,
 		pb_poly *Fq,
+		ntru_context *ctx);
+
+bool pb_inverse_poly_p(pb_poly *a,
+		pb_poly *Fp,
 		ntru_context *ctx);
 
 void draw_polynom(pb_poly * const poly);
