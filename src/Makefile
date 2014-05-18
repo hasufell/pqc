@@ -34,7 +34,7 @@ else
 PQC_LIBS = libpqc.a
 endif
 # CUNIT_LIBS = -lcunit
-LIBS += -L.
+LIBS += -L. -lgmp -lmpfr -lm
 
 # objects
 PQC_OBJS = rand.o poly.o mem.o ntru_decrypt.o pqc_encrypt.o
@@ -47,10 +47,14 @@ INCS = -I.
 ifndef UNBUNDLE
 LIBTOMMATH = ../external/libtommath-0.42.0/libtommath.a
 LIBTOMPOLY = ../external/libtompoly-0.04/libtompoly.a
-INCS += -I../external/libtommath-0.42.0 -I../external/libtompoly-0.04
+LIBFLINT = ../external/flint-2.4.3/libflint.a
+INCS += -I../external/libtommath-0.42.0 \
+		-I../external/libtompoly-0.04 \
+		-I../external/flint-2.4.3
 else
 LIBTOMMATH = -ltommath
 LIBTOMPOLY = -ltompoly
+LIBFLINT = -lflint
 endif
 
 
@@ -69,18 +73,22 @@ $(LIBTOMMATH):
 
 $(LIBTOMPOLY):
 	$(MAKE) -C ../external/libtompoly-0.04
+
+$(LIBFLINT):
+	cd ../external/flint-2.4.3 && ./configure --prefix=/usr --with-gmp=/usr --with-mpfr=/usr --disable-shared
+	$(MAKE) -C ../external/flint-2.4.3
 endif
 
 libpqc.a: $(PQC_OBJS) $(PQC_HEADERS)
 	$(AR) cru libpqc.a $(PQC_OBJS)
 
-libpqc.so: libpqc.a $(PQC_HEADERS) $(LIBTOMMATH) $(LIBTOMPOLY)
+libpqc.so: libpqc.a $(PQC_HEADERS) $(LIBTOMMATH) $(LIBTOMPOLY) $(LIBFLINT)
 	$(CC) -shared $(CFLAGS) -o $@ $(LDFLAGS) \
-		libpqc.a $(LIBTOMMATH) $(LIBTOMPOLY) $(LIBS)
+		libpqc.a $(LIBTOMMATH) $(LIBTOMPOLY) $(LIBFLINT) $(LIBS)
 
-main: main.o libpqc.a $(LIBTOMMATH) $(LIBTOMPOLY)
+main: main.o libpqc.a $(LIBTOMMATH) $(LIBTOMPOLY) $(LIBFLINT)
 	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) \
-		main.o $(LIBTOMPOLY) libpqc.a $(LIBTOMPOLY) $(LIBTOMMATH) $(LIBS)
+		main.o $(LIBTOMPOLY) libpqc.a $(LIBTOMPOLY) $(LIBTOMMATH) $(LIBFLINT) $(LIBS)
 
 install:
 	$(INSTALL_DIR) "$(DESTDIR)$(INSTALL_BINDIR)"
