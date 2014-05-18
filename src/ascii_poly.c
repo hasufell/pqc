@@ -19,11 +19,11 @@
  * MA  02110-1301  USA
  */
 
-#include "ascii_poly.h"
 #include "context.h"
 #include "err.h"
 #include "mem.h"
 #include "poly.h"
+#include "ascii_poly.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -101,16 +101,24 @@ char *polynom_to_ascii(pb_poly *to_ascii)
 	char *tmp_ptr = string;
 	u_int8_t ascii_value = 0;
 
+	/* every char */
 	for (u_int32_t i = 0; i < length_poly; i += ASCII_DIGITS) {
+		/* every bit*/
 		for (u_int32_t j = 0; j < ASCII_DIGITS; j++) {
+			/* get the bit */
 			if (mp_toradix(&(to_ascii->terms[i + j]), &bit_buffer, 2)) {
 				return NULL;
 			}
+			/* bit as integer */
 			u_int8_t bit = atoi(&bit_buffer);
+			/* bitshift to the left */
 			ascii_value <<= 1;
+			/* set the new bit and keep the other */
 			ascii_value |= bit;
 		}
-		*tmp_ptr++ = ascii_value;
+		/* char into string */
+		*tmp_ptr++ = (char) ascii_value;
+		/* reset for next char */
 		ascii_value = 0;
 	}
 	return string;
