@@ -23,5 +23,6 @@
 #define ASCII_POLY_H_
 
 pb_poly *ascii_to_poly(char *to_poly);
+char *polynom_to_ascii(pb_poly *to_ascii);
 
 #endif /* ASCII_POLY_H_ */
