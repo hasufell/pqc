@@ -600,3 +600,37 @@ void draw_polynom(pb_poly * const poly)
 	}
 	printf("\n");
 }
+
+void pb_normalize(pb_poly *poly, int low_border, int high_border, ntru_context *ctx){
+	unsigned int p = ctx->p;
+	unsigned int N = ctx->N;
+
+	mp_int mp_p;
+	mp_int mp_low_border;
+	mp_int mp_high_border;
+
+	init_integer(&mp_low_border);
+	init_integer(&mp_high_border);
+	init_integer(&mp_p);
+
+	MP_SET_INT(&mp_p, p);
+	MP_SET_INT(&mp_low_border,(unsigned long)abs(low_border));
+	mp_neg(&mp_low_border,&mp_low_border);
+	MP_SET_INT(&mp_high_border,high_border);
+
+
+	unsigned int i;
+	for(i = 0; i < N; i++){
+		if(mp_cmp(&(poly->terms[i]),&mp_low_border) == MP_LT) {
+			mp_add(&(poly->terms[i]),&mp_p,&(poly->terms[i]));
+		} else if(mp_cmp(&(poly->terms[i]),&mp_high_border) == MP_GT) {
+			mp_sub(&(poly->terms[i]),&mp_p,&(poly->terms[i]));
+		}
+	}
+}
+
+void draw_mp_int(mp_int *digit) {
+	char buf[8192];
+	mp_toradix(digit, buf, 10);
+	printf("%s\n",buf);
+}

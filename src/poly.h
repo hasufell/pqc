@@ -214,4 +214,11 @@ bool pb_inverse_poly_p(pb_poly *a,
 
 void draw_polynom(pb_poly * const poly);
 
+void pb_normalize(pb_poly*,
+		int,
+		int,
+		ntru_context*);
+
+void draw_mp_int(mp_int*);
+
 #endif /* NTRU_POLY_H */

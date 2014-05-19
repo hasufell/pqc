@@ -37,8 +37,8 @@ endif
 LIBS += -L.
 
 # objects
-PQC_OBJS = rand.o poly.o mem.o
-PQC_HEADERS = err.h rand.h poly.h context.h
+PQC_OBJS = rand.o poly.o mem.o ntru_decrypt.o
+PQC_HEADERS = err.h rand.h poly.h context.h ntru_decrypt.h
 # CUNIT_OBJS = cunit.o
 
 # includes
