@@ -43,13 +43,14 @@
 static mp_digit get_int_dev_random(void);
 static mp_digit get_int_dev_urandom(void);
 static mp_digit get_random_ternary(mp_digit random_int, int* sign);
-static mp_int *get_random_bigint(mp_int *upper_bound, mp_int *lower_bound,
+static mp_int *get_random_bigint(mp_int *upper_bound,
+		mp_int *lower_bound,
 		int entropy_source);
 static unsigned int check_allowed_zeros(pb_poly *polynom);
 
 /**
  * Reads a single mp_digit out of /dev/random and returns this mp_digit
- * 
+ *
  * @return the randomly chosen integer
  */
 static mp_digit get_int_dev_random(void)
@@ -126,11 +127,12 @@ static mp_digit get_random_ternary(mp_digit random_int, int* sign)
  * entropy_source random_int TODO
  * @return a mp_int with the random number
  */
-static mp_int *get_random_bigint(mp_int *upper_bound, mp_int *lower_bound,
+static mp_int *get_random_bigint(mp_int *upper_bound,
+		mp_int *lower_bound,
 		int entropy_source)
 {
-	mp_int result;
-	init_integer(&result);
+	mp_int *result = NULL;
+	init_integer(result);
 
 	//TODO
 
@@ -193,14 +195,19 @@ pb_poly *ntru_get_random_poly_ternary(size_t length, int entropy_source)
 
 /**
  * Gets a random polynomial with coefficients
- * from the the borders of lower_bound to upper_bound using the given entropy source
+ * from the the borders of lower_bound to upper_bound
+ * using the given entropy source
  *
  * @param length the amount of coefficients
  * @param entropy_source the source of entropy you want
  * @return newly allocated polynomial, must be freed with delete_polynom()
  */
-pb_poly *ntru_get_random_poly(int length, int entropy_source, mp_int *upper_bound,
+pb_poly *ntru_get_random_poly(int length,
+		int entropy_source,
+		mp_int *upper_bound,
 		mp_int *lower_bound)
 {
 	//TODO
+
+	return NULL;
 }
