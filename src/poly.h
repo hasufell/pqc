@@ -214,5 +214,4 @@ bool pb_inverse_poly_p(pb_poly *a,
 
 void draw_polynom(pb_poly * const poly);
 
-
 #endif /* NTRU_POLY_H */

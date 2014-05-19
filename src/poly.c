@@ -42,7 +42,7 @@ static void pb_mod2_to_modq(pb_poly * const a,
 
 /**
  * Initialize a mp_int and check if this was successful, the
- * caller must free new_int with mp_clear().
+ * caller must free new_int.
  *
  * @param new_int a pointer to the mp_int you want to initialize
  */

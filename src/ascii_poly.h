@@ -19,25 +19,10 @@
  * MA  02110-1301  USA
  */
 
-#ifndef NTRU_RAND_H
-#define NTRU_RAND_H
+#ifndef ASCII_POLY_H_
+#define ASCII_POLY_H_
 
-#include "context.h"
+pb_poly *ascii_to_poly(char *to_poly);
+char *polynom_to_ascii(pb_poly *to_ascii);
 
-#include <tompoly.h>
-
-/**
- * Use the /dev/urandom device as entropy source.
- */
-#define GET_INT_FROM_URAND 2
-
-/**
- * Use the /dev/random device as entropy source.
- */
-#define GET_INT_FROM_RRAND 3
-
-pb_poly *ntru_get_random_poly_ternary(int length, int entropy_source);
-pb_poly *ntru_get_random_poly(size_t length, int entropy_source, mp_int *upper_bound,
-		mp_int *lower_bound);
-
-#endif /* NTRU_RAND_H */
+#endif /* ASCII_POLY_H_ */
