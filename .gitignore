@@ -7,6 +7,7 @@ latex/
 *.la
 *.a
 *.o
+*.d
 
 # targets
 
