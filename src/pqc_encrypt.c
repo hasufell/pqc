@@ -19,46 +19,46 @@
  * MA  02110-1301  USA
  */
 
-#include "pcq_encrypt.h"
+#include "pqc_encrypt.h"
 
 /*
  * encrypt the msg, using the math:
  * e = (h ∗ r) + m (mod q)
- * 
+ *
  * e = the encrypted poly
  * h = the public key
  * r = the random poly
  * m = the message poly
  * q = large mod
- * 
+ *
  * @param ctx ntru_context* the ntru context
  * @param rnd pb_poly*   	the random poly
  * @param msg pb_poly* 		the message to encrypt
  * @param pubKey pb_poly* 	the public key
  * @param out pb_poly* 		the output poly
  */
-void pb_encrypt(ntru_context *ctx, 
+void pb_encrypt(ntru_context *ctx,
 		pb_poly *rnd,
 		pb_poly *msg,
 		pb_poly *pubKey,
-		pb_poly *out) 
+		pb_poly *out)
 {
 		mp_int *tmpOut;
 		mp_int *tmpMsg;
-		mp_int mp_mod;
-		
-		init_integer(&mp_mod);
-		MP_SET_INT(&mp_mod,(unsigned long)ctx->q);
-		
+		mp_int mp_int_mod;
+
+		init_integer(&mp_int_mod);
+		MP_SET_INT(&mp_int_mod,(unsigned long)ctx->q);
+
 		pb_starmultiply(pubKey, rnd, out, ctx, ctx->q);
-		
+
 		tmpOut = out->terms;
 		tmpMsg = msg->terms;
-		
+
 		for(unsigned int i = 0; i <= ctx->N-1; i++) {
 			mp_add(tmpOut,tmpMsg,tmpOut);
-			mp_mod(tmpOut,mp_mod,tmpOut);
-			
+			mp_mod(tmpOut,&mp_int_mod,tmpOut);
+
 			tmpOut++;
 			tmpMsg++;
 		}
