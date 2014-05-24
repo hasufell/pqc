@@ -79,9 +79,8 @@ static void poly_mod2_to_modq(fmpz_poly_t a,
 /**
  * Initializes and builds a polynomial with the
  * coefficient values of c[] of size len within NTRU
- * context ctx and returns a newly allocated polynomial
- * pointer which is not clamped. For an empty polynom,
- * both parameters can be NULL/0.
+ * context ctx and returns a newly allocated polynomial.
+ * For an empty polynom, both parameters can be NULL/0.
  *
  * @param c array of polynomial coefficients, can be NULL
  * @param len size of the coefficient array, can be 0
