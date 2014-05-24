@@ -35,6 +35,7 @@ typedef struct keypair keypair;
 
 struct keypair {
 	fmpz_poly_t priv;
+	fmpz_poly_t priv_inv;
 	fmpz_poly_t pub;
 };
 

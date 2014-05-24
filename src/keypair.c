@@ -38,11 +38,11 @@ bool ntru_create_keypair(
 	bool retval = true;
 	fmpz_poly_t Fq,
 				Fp,
-				priv;
+				pub;
 
 	fmpz_poly_init(Fq);
 	fmpz_poly_init(Fp);
-	fmpz_poly_init(priv);
+	fmpz_poly_init(pub);
 
 
 	if (!poly_inverse_poly_q(f, Fq, ctx)) {
@@ -55,20 +55,21 @@ bool ntru_create_keypair(
 		goto cleanup;
 	}
 
-	poly_starmultiply(Fq, g, priv, ctx, ctx->q);
-	fmpz_poly_scalar_mul_ui(priv, priv, ctx->p);
-	fmpz_poly_mod(priv, ctx->q);
+	poly_starmultiply(Fq, g, pub, ctx, ctx->q);
+	fmpz_poly_scalar_mul_ui(pub, pub, ctx->p);
+	fmpz_poly_mod(pub, ctx->q);
 
 	fmpz_poly_init(pair->priv);
 	fmpz_poly_init(pair->pub);
 
-	fmpz_poly_set(pair->priv, priv);
-	fmpz_poly_set(pair->pub, Fp);
+	fmpz_poly_set(pair->priv, f);
+	fmpz_poly_set(pair->priv_inv, Fp);
+	fmpz_poly_set(pair->pub, pub);
 
 cleanup:
 	fmpz_poly_clear(Fq);
 	fmpz_poly_clear(Fp);
-	fmpz_poly_clear(priv);
+	fmpz_poly_clear(pub);
 	return retval;
 }
 
