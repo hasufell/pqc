@@ -8,8 +8,6 @@ clean:
 	$(MAKE) -C src clean
 
 clean-all: clean
-	$(MAKE) -C external/libtommath-0.42.0 clean
-	$(MAKE) -C external/libtompoly-0.04 clean
 	$(MAKE) -C external/flint-2.4.3 clean
 
 doc:
