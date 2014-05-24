@@ -602,3 +602,26 @@ cleanup:
 
 	return retval;
 }
+
+/**
+ * Draws a polynomial to stdout.
+ *
+ * @param poly draw this
+ */
+void poly_draw(fmpz_poly_t poly)
+{
+	fmpz_poly_print(poly);
+	flint_printf("\n");
+}
+
+/**
+ * Draws a polynomial to stdout,
+ * in pretty format.
+ *
+ * @param poly draw this
+ */
+void poly_draw_pretty(fmpz_poly_t poly)
+{
+	fmpz_poly_print_pretty(poly, "x");
+	flint_printf("\n");
+}

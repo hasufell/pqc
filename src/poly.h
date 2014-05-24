@@ -70,5 +70,9 @@ bool poly_inverse_poly_p(fmpz_poly_t a,
 		fmpz_poly_t Fp,
 		ntru_context *ctx);
 
+void poly_draw(fmpz_poly_t poly);
+
+void poly_draw_pretty(fmpz_poly_t poly);
+
 
 #endif /* NTRU_POLY_H */
