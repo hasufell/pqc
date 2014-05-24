@@ -30,9 +30,10 @@
 #include <fmpz.h>
 
 
-void ntru_encrypt_poly(fmpz_poly_t rnd,
+void ntru_encrypt_poly(
 		fmpz_poly_t msg,
-		fmpz_poly_t pubKey,
+		fmpz_poly_t pub_key,
+		fmpz_poly_t rnd,
 		fmpz_poly_t out,
 		ntru_context *ctx);
 

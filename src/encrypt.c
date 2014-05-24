@@ -35,34 +35,21 @@
  * m = the message poly
  * q = large mod
  *
- * @param ctx ntru_context* the ntru context
- * @param rnd pb_poly*   	the random poly
  * @param msg pb_poly* 		the message to encrypt
  * @param pubKey pb_poly* 	the public key
+ * @param rnd pb_poly*   	the random poly
  * @param out pb_poly* 		the output poly [out]
+ * @param ctx ntru_context* the ntru context
  */
-void ntru_encrypt_poly(fmpz_poly_t rnd,
+void ntru_encrypt_poly(
 		fmpz_poly_t msg,
 		fmpz_poly_t pub_key,
+		fmpz_poly_t rnd,
 		fmpz_poly_t out,
 		ntru_context *ctx)
 {
-	poly_starmultiply(pub_key, rnd, out, ctx, ctx->q);
-
 	fmpz_poly_zero(out);
-
-	for(unsigned int i = 0; i <= ctx->N - 1; i++) {
-		fmpz_poly_t tmp_poly;
-		fmpz_t tmp_coeff;
-		fmpz *e_coeff_i = fmpz_poly_get_coeff_ptr(out, i),
-			 *m_coeff_i = fmpz_poly_get_coeff_ptr(msg, i);
-
-		fmpz_poly_init(tmp_poly);
-		fmpz_init(tmp_coeff);
-
-		fmpz_add_n(tmp_coeff, e_coeff_i, m_coeff_i);
-		fmpz_mod_ui(tmp_coeff, tmp_coeff, ctx->q);
-
-		fmpz_poly_set_coeff_fmpz(out, i, tmp_coeff);
-	}
+	poly_starmultiply(pub_key, rnd, out, ctx, ctx->q);
+	fmpz_poly_add(out, out, msg);
+	fmpz_poly_mod_unsigned(out, ctx->q);
 }
