@@ -50,7 +50,7 @@ bool ntru_create_keypair(
 		goto cleanup;
 	}
 
-	if (!poly_inverse_poly_q(f, Fp, ctx)) {
+	if (!poly_inverse_poly_p(f, Fp, ctx)) {
 		retval = false;
 		goto cleanup;
 	}
