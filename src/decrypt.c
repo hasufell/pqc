@@ -34,9 +34,8 @@
  * @param priv_key the polynom containing the private key to decrypt
  * 		the message
  * @param priv_key_inv the inverse polynome to the private key
- * @param context the ntru_context
  * @param out the result polynom is written in here [out]
- *
+ * @param ctx the ntru_context
  */
 void ntru_decrypt_poly(
 		fmpz_poly_t encr_msg,

@@ -36,7 +36,7 @@
  * q = large mod
  *
  * @param msg pb_poly* 		the message to encrypt
- * @param pubKey pb_poly* 	the public key
+ * @param pub_key pb_poly* 	the public key
  * @param rnd pb_poly*   	the random poly
  * @param out pb_poly* 		the output poly [out]
  * @param ctx ntru_context* the ntru context

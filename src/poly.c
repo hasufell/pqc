@@ -433,7 +433,7 @@ cleanup:
  * and Fast NTRU Key Creation."
  *
  * @param a polynomial to invert
- * @param Fq polynomial [out]
+ * @param Fp polynomial [out]
  * @param ctx NTRU context
  */
 bool poly_inverse_poly_p(fmpz_poly_t a,
