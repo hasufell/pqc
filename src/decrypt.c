@@ -19,10 +19,13 @@
  * MA  02110-1301  USA
  */
 
-#include "ntru_decrypt.h"
+#include "decrypt.h"
+
+#include <fmpz_poly.h>
+#include <fmpz.h>
 
 
-/** 
+/**
  * Decryption of the given Polynom with the private key, its inverse
  * and the fitting ntru_context
  *
@@ -31,49 +34,23 @@
  * @param priv_key the polynom containing the private key to decrypt
  * 		the message
  * @param priv_key_inv the inverse polynome to the private key
- * @param context the ntru_context 
- * @param decr_msg may contain the decrypted polynome at some point
- * @returns the decrypted polynome at the moment
- * 
- * 
+ * @param context the ntru_context
+ * @param out the result polynom is written in here [out]
+ *
  */
-pb_poly* ntru_decrypt(pb_poly *encr_msg, pb_poly *priv_key, 
-	pb_poly *priv_key_inv, ntru_context *context, char ** decr_msg){
+void ntru_decrypt_poly(
+		fmpz_poly_t encr_msg,
+		fmpz_poly_t priv_key,
+		fmpz_poly_t priv_key_inv,
+		fmpz_poly_t out,
+		ntru_context *ctx)
+{
+	fmpz_poly_t a;
 
-	unsigned int q = context->q;
-	unsigned int p = context->p;
-	unsigned int N = context->N;
-	unsigned int i;
+	fmpz_poly_init(a);
+	fmpz_poly_zero(a);
 
-	pb_poly *a = build_polynom(NULL, N);
-	pb_starmultiply(priv_key, encr_msg, a, context, q);
-
-	mp_int mp_q;
-	mp_int mp_qdiv2;
-	mp_int zero;
-
-	init_integer(&mp_q);
-	init_integer(&mp_qdiv2);
-	init_integer(&zero);
-
-	MP_SET_INT(&mp_q, q);
-	mp_div_2(&mp_q, &mp_qdiv2);
-	mp_zero(&zero);
-
-	for(i = 0; i < N; i++){
-		if(mp_cmp(&(a->terms[i]),&zero) == MP_LT) {
-			mp_add((&a->terms[i]),&mp_q,(&a->terms[i]));
-		}
-		if(mp_cmp(&(a->terms[i]), &mp_qdiv2) == MP_GT) {
-			mp_sub((&a->terms[i]),&mp_q,(&a->terms[i]));
-		}
-	}
-
-	pb_poly *d = build_polynom(NULL, N);
-
-	pb_starmultiply(a, priv_key_inv, d, context, p);
-	
-	pb_normalize(d,-1,1,context);
-
-	return d;
+	poly_starmultiply(priv_key, encr_msg, a, ctx, ctx->q);
+	fmpz_poly_mod(a, ctx->q);
+	poly_starmultiply(a, priv_key_inv, out, ctx, ctx->p);
 }

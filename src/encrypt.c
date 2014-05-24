@@ -19,9 +19,13 @@
  * MA  02110-1301  USA
  */
 
-#include "pqc_encrypt.h"
+#include "encrypt.h"
 
-/*
+#include <fmpz_poly.h>
+#include <fmpz.h>
+
+
+/**
  * encrypt the msg, using the math:
  * e = (h ∗ r) + m (mod q)
  *
@@ -35,31 +39,30 @@
  * @param rnd pb_poly*   	the random poly
  * @param msg pb_poly* 		the message to encrypt
  * @param pubKey pb_poly* 	the public key
- * @param out pb_poly* 		the output poly
+ * @param out pb_poly* 		the output poly [out]
  */
-void pb_encrypt(ntru_context *ctx,
-		pb_poly *rnd,
-		pb_poly *msg,
-		pb_poly *pubKey,
-		pb_poly *out)
+void ntru_encrypt_poly(fmpz_poly_t rnd,
+		fmpz_poly_t msg,
+		fmpz_poly_t pub_key,
+		fmpz_poly_t out,
+		ntru_context *ctx)
 {
-	mp_int *tmpOut;
-	mp_int *tmpMsg;
-	mp_int mp_int_mod;
+	poly_starmultiply(pub_key, rnd, out, ctx, ctx->q);
 
-	init_integer(&mp_int_mod);
-	MP_SET_INT(&mp_int_mod,(unsigned long)ctx->q);
+	fmpz_poly_zero(out);
 
-	pb_starmultiply(pubKey, rnd, out, ctx, ctx->q);
+	for(unsigned int i = 0; i <= ctx->N - 1; i++) {
+		fmpz_poly_t tmp_poly;
+		fmpz_t tmp_coeff;
+		fmpz *e_coeff_i = fmpz_poly_get_coeff_ptr(out, i),
+			 *m_coeff_i = fmpz_poly_get_coeff_ptr(msg, i);
 
-	tmpOut = out->terms;
-	tmpMsg = msg->terms;
+		fmpz_poly_init(tmp_poly);
+		fmpz_init(tmp_coeff);
 
-	for(unsigned int i = 0; i <= ctx->N-1; i++) {
-		mp_add(tmpOut,tmpMsg,tmpOut);
-		mp_mod(tmpOut,&mp_int_mod,tmpOut);
+		fmpz_add_n(tmp_coeff, e_coeff_i, m_coeff_i);
+		fmpz_mod_ui(tmp_coeff, tmp_coeff, ctx->q);
 
-		tmpOut++;
-		tmpMsg++;
+		fmpz_poly_set_coeff_fmpz(out, i, tmp_coeff);
 	}
 }

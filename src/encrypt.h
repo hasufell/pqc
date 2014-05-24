@@ -19,16 +19,22 @@
  * MA  02110-1301  USA
  */
 
-#ifndef NTRU_DECRYPT_H
-#define NTRU_DECRYPT_H
+#ifndef PQC_ENCRYPT_H
+#define PQC_ENCRYPT_H
 
-#include "poly.h"
+
 #include "context.h"
+#include "poly.h"
 
-pb_poly* ntru_decrypt(pb_poly*,
-		pb_poly*,
-		pb_poly*,
-		ntru_context*,
-		char**);
+#include <fmpz_poly.h>
+#include <fmpz.h>
 
-#endif /* NTRU_DECRYPT */
+
+void ntru_encrypt_poly(fmpz_poly_t rnd,
+		fmpz_poly_t msg,
+		fmpz_poly_t pubKey,
+		fmpz_poly_t out,
+		ntru_context *ctx);
+
+
+#endif /* PQC_ENCRYPT_H */

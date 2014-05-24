@@ -27,141 +27,78 @@
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <tompoly.h>
-#include <tommath.h>
 #include <stdbool.h>
+
+#include <fmpz_poly.h>
+#include <fmpz.h>
 
 
 /*
  * static declarations
  */
-static void pb_mod2_to_modq(pb_poly * const a,
-		pb_poly *Fq,
+static void poly_mod2_to_modq(fmpz_poly_t a,
+		fmpz_poly_t Fq,
 		ntru_context *ctx);
 
 
 /**
- * Initialize a mp_int and check if this was successful, the
- * caller must free new_int.
+ * Find the inverse polynomial modulo a power of 2,
+ * which is q.
  *
- * @param new_int a pointer to the mp_int you want to initialize
+ * @param a polynomial to invert
+ * @param Fq polynomial [out]
+ * @param ctx NTRU context
  */
-void init_integer(mp_int *new_int)
+static void poly_mod2_to_modq(fmpz_poly_t a,
+		fmpz_poly_t Fq,
+		ntru_context *ctx)
 {
-	int result;
-	if ((result = mp_init(new_int)) != MP_OKAY) {
-		NTRU_ABORT("Error initializing the number. %s",
-				mp_error_to_string(result));
-	}
-}
+	int v = 2;
+	fmpz_poly_t poly_tmp, two;
 
-/**
- * Initialize one ore more mp_int and check if this was successful, the
- * caller must free new_int with mp_clear().
- *
- * @param new_int a pointer to the mp_int you want to initialize
- */
-void init_integers(mp_int *new_int, ...)
-{
-	mp_int *next_mp;
-	va_list args;
+	fmpz_poly_init(poly_tmp);
+	fmpz_poly_zero(poly_tmp);
+	fmpz_poly_init(two);
+	fmpz_poly_set_coeff_ui(two, 0, 2);
 
-	next_mp = new_int;
-	va_start(args, new_int);
-	while (next_mp != NULL) {
-		init_integer(next_mp);
-		next_mp = va_arg(args, mp_int*);
-	}
-	va_end(args);
-}
+	while (v < (int)(ctx->q)) {
+		v = v * 2;
 
-/**
- * Initialize a Polynom with a pb_poly and a mp_int as characteristic.
- * Checks if everything went fine. The caller must free new_poly
- * with pb_clear().
- *
- * @param new_poly the pb_poly you want to initialize
- * @param chara the characteristic
- */
-void init_polynom(pb_poly *new_poly, mp_int *chara)
-{
-	int result;
-	if ((result = pb_init(new_poly, chara)) != MP_OKAY) {
-		NTRU_ABORT("Error initializing the number. %s",
-				mp_error_to_string(result));
-	}
-}
+		poly_starmultiply(a, Fq, poly_tmp, ctx, v);
+		fmpz_poly_sub(poly_tmp, two, poly_tmp);
+		fmpz_poly_mod_unsigned(poly_tmp, v);
+		poly_starmultiply(Fq, poly_tmp, Fq, ctx, v);
 
-/**
- * Initialize a Polynom with a pb_poly and an mp_int as characteristic
- * with size. Checks if everything went fine. The caller must free
- * new_poly with pb_clear().
- *
- * @param new_poly the pb_poly you want to initialize
- * @param chara the characteristic
- * @param size the size of the polynomial
- */
-void init_polynom_size(pb_poly *new_poly, mp_int *chara, size_t size)
-{
-	int result;
-	if ((result = pb_init_size(new_poly, chara, size)) != MP_OKAY) {
-		NTRU_ABORT("Error initializing the number. %s",
-				mp_error_to_string(result));
 	}
+
+	fmpz_poly_clear(poly_tmp);
+	fmpz_poly_clear(two);
+
 }
 
 /**
  * Initializes and builds a polynomial with the
  * coefficient values of c[] of size len within NTRU
  * context ctx and returns a newly allocated polynomial
- * pointer which is not clamped.
- *
- * If you want to fill a polyonmial of length 11 with zeros,
- * call build_polynom(NULL, 11).
+ * pointer which is not clamped. For an empty polynom,
+ * both parameters can be NULL/0.
  *
  * @param c array of polynomial coefficients, can be NULL
  * @param len size of the coefficient array, can be 0
- * @param ctx NTRU context
  * @return newly allocated polynomial pointer, must be freed
- * with delete_polynom()
+ * with fmpz_poly_clear()
  */
-pb_poly *build_polynom(int const * const c,
+fmpz_poly_t *poly_new(int const * const c,
 		const size_t len)
 {
-	pb_poly *new_poly;
-	mp_int chara;
+	fmpz_poly_t *new_poly = ntru_malloc(sizeof(*new_poly));
 
-	new_poly = ntru_malloc(sizeof(*new_poly));
-	init_integer(&chara);
-	init_polynom_size(new_poly, &chara, len);
-	mp_clear(&chara);
+	fmpz_poly_init(*new_poly);
 
-	/* fill the polynom if c is not NULL */
-	if (c) {
-		for (unsigned int i = 0; i < len; i++)
-			MP_SET_INT(&(new_poly->terms[i]), c[i]);
-	} else { /* fill with 0 */
-		for (unsigned int i = 0; i < len; i++)
-			MP_SET(&(new_poly->terms[i]), 0);
-	}
-
-	new_poly->used = len;
+	for (unsigned int i = 0; i < len; i++)
+		fmpz_poly_set_coeff_si(*new_poly, i, c[i]);
 
 	return new_poly;
-}
-
-/**
- * Sets all the polynomial coefficients to +0.
- *
- * @param poly the polynomial
- * @param len the length of the polynomial
- */
-void erase_polynom(pb_poly *poly, size_t len)
-{
-	for (unsigned int i = 0; i < len ; i++) {
-		MP_SET(&(poly->terms[i]), 0);
-		mp_abs(&(poly->terms[i]), &(poly->terms[i]));
-	}
 }
 
 /**
@@ -172,9 +109,9 @@ void erase_polynom(pb_poly *poly, size_t len)
  *
  * @param poly the polynomial to delete
  */
-void delete_polynom(pb_poly *poly)
+void poly_delete(fmpz_poly_t *poly)
 {
-	pb_clear(poly);
+	fmpz_poly_clear(*poly);
 	free(poly);
 }
 
@@ -188,18 +125,115 @@ void delete_polynom(pb_poly *poly)
  * @param poly the polynomial to delete
  * @param ... follow up polynomials
  */
-void delete_polynom_multi(pb_poly *poly, ...)
+void poly_delete_all(fmpz_poly_t *poly, ...)
 {
-	pb_poly *next_poly;
+	fmpz_poly_t *next_poly;
 	va_list args;
 
 	next_poly = poly;
 	va_start(args, poly);
 	while (next_poly != NULL) {
-		delete_polynom(next_poly);
-		next_poly = va_arg(args, pb_poly*);
+		poly_delete(next_poly);
+		next_poly = va_arg(args, fmpz_poly_t*);
 	}
 	va_end(args);
+}
+
+/**
+ * Calls fmpz_poly_get_nmod_poly() and
+ * fmpz_poly_set_nmod_poly_unsigned() in a row,
+ * so we don't have to deal with the intermediate
+ * nmod_poly_t type if we don't need it.
+ *
+ * @param a the polynom to apply the modulus to
+ * @param mod the modulus
+ */
+void fmpz_poly_mod_unsigned(fmpz_poly_t a,
+		unsigned int mod)
+{
+	nmod_poly_t nmod_tmp;
+
+	nmod_poly_init(nmod_tmp, mod);
+
+	fmpz_poly_get_nmod_poly(nmod_tmp, a);
+	fmpz_poly_set_nmod_poly_unsigned(a, nmod_tmp);
+
+	nmod_poly_clear(nmod_tmp);
+}
+
+/**
+ * Calls fmpz_poly_get_nmod_poly() and
+ * fmpz_poly_set_nmod_poly() in a row,
+ * so we don't have to deal with the intermediate
+ * nmod_poly_t type if we don't need it.
+ *
+ * @param a the polynom to apply the modulus to
+ * @param mod the modulus
+ */
+void fmpz_poly_mod(fmpz_poly_t a,
+		unsigned int mod)
+{
+	nmod_poly_t nmod_tmp;
+
+	nmod_poly_init(nmod_tmp, mod);
+
+	fmpz_poly_get_nmod_poly(nmod_tmp, a);
+	fmpz_poly_set_nmod_poly(a, nmod_tmp);
+
+	nmod_poly_clear(nmod_tmp);
+}
+
+/**
+ * The same as fmpz_poly_set_coeff_fmpz() except that it
+ * will take care of null-pointer coefficients and use
+ * fmpz_poly_set_coeff_si() in that case.
+ *
+ * @param poly the polynom we want to change a coefficient of
+ * @param n the coefficient we want to set
+ * @param x the value to assign to the coefficient
+ */
+void fmpz_poly_set_coeff_fmpz_n(fmpz_poly_t poly, slong n,
+		const fmpz_t x)
+{
+	if (x)
+		fmpz_poly_set_coeff_fmpz(poly, n, x);
+	else
+		fmpz_poly_set_coeff_si(poly, n, 0);
+}
+
+/**
+ * Wrapper around fmpz_invmod() where we convert
+ * mod to an fmpz_t implicitly.
+ *
+ * @param f result [out]
+ * @param g the inverse
+ * @param mod the modulo
+ */
+int fmpz_invmod_ui(fmpz_t f, const fmpz_t g, unsigned int mod)
+{
+	fmpz_t modulus;
+
+	fmpz_init_set_ui(modulus, mod);
+
+	return fmpz_invmod(f, g, modulus);
+}
+
+/**
+ * The same as fmpz_add() except that it handles NULL
+ * pointer for g and h.
+ */
+void fmpz_add_n(fmpz_t f, const fmpz_t g, const fmpz_t h)
+{
+	if (!g && !h) {
+		fmpz_zero(f);
+	} else {
+		if (!g && h)
+			fmpz_add_ui(f, h, 0);
+		else if (g && !h)
+			fmpz_add_ui(f, g, 0);
+		else
+			fmpz_add(f, g, h);
+	}
 }
 
 /**
@@ -212,425 +246,359 @@ void delete_polynom_multi(pb_poly *poly, ...)
  * @param ctx NTRU context
  * @param modulus whether we use p or q
  */
-void pb_starmultiply(pb_poly *a,
-		pb_poly *b,
-		pb_poly *c,
+void poly_starmultiply(fmpz_poly_t a,
+		fmpz_poly_t b,
+		fmpz_poly_t c,
 		ntru_context *ctx,
 		unsigned int modulus)
 {
-	pb_poly *a_tmp;
-	mp_int mp_modulus;
+	fmpz_poly_t a_tmp;
+	fmpz_t c_coeff_k;
 
-	init_integer(&mp_modulus);
-	MP_SET_INT(&mp_modulus, (unsigned long)(modulus));
+	fmpz_poly_init(a_tmp);
+	fmpz_init(c_coeff_k);
 
 	/* avoid side effects */
-	a_tmp = build_polynom(NULL, ctx->N);
-	PB_COPY(a, a_tmp);
-	erase_polynom(c, ctx->N);
+	fmpz_poly_set(a_tmp, a);
+	fmpz_poly_zero(c);
 
 	for (int k = ctx->N - 1; k >= 0; k--) {
 		int j;
+
 		j = k + 1;
 
+		fmpz_set_si(c_coeff_k, 0);
+
 		for (int i = ctx->N - 1; i >= 0; i--) {
+			fmpz *a_tmp_coeff_i,
+				 *b_coeff_j;
+
 			if (j == (int)(ctx->N))
 				j = 0;
-			if (mp_cmp_d(&(a_tmp->terms[i]), 0) != MP_EQ &&
-					mp_cmp_d(&(b->terms[j]), 0) != MP_EQ) {
-				mp_int mp_tmp;
 
-				init_integer(&mp_tmp);
+			a_tmp_coeff_i = fmpz_poly_get_coeff_ptr(a_tmp, i);
+			b_coeff_j = fmpz_poly_get_coeff_ptr(b, j);
 
-				MP_MUL(&(a_tmp->terms[i]), &(b->terms[j]), &mp_tmp);
-				MP_ADD(&(c->terms[k]), &mp_tmp, &(c->terms[k]));
-				MP_DIV(&(c->terms[k]), &mp_modulus, NULL, &(c->terms[k]));
+			if (a_tmp_coeff_i && fmpz_cmp_si(a_tmp_coeff_i, 0) &&
+					b_coeff_j && fmpz_cmp_si(b_coeff_j, 0)) {
+				fmpz_t fmpz_tmp;
 
-				mp_clear(&mp_tmp);
+				fmpz_init(fmpz_tmp);
+
+				fmpz_mul(fmpz_tmp, a_tmp_coeff_i, b_coeff_j);
+				fmpz_add(fmpz_tmp, fmpz_tmp, c_coeff_k);
+				fmpz_mod_ui(c_coeff_k, fmpz_tmp, modulus);
+
+				fmpz_poly_set_coeff_fmpz(c, k, c_coeff_k);
+
+				fmpz_clear(fmpz_tmp);
 			}
 			j++;
 		}
+		fmpz_clear(c_coeff_k);
 	}
-	mp_clear(&mp_modulus);
-	delete_polynom(a_tmp);
+
+	fmpz_poly_clear(a_tmp);
 }
 
 /**
- * Calculate c = a * b where c and a are polynomials
- * and b is an mp_int.
- *
- * @param a polynom
- * @param b mp_int
- * @param c polynom [out]
- * @return error code of pb_mul()
- */
-int pb_mp_mul(pb_poly *a, mp_int *b, pb_poly *c)
-{
-	int result;
-
-	pb_poly *b_poly = build_polynom(NULL, 1);
-	MP_COPY(b, &(b_poly->terms[0]));
-	printf("u converted to poly: "); draw_polynom(b_poly);
-	result = pb_mul(a, b_poly, c);
-
-	delete_polynom(b_poly);
-
-	return result;
-}
-
-/**
- * c = a XOR b
- *
- * @param a polynom (is allowed to be the same as param c)
- * @param b polynom
- * @param c polynom [out]
- * @param len max size of the polynoms, make sure all are
- * properly allocated
- */
-void pb_xor(pb_poly *a,
-		pb_poly *b,
-		pb_poly *c,
-		const size_t len)
-{
-	for (unsigned int i = 0; i < len; i++)
-		MP_XOR(&(a->terms[i]), &(b->terms[i]), &(c->terms[i]));
-}
-
-/**
- * Get the degree of the polynomial.
- *
- * @param poly the polynomial
- * @return the degree, -1 if polynom is empty
- */
-int get_degree(pb_poly const * const poly)
-{
-	int count = -1;
-
-	for (int i = 0; i < poly->alloc; i++)
-		if (mp_iszero(&(poly->terms[i])) == MP_NO)
-			count = i;
-
-	return count;
-}
-
-/**
- * Find the inverse polynomial modulo a power of 2,
- * which is q.
- *
- * @param a polynomial to invert
- * @param Fq polynomial [out]
- * @param ctx NTRU context
- */
-static void pb_mod2_to_modq(pb_poly * const a,
-		pb_poly *Fq,
-		ntru_context *ctx)
-{
-	int v = 2;
-
-	while (v < (int)(ctx->q)) {
-		pb_poly *pb_tmp,
-				*pb_tmp2;
-		mp_int tmp_v;
-		pb_tmp = build_polynom(NULL, ctx->N);
-		v = v * 2;
-		init_integer(&tmp_v);
-		MP_SET_INT(&tmp_v, v);
-		pb_tmp2 = build_polynom(NULL, ctx->N);
-		MP_SET_INT(&(pb_tmp2->terms[0]), 2);
-
-		pb_starmultiply(a, Fq, pb_tmp, ctx, v);
-		PB_SUB(pb_tmp2, pb_tmp, pb_tmp);
-		PB_MOD(pb_tmp, &tmp_v, pb_tmp, ctx->N);
-		pb_starmultiply(Fq, pb_tmp, Fq, ctx, v);
-
-		mp_clear(&tmp_v);
-		delete_polynom_multi(pb_tmp, pb_tmp2, NULL);
-	}
-}
-
-/**
- * Invert the polynomial a modulo q.
+ * Compute the inverse of a polynomial in modulo a power of 2,
+ * which is q. This is based off the pseudo-code for "Inversion
+ * in (Z/2Z)[X](X^N - 1)" and "Inversion in (Z/p^r Z)[X](X^N - 1)".
+ * See NTRU Cryptosystems Tech Report #014 "Almost Inverses
+ * and Fast NTRU Key Creation."
  *
  * @param a polynomial to invert (is allowed to be the same as param Fq)
  * @param Fq polynomial [out]
  * @param ctx NTRU context
  * @return true if invertible, false if not
  */
-bool pb_inverse_poly_q(pb_poly * const a,
-		pb_poly *Fq,
+bool poly_inverse_poly_q(fmpz_poly_t a,
+		fmpz_poly_t Fq,
 		ntru_context *ctx)
 {
+	bool retval = true;
 	int k = 0,
 		j = 0;
-	pb_poly *a_tmp, *b, *c, *f, *g;
-	mp_int mp_modulus;
+	fmpz *b_last;
+	fmpz_poly_t a_tmp,
+				b,
+				c,
+				f,
+				g;
 
 	/* general initialization of temp variables */
-	init_integer(&mp_modulus);
-	MP_SET_INT(&mp_modulus, (unsigned long)(ctx->q));
-	b = build_polynom(NULL, ctx->N + 1);
-	MP_SET(&(b->terms[0]), 1);
-	c = build_polynom(NULL, ctx->N + 1);
-	f = build_polynom(NULL, ctx->N + 1);
-	PB_COPY(a, f);
+	fmpz_poly_init(b);
+	fmpz_poly_set_coeff_ui(b, 0, 1);
+	fmpz_poly_init(c);
+	fmpz_poly_init(f);
+	fmpz_poly_set(f, a);
 
 	/* set g(x) = x^N − 1 */
-	g = build_polynom(NULL, ctx->N + 1);
-	MP_SET(&(g->terms[0]), 1);
-	MP_SET(&(g->terms[ctx->N]), 1);
+	fmpz_poly_init(g);
+	fmpz_poly_set_coeff_si(g, 0, -1);
+	fmpz_poly_set_coeff_si(g, ctx->N, 1);
 
 	/* avoid side effects */
-	a_tmp = build_polynom(NULL, ctx->N);
-	PB_COPY(a, a_tmp);
-	erase_polynom(Fq, ctx->N);
+	fmpz_poly_init(a_tmp);
+	fmpz_poly_set(a_tmp, a);
+	fmpz_poly_zero(Fq);
 
 	while (1) {
-		while (mp_cmp_d(&(f->terms[0]), 0) == MP_EQ) {
+		while (fmpz_is_zero(fmpz_poly_get_coeff_ptr(f, 0))) {
 			for (unsigned int i = 1; i <= ctx->N; i++) {
+				fmpz *f_coeff = fmpz_poly_get_coeff_ptr(f, i);
+				fmpz *c_coeff = fmpz_poly_get_coeff_ptr(c, ctx->N - i);
+
 				/* f(x) = f(x) / x */
-				MP_COPY(&(f->terms[i]), &(f->terms[i - 1]));
+				fmpz_poly_set_coeff_fmpz_n(f, i - 1,
+						f_coeff);
+
 				/* c(x) = c(x) * x */
-				MP_COPY(&(c->terms[ctx->N - i]), &(c->terms[ctx->N + 1 - i]));
+				fmpz_poly_set_coeff_fmpz_n(c, ctx->N + 1 - i,
+						c_coeff);
 			}
-			MP_SET(&(f->terms[ctx->N]), 0);
-			MP_SET(&(c->terms[0]), 0);
+
+			fmpz_poly_set_coeff_si(f, ctx->N, 0);
+			fmpz_poly_set_coeff_si(c, 0, 0);
+
 			k++;
-			if (get_degree(f) == -1)
-				return false;
+
+			if (fmpz_poly_degree(f) == -1) {
+				retval = false;
+				goto cleanup;
+			}
 		}
 
-		if (get_degree(f) == 0)
+		if (fmpz_poly_degree(f) == 0)
 			break;
 
-		if (get_degree(f) < get_degree(g)) {
-			pb_exch(f, g);
-			pb_exch(b, c);
+		if (fmpz_poly_degree(f) < fmpz_poly_degree(g)) {
+			fmpz_poly_swap(f, g);
+			fmpz_poly_swap(b, c);
 		}
 
-		pb_xor(f, g, f, ctx->N);
-		pb_xor(b, c, b, ctx->N);
+		fmpz_poly_add(f, g, f);
+		fmpz_poly_mod_unsigned(f, 2);
+
+		fmpz_poly_add(b, c, b);
+		fmpz_poly_mod_unsigned(b, 2);
 	}
 
 	k = k % ctx->N;
 
-	if (mp_cmp_d(&(b->terms[ctx->N]), 0) != MP_EQ)
-		return false;
+	b_last = fmpz_poly_get_coeff_ptr(b, ctx->N);
+	if (b_last && fmpz_cmp_si(b_last, 0)) {
+		retval = false;
+		goto cleanup;
+	}
 
 	/* Fq(x) = x^(N-k) * b(x) */
 	for (int i = ctx->N - 1; i >= 0; i--) {
+		fmpz *b_i;
+
 		j = i - k;
+
 		if (j < 0)
 			j = j + ctx->N;
-		MP_COPY(&(b->terms[i]), &(Fq->terms[j]));
+
+		b_i = fmpz_poly_get_coeff_ptr(b, i);
+		fmpz_poly_set_coeff_fmpz_n(Fq, j, b_i);
 	}
 
-	pb_mod2_to_modq(a_tmp, Fq, ctx);
+	poly_mod2_to_modq(a_tmp, Fq, ctx);
 
-	/* pull into positive space */
-	for (int i = ctx->N - 1; i >= 0; i--)
-		if (mp_cmp_d(&(Fq->terms[i]), 0) == MP_LT)
-			MP_ADD(&(Fq->terms[i]), &mp_modulus, &(Fq->terms[i]));
+	/* check if the f * Fq = 1 (mod p) condition holds true */
+	fmpz_poly_set(a_tmp, a);
+	poly_starmultiply(a_tmp, Fq, a_tmp, ctx, ctx->q);
+	if (!fmpz_poly_is_one(a_tmp))
+		retval = false;
 
-	delete_polynom_multi(a_tmp, b, c, f, g, NULL);
-	mp_clear(&mp_modulus);
+cleanup:
+	fmpz_poly_clear(a_tmp);
+	fmpz_poly_clear(b);
+	fmpz_poly_clear(c);
+	fmpz_poly_clear(f);
+	fmpz_poly_clear(g);
 
-	/* TODO: check if the f * Fq = 1 (mod p) condition holds true */
+	if (!retval)
+		fmpz_poly_zero(Fq);
 
-	return true;
+	return retval;
 }
 
 /**
- * Invert the polynomial a modulo p.
+ * Compute the inverse of a polynomial in (Z/pZ)[X]/(X^N - 1).
+ * See NTRU Cryptosystems Tech Report #014 "Almost Inverses
+ * and Fast NTRU Key Creation."
  *
  * @param a polynomial to invert
  * @param Fq polynomial [out]
  * @param ctx NTRU context
  */
-bool pb_inverse_poly_p(pb_poly *a,
-		pb_poly *Fp,
+bool poly_inverse_poly_p(fmpz_poly_t a,
+		fmpz_poly_t Fp,
 		ntru_context *ctx)
 {
+	bool retval = true;
 	int k = 0,
 		j = 0;
-	pb_poly *a_tmp, *b, *c, *f, *g;
-	mp_int mp_modulus;
+	fmpz *b_last;
+	fmpz_poly_t a_tmp,
+				b,
+				c,
+				f,
+				g;
 
 	/* general initialization of temp variables */
-	init_integer(&mp_modulus);
-	MP_SET_INT(&mp_modulus, (unsigned long)(ctx->p));
-	b = build_polynom(NULL, ctx->N + 1);
-	MP_SET(&(b->terms[0]), 1);
-	c = build_polynom(NULL, ctx->N + 1);
-	f = build_polynom(NULL, ctx->N + 1);
-	PB_COPY(a, f);
+	fmpz_poly_init(b);
+	fmpz_poly_set_coeff_ui(b, 0, 1);
+	fmpz_poly_init(c);
+	fmpz_poly_init(f);
+	fmpz_poly_set(f, a);
 
 	/* set g(x) = x^N − 1 */
-	g = build_polynom(NULL, ctx->N + 1);
-	MP_SET_INT(&(g->terms[0]), -1);
-	MP_SET(&(g->terms[ctx->N]), 1);
+	fmpz_poly_init(g);
+	fmpz_poly_set_coeff_si(g, 0, -1);
+	fmpz_poly_set_coeff_si(g, ctx->N, 1);
 
 	/* avoid side effects */
-	a_tmp = build_polynom(NULL, ctx->N);
-	PB_COPY(a, a_tmp);
-	erase_polynom(Fp, ctx->N);
-
-	printf("f: "); draw_polynom(f);
-	printf("g: "); draw_polynom(g);
+	fmpz_poly_init(a_tmp);
+	fmpz_poly_set(a_tmp, a);
+	fmpz_poly_zero(Fp);
 
 	while (1) {
-		while (mp_cmp_d(&(f->terms[0]), 0) == MP_EQ) {
+		while (fmpz_is_zero(fmpz_poly_get_coeff_ptr(f, 0))) {
 			for (unsigned int i = 1; i <= ctx->N; i++) {
+				fmpz *f_coeff_tmp = fmpz_poly_get_coeff_ptr(f, i);
+				fmpz *c_coeff_tmp = fmpz_poly_get_coeff_ptr(c, ctx->N - i);
+
 				/* f(x) = f(x) / x */
-				MP_COPY(&(f->terms[i]), &(f->terms[i - 1]));
+				fmpz_poly_set_coeff_fmpz_n(f, i - 1,
+						f_coeff_tmp);
+
 				/* c(x) = c(x) * x */
-				MP_COPY(&(c->terms[ctx->N - i]), &(c->terms[ctx->N + 1 - i]));
+				fmpz_poly_set_coeff_fmpz_n(c, ctx->N + 1 - i,
+						c_coeff_tmp);
 			}
-			MP_SET(&(f->terms[ctx->N]), 0);
-			MP_SET(&(c->terms[0]), 0);
+
+			fmpz_poly_set_coeff_si(f, ctx->N, 0);
+			fmpz_poly_set_coeff_si(c, 0, 0);
+
 			k++;
+
+			if (fmpz_poly_degree(f) == -1) {
+				retval = false;
+				goto cleanup;
+			}
 		}
 
-		if (get_degree(f) == 0)
+		if (fmpz_poly_degree(f) == 0)
 			break;
 
-		if (get_degree(f) < get_degree(g)) {
+		if (fmpz_poly_degree(f) < fmpz_poly_degree(g)) {
 			/* exchange f and g and exchange b and c */
-			pb_exch(f, g);
-			pb_exch(b, c);
+			fmpz_poly_swap(f, g);
+			fmpz_poly_swap(b, c);
 		}
 
 		{
-			pb_poly *c_tmp, *g_tmp;
-			mp_int u, mp_tmp;
+			fmpz_poly_t c_tmp,
+						g_tmp;
+			fmpz_t u,
+				   mp_tmp;
 
-			init_integers(&u, &mp_tmp, NULL);
-			g_tmp = build_polynom(NULL, ctx->N + 1);
-			PB_COPY(g, g_tmp);
-			c_tmp = build_polynom(NULL, ctx->N + 1);
-			PB_COPY(c, c_tmp);
+			fmpz_init(u);
+			fmpz_zero(u);
 
-			/* u = f[0] * g[0]^(-1) mod p
-			 *   = (f[0] mod p) * (g[0] inverse mod p) mod p */
-			MP_COPY(&(f->terms[0]), &mp_tmp);
-			MP_INVMOD(&(g->terms[0]), &mp_modulus, &u);
-			MP_MOD(&mp_tmp, &mp_modulus, &mp_tmp);
-			MP_MUL(&u, &mp_tmp, &u);
-			MP_MOD(&u, &mp_modulus, &u);
+			fmpz_init_set(mp_tmp, fmpz_poly_get_coeff_ptr(f, 0));
+
+			fmpz_poly_init(g_tmp);
+			fmpz_poly_set(g_tmp, g);
+
+			fmpz_poly_init(c_tmp);
+			fmpz_poly_set(c_tmp, c);
+
+			/* u = f[0] * g[0]^(-1) mod p */
+			  /* = (f[0] mod p) * (g[0] inverse mod p) mod p */
+			fmpz_invmod_ui(u,
+					fmpz_poly_get_coeff_ptr(g, 0),
+					ctx->p);
+			fmpz_mod_ui(mp_tmp, mp_tmp, ctx->p);
+			fmpz_mul(u, mp_tmp, u);
+			fmpz_mod_ui(u, u, ctx->p);
 
 			/* f = f - u * g mod p */
-			PB_MP_MUL(g_tmp, &u, g_tmp);
-			PB_SUB(f, g_tmp, f);
-			PB_MOD(f, &mp_modulus, f, ctx->N + 1);
+			fmpz_poly_scalar_mul_fmpz(g_tmp, g_tmp, u);
+			fmpz_poly_sub(f, g_tmp, f);
+			fmpz_poly_mod_unsigned(f, ctx->p);
 
 			/* b = b - u * c mod p */
-			PB_MP_MUL(c_tmp, &u, c_tmp);
-			PB_SUB(b, c_tmp, b);
-			PB_MOD(b, &mp_modulus, b, ctx->N + 1);
+			fmpz_poly_scalar_mul_fmpz(c_tmp, c_tmp, u);
+			fmpz_poly_sub(b, c_tmp, b);
+			fmpz_poly_mod_unsigned(b, ctx->p);
 
-			mp_clear(&mp_tmp);
-			delete_polynom_multi(c_tmp, g_tmp, NULL);
+			fmpz_clear(u);
+			fmpz_poly_clear(g_tmp);
+			fmpz_poly_clear(c_tmp);
 		}
 	}
 
 	k = k % ctx->N;
 
+	b_last = fmpz_poly_get_coeff_ptr(b, ctx->N);
+	if (b_last && fmpz_cmp_si(b_last, 0)) {
+		retval = false;
+		goto cleanup;
+	}
+
 	/* Fp(x) = x^(N-k) * b(x) */
 	for (int i = ctx->N - 1; i >= 0; i--) {
+		fmpz *b_i;
 
 		/* b(X) = f[0]^(-1) * b(X) (mod p) */
 		{
-			pb_poly *poly_tmp;
+			fmpz_t mp_tmp;
 
-			poly_tmp = build_polynom(NULL, 1);
+			fmpz_init(mp_tmp);
 
-			MP_INVMOD(&(f->terms[0]), &mp_modulus, &(poly_tmp->terms[0]));
-			MP_MOD(&(b->terms[i]), &mp_modulus, &(b->terms[i]));
-			MP_MUL(&(b->terms[i]), &(poly_tmp->terms[0]), &(b->terms[i]));
+			fmpz_invmod_ui(mp_tmp,
+					fmpz_poly_get_coeff_ptr(f, 0),
+					ctx->p);
 
-			delete_polynom(poly_tmp);
+			if (fmpz_poly_get_coeff_ptr(b, i)) {
+				fmpz_mul(fmpz_poly_get_coeff_ptr(b, i),
+						fmpz_poly_get_coeff_ptr(b, i),
+						mp_tmp);
+				fmpz_mod_ui(fmpz_poly_get_coeff_ptr(b, i),
+						fmpz_poly_get_coeff_ptr(b, i),
+						ctx->p);
+			}
 		}
 
 		j = i - k;
 		if (j < 0)
 			j = j + ctx->N;
-		MP_COPY(&(b->terms[i]), &(Fp->terms[j]));
 
-		/* delete_polynom(f_tmp); */
+		b_i = fmpz_poly_get_coeff_ptr(b, i);
+		fmpz_poly_set_coeff_fmpz_n(Fp, j, b_i);
 	}
 
-	/* pull into positive space */
-	for (int i = ctx->N - 1; i >= 0; i--)
-		if (mp_cmp_d(&(Fp->terms[i]), 0) == MP_LT)
-			MP_ADD(&(Fp->terms[i]), &mp_modulus, &(Fp->terms[i]));
+	/* check if the f * Fq = 1 (mod p) condition holds true */
+	fmpz_poly_set(a_tmp, a);
+	poly_starmultiply(a_tmp, Fp, a_tmp, ctx, ctx->p);
+	if (!fmpz_poly_is_one(a_tmp))
+		retval = false;
 
-	mp_clear(&mp_modulus);
-	delete_polynom_multi(a_tmp, b, c, f, g, NULL);
+cleanup:
+	fmpz_poly_clear(a_tmp);
+	fmpz_poly_clear(b);
+	fmpz_poly_clear(c);
+	fmpz_poly_clear(f);
+	fmpz_poly_clear(g);
 
-	/* TODO: check if the f * Fq = 1 (mod p) condition holds true */
+	if (!retval)
+		fmpz_poly_zero(Fp);
 
-	return true;
-}
-
-/**
- * Print the polynomial in a human readable format to stdout.
- *
- * @param poly to draw
- */
-void draw_polynom(pb_poly * const poly)
-{
-	int x;
-	char buf[8192];
-
-	if (poly->used == 0) {
-		printf("0");
-	} else {
-		for (x = poly->used - 1; x >= 0; x--) {
-			if (mp_iszero(&(poly->terms[x])) == MP_YES)
-				continue;
-			mp_toradix(&(poly->terms[x]), buf, 10);
-			if ((x != poly->used - 1) && poly->terms[x].sign == MP_ZPOS) {
-				printf("+");
-			}
-			printf(" %sx^%d ", buf, x);
-		}
-	}
-	if (mp_iszero(&(poly->characteristic)) == MP_NO) {
-		mp_toradix(&(poly->characteristic), buf, 10);
-		printf(" (mod %s)", buf);
-	}
-	printf("\n");
-}
-
-void pb_normalize(pb_poly *poly, int low_border, int high_border, ntru_context *ctx){
-	unsigned int p = ctx->p;
-	unsigned int N = ctx->N;
-
-	mp_int mp_p;
-	mp_int mp_low_border;
-	mp_int mp_high_border;
-
-	init_integer(&mp_low_border);
-	init_integer(&mp_high_border);
-	init_integer(&mp_p);
-
-	MP_SET_INT(&mp_p, p);
-	MP_SET_INT(&mp_low_border,(unsigned long)abs(low_border));
-	mp_neg(&mp_low_border,&mp_low_border);
-	MP_SET_INT(&mp_high_border,high_border);
-
-
-	unsigned int i;
-	for(i = 0; i < N; i++){
-		if(mp_cmp(&(poly->terms[i]),&mp_low_border) == MP_LT) {
-			mp_add(&(poly->terms[i]),&mp_p,&(poly->terms[i]));
-		} else if(mp_cmp(&(poly->terms[i]),&mp_high_border) == MP_GT) {
-			mp_sub(&(poly->terms[i]),&mp_p,&(poly->terms[i]));
-		}
-	}
-}
-
-void draw_mp_int(mp_int *digit) {
-	char buf[8192];
-	mp_toradix(digit, buf, 10);
-	printf("%s\n",buf);
+	return retval;
 }
