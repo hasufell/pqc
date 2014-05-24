@@ -53,4 +53,5 @@ void ntru_decrypt_poly(
 	poly_starmultiply(priv_key, encr_msg, a, ctx, ctx->q);
 	fmpz_poly_mod(a, ctx->q);
 	poly_starmultiply(a, priv_key_inv, out, ctx, ctx->p);
+	fmpz_poly_mod(out, ctx->p);
 }
