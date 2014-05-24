@@ -37,8 +37,8 @@ endif
 LIBS += -L. -lgmp -lmpfr -lm
 
 # objects
-PQC_OBJS = poly.o mem.o encrypt.o decrypt.o
-PQC_HEADERS = err.h poly.h context.h encrypt.h decrypt.h
+PQC_OBJS = poly.o mem.o encrypt.o decrypt.o keypair.o
+PQC_HEADERS = err.h poly.h context.h encrypt.h decrypt.h keypair.h
 # CUNIT_OBJS = cunit.o
 
 # includes
