@@ -33,9 +33,25 @@
 typedef struct keypair keypair;
 
 
+/**
+ * This struct holds the keypair,
+ * both private and public components.
+ */
 struct keypair {
+	/**
+	 * First part of the private key,
+	 * a random polynom.
+	 */
 	fmpz_poly_t priv;
+	/**
+	 * Second part of the private key,
+	 * the priv polynom inverted.
+	 */
 	fmpz_poly_t priv_inv;
+	/**
+	 * The public key, computed as:
+	 * h = p * (Fq * g) mod q
+	 */
 	fmpz_poly_t pub;
 };
 
