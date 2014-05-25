@@ -114,7 +114,7 @@ fmpz_poly_t **ascii_to_poly(char *to_poly, ntru_context *ctx)
 	uint32_t i = 0,
 			 polyc = 0;
 	char *cur = to_poly;
-	size_t out_size = sizeof(char) * (strlen(to_poly) * 90 + 1);
+	size_t out_size = sizeof(char) * (strlen(to_poly) * 8 + 1);
 	char *out = ntru_malloc(out_size);
 	fmpz_poly_t **poly_array;
 
