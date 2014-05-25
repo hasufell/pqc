@@ -31,5 +31,7 @@
 #include <stdlib.h>
 
 void *ntru_malloc(size_t size);
+void *ntru_calloc(size_t nmemb, size_t size);
+
 
 #endif /* NTRU_MEM_H */
