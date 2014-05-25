@@ -40,13 +40,6 @@
 #include <fmpz.h>
 
 
-/*
- * static function declaration
- */
-static char *get_int_to_bin_str(uint8_t value);
-static char *get_bin_arr_to_ascii(char *binary_rep);
-
-
 /**
  * Convert an integer to it's binary representation
  * as a string and return it.
@@ -54,7 +47,25 @@ static char *get_bin_arr_to_ascii(char *binary_rep);
  * @param value the integer to convert
  * @return the binary representation as a newly allocated string
  */
-static char *get_int_to_bin_str(uint8_t value)
+static char *
+get_int_to_bin_str(uint8_t value);
+
+/**
+ * Converts a binary representation of multiple concatenated
+ * integers to the corresponding array of ascii chars, which
+ * is NULL-terminated.
+ *
+ * @param binary_rep the binary representation of multiple
+ * integers concatenated
+ * @return NULL-terminated array of corresponding ascii-chars,
+ * newly allocated
+ */
+static char *
+get_bin_arr_to_ascii(char *binary_rep);
+
+
+static char *
+get_int_to_bin_str(uint8_t value)
 {
     int i;
 	const size_t bin_string_size = ASCII_BITS + 1;
@@ -70,19 +81,10 @@ static char *get_int_to_bin_str(uint8_t value)
 	return bin_string;
 }
 
-/**
- * Converts a binary representation of multiple concatenated
- * integers to the corresponding array of ascii chars, which
- * is NULL-terminated.
- *
- * @param binary_rep the binary representation of multiple
- * integers concatenated
- * @return NULL-terminated array of corresponding ascii-chars,
- * newly allocated
- */
-static char *get_bin_arr_to_ascii(char *binary_rep)
+static char *
+get_bin_arr_to_ascii(char *binary_rep)
 {
-	const size_t int_arr_size = strlen(binary_rep) / 8;
+	const size_t int_arr_size = strlen(binary_rep) / ASCII_BITS;
 	uint8_t int_arr[int_arr_size];
 	char *tmp_string = binary_rep;
 	uint32_t i = 0;
@@ -109,19 +111,13 @@ static char *get_bin_arr_to_ascii(char *binary_rep)
 	return int_string;
 }
 
-/**
- * Convert an ascii string to an array of polyomials.
- *
- * @param to_poly the string to get into polynomial format
- * @param ctx the NTRUEncrypt context
- * @return newly allocated array of polynomials
- */
-fmpz_poly_t **ascii_to_poly(char *to_poly, ntru_context *ctx)
+fmpz_poly_t **
+ascii_to_poly(char *to_poly, ntru_context *ctx)
 {
 	uint32_t i = 0,
 			 polyc = 0;
 	char *cur = to_poly;
-	size_t out_size = CHAR_SIZE * (strlen(to_poly) * 8 + 1);
+	size_t out_size = CHAR_SIZE * (strlen(to_poly) * ASCII_BITS + 1);
 	char *out = ntru_malloc(out_size);
 	fmpz_poly_t **poly_array;
 
@@ -159,14 +155,8 @@ fmpz_poly_t **ascii_to_poly(char *to_poly, ntru_context *ctx)
 	return poly_array;
 }
 
-/**
- * Convert an array of polynomials back to a real string.
- *
- * @param poly_array the array of polynomials
- * @param ctx the NTRUEncrypt context
- * @return the real string
- */
-char *poly_to_ascii(fmpz_poly_t **poly_array, ntru_context *ctx)
+char *
+poly_to_ascii(fmpz_poly_t **poly_array, ntru_context *ctx)
 {
 	fmpz_poly_t *ascii_poly;
 	char *binary_rep = NULL;

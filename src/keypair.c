@@ -36,17 +36,8 @@
 #include <stdbool.h>
 
 
-/**
- * Creates an NTRU key pair,
- * consisting of public and private
- * components.
- *
- * @param f a random polynomial
- * @param g a random polynomial
- * @param pair store private and public components here [out]
- * @param ctx the NTRU context
- */
-bool ntru_create_keypair(
+bool
+ntru_create_keypair(
 		fmpz_poly_t f,
 		fmpz_poly_t g,
 		keypair *pair,
@@ -91,14 +82,8 @@ cleanup:
 	return retval;
 }
 
-/**
- * Used to free the inner structure
- * of a keypair. This will not call free()
- * on the pair itself.
- *
- * @param pair the pair to free the inner structure of
- */
-void ntru_delete_keypair(keypair *pair)
+void
+ntru_delete_keypair(keypair *pair)
 {
 	fmpz_poly_clear(pair->priv_inv);
 	fmpz_poly_clear(pair->priv);

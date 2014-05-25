@@ -32,14 +32,8 @@
 #include <stdlib.h>
 
 
-/**
- * Allocate memory of size and return
- * a void pointer.
- *
- * @param size of the memory to allocate in bytes
- * @return void pointer to the beginning of the allocated memory block
- */
-void *ntru_malloc(size_t size)
+void *
+ntru_malloc(size_t size)
 {
 	void *ptr;
 
@@ -54,15 +48,8 @@ void *ntru_malloc(size_t size)
 	return ptr;
 }
 
-/**
- * Allocate memory of size and return
- * a void pointer. The memory is zeroed.
- *
- * @param nmemb amount of blocks to allocate
- * @param size of the memory blocks to allocate in bytes
- * @return void pointer to the beginning of the allocated memory block
- */
-void *ntru_calloc(size_t nmemb, size_t size)
+void *
+ntru_calloc(size_t nmemb, size_t size)
 {
 	void *ptr;
 

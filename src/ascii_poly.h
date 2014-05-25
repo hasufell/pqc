@@ -35,8 +35,25 @@
 #include <fmpz.h>
 
 
-fmpz_poly_t **ascii_to_poly(char *to_poly, ntru_context *ctx);
-char *poly_to_ascii(fmpz_poly_t **poly_array, ntru_context *ctx);
+/**
+ * Convert an ascii string to an array of polyomials.
+ *
+ * @param to_poly the string to get into polynomial format
+ * @param ctx the NTRUEncrypt context
+ * @return newly allocated array of polynomials
+ */
+fmpz_poly_t **
+ascii_to_poly(char *to_poly, ntru_context *ctx);
+
+/**
+ * Convert an array of polynomials back to a real string.
+ *
+ * @param poly_array the array of polynomials
+ * @param ctx the NTRUEncrypt context
+ * @return the real string
+ */
+char *
+poly_to_ascii(fmpz_poly_t **poly_array, ntru_context *ctx);
 
 
 #endif /* NTRU_ASCII_POLY_H_ */

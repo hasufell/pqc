@@ -29,6 +29,10 @@
 #ifndef NTRU_CONTEXT_H
 #define NTRU_CONTEXT_H
 
+
+#include <stdint.h>
+
+
 /**
  * NTRU cryptosystem is specified by
  * the following triple.
@@ -38,15 +42,15 @@ typedef struct {
 	 * maximal degree N - 1 for
 	 * all polynomials
 	 */
-	unsigned int N;
+	uint32_t N;
 	/**
 	 * large modulus
 	 */
-	unsigned int q;
+	uint32_t q;
 	/**
 	 * small modulus
 	 */
-	unsigned int p;
+	uint32_t p;
 } ntru_context;
 
 #endif /* NTRU_CONTEXT_H */
