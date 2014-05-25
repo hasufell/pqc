@@ -35,7 +35,8 @@
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdbool.h>
+#include <stdlib.h>
+#include <sys/types.h>
 
 #include <fmpz_poly.h>
 #include <fmpz.h>
