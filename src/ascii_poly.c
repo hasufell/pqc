@@ -19,6 +19,7 @@
  * MA  02110-1301  USA
  */
 
+#include "common.h"
 #include "context.h"
 #include "mem.h"
 #include "poly.h"
@@ -49,15 +50,14 @@ static char *get_bin_arr_to_ascii(char *binary_rep);
 static char *get_int_to_bin_str(uint8_t value)
 {
     int i;
-	const size_t ascii_bit_size = 8;
-	const size_t bin_string_size = ascii_bit_size + 1;
-	char *bin_string = ntru_malloc(sizeof(char) *
+	const size_t bin_string_size = ASCII_BITS + 1;
+	char *bin_string = ntru_malloc(sizeof(*bin_string) *
 			(bin_string_size)); /* account for trailing null-byte */
 
 	/* terminate properly */
     bin_string[bin_string_size - 1] = '\0';
 
-    for (i = 7; i >= 0; --i, value >>= 1)
+    for (i = ASCII_BITS - 1; i >= 0; --i, value >>= 1)
         bin_string[i] = (value & 1) + '0';
 
 	return bin_string;
@@ -84,7 +84,7 @@ static char *get_bin_arr_to_ascii(char *binary_rep)
 
 	while (*tmp_string) {
 		int_arr[i] = 0;
-		for (uint32_t j = 0; j < 8; j++) {
+		for (uint32_t j = 0; j < ASCII_BITS; j++) {
 			if (*tmp_string == '1')
 				int_arr[i] = int_arr[i] * 2 + 1;
 			else if (*tmp_string == '0')
@@ -94,7 +94,7 @@ static char *get_bin_arr_to_ascii(char *binary_rep)
 		i++;
 	}
 
-	int_string = ntru_calloc(1, sizeof(char) * (i + 1));
+	int_string = ntru_calloc(1, CHAR_SIZE * (i + 1));
 
 	for (uint32_t j = 0; j < i; j++)
 		int_string[j] = (char) int_arr[j];
@@ -114,7 +114,7 @@ fmpz_poly_t **ascii_to_poly(char *to_poly, ntru_context *ctx)
 	uint32_t i = 0,
 			 polyc = 0;
 	char *cur = to_poly;
-	size_t out_size = sizeof(char) * (strlen(to_poly) * 8 + 1);
+	size_t out_size = CHAR_SIZE * (strlen(to_poly) * 8 + 1);
 	char *out = ntru_malloc(out_size);
 	fmpz_poly_t **poly_array;
 
@@ -171,9 +171,9 @@ char *poly_to_ascii(fmpz_poly_t **poly_array, ntru_context *ctx)
 	/*
 	 * parse the polynomial coefficients into a string
 	 */
-	binary_rep = ntru_malloc(sizeof(char) * (ctx->N + 1));
+	binary_rep = ntru_malloc(CHAR_SIZE * (ctx->N + 1));
 	while ((ascii_poly = *poly_array++)) {
-		new_length = sizeof(char) * (ctx->N + 1);
+		new_length = CHAR_SIZE * (ctx->N + 1);
 
 		REALLOC(binary_rep,
 				old_length +
