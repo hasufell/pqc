@@ -34,6 +34,7 @@
 
 #include <stdarg.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -104,7 +105,7 @@ void poly_new(fmpz_poly_t new_poly,
 {
 	fmpz_poly_init(new_poly);
 
-	for (unsigned int i = 0; i < len; i++)
+	for (uint32_t i = 0; i < len; i++)
 		fmpz_poly_set_coeff_si(new_poly, i, c[i]);
 }
 
@@ -129,7 +130,7 @@ void poly_delete(fmpz_poly_t poly)
  */
 void poly_delete_array(fmpz_poly_t **poly_array)
 {
-	unsigned int i = 0;
+	uint32_t i = 0;
 
 	while(poly_array[i]) {
 		poly_delete(*(poly_array[i]));
@@ -174,7 +175,7 @@ void poly_delete_all(fmpz_poly_t poly, ...)
  * @param mod the modulus
  */
 void fmpz_poly_mod_unsigned(fmpz_poly_t a,
-		unsigned int mod)
+		uint32_t mod)
 {
 	nmod_poly_t nmod_tmp;
 
@@ -199,7 +200,7 @@ void fmpz_poly_mod_unsigned(fmpz_poly_t a,
  * @param mod the modulus
  */
 void fmpz_poly_mod(fmpz_poly_t a,
-		unsigned int mod)
+		uint32_t mod)
 {
 	nmod_poly_t nmod_tmp;
 
@@ -237,7 +238,7 @@ void fmpz_poly_set_coeff_fmpz_n(fmpz_poly_t poly, slong n,
  * @param g the inverse
  * @param mod the modulo
  */
-int fmpz_invmod_ui(fmpz_t f, const fmpz_t g, unsigned int mod)
+int fmpz_invmod_ui(fmpz_t f, const fmpz_t g, uint32_t mod)
 {
 	fmpz_t modulus;
 
@@ -278,7 +279,7 @@ void poly_starmultiply(fmpz_poly_t a,
 		fmpz_poly_t b,
 		fmpz_poly_t c,
 		ntru_context *ctx,
-		unsigned int modulus)
+		uint32_t modulus)
 {
 	fmpz_poly_t a_tmp;
 	fmpz_t c_coeff_k;
@@ -374,7 +375,7 @@ bool poly_inverse_poly_q(fmpz_poly_t a,
 
 	while (1) {
 		while (fmpz_is_zero(fmpz_poly_get_coeff_ptr(f, 0))) {
-			for (unsigned int i = 1; i <= ctx->N; i++) {
+			for (uint32_t i = 1; i <= ctx->N; i++) {
 				fmpz *f_coeff = fmpz_poly_get_coeff_ptr(f, i);
 				fmpz *c_coeff = fmpz_poly_get_coeff_ptr(c, ctx->N - i);
 
@@ -497,7 +498,7 @@ bool poly_inverse_poly_p(fmpz_poly_t a,
 
 	while (1) {
 		while (fmpz_is_zero(fmpz_poly_get_coeff_ptr(f, 0))) {
-			for (unsigned int i = 1; i <= ctx->N; i++) {
+			for (uint32_t i = 1; i <= ctx->N; i++) {
 				fmpz *f_coeff_tmp = fmpz_poly_get_coeff_ptr(f, i);
 				fmpz *c_coeff_tmp = fmpz_poly_get_coeff_ptr(c, ctx->N - i);
 

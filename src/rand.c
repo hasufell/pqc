@@ -46,7 +46,7 @@ static mp_digit get_random_ternary(mp_digit random_int, int* sign);
 static mp_int *get_random_bigint(mp_int *upper_bound,
 		mp_int *lower_bound,
 		int entropy_source);
-static unsigned int check_allowed_zeros(pb_poly *polynom);
+static uint32_t check_allowed_zeros(pb_poly *polynom);
 
 /**
  * Reads a single mp_digit out of /dev/random and returns this mp_digit
@@ -149,9 +149,9 @@ static mp_int *get_random_bigint(mp_int *upper_bound,
  *         -1 if the polynom zero coefficients are over
  *         PERCENTAGE_OF_ZERO_ALLOWED percent
  */
-static unsigned int check_allowed_zeros(pb_poly *polynom)
+static uint32_t check_allowed_zeros(pb_poly *polynom)
 {
-	unsigned int result = -1;
+	uint32_t result = -1;
 	//TODO
 	return result;
 }
@@ -175,7 +175,7 @@ pb_poly *ntru_get_random_poly_ternary(size_t length, int entropy_source)
 	init_polynom_size(poly, &chara, length);
 	mp_clear(&chara);
 
-	for (unsigned int i = 0; i < length; i++) {
+	for (uint32_t i = 0; i < length; i++) {
 		int sign;
 		if (entropy_source == GET_INT_FROM_RRAND) {
 			coefficient = get_int_dev_random();

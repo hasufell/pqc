@@ -33,6 +33,7 @@
 
 #include <stdarg.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
 
 #include <fmpz_poly.h>
@@ -49,10 +50,10 @@ void poly_delete_array(fmpz_poly_t **poly_array);
 void poly_delete_all(fmpz_poly_t poly, ...);
 
 void fmpz_poly_mod_unsigned(fmpz_poly_t a,
-		unsigned int mod);
+		uint32_t mod);
 
 void fmpz_poly_mod(fmpz_poly_t a,
-		unsigned int mod);
+		uint32_t mod);
 
 void fmpz_poly_set_coeff_fmpz_n(fmpz_poly_t poly,
 		slong n,
@@ -60,7 +61,7 @@ void fmpz_poly_set_coeff_fmpz_n(fmpz_poly_t poly,
 
 int fmpz_invmod_ui(fmpz_t f,
 		const fmpz_t g,
-		unsigned int mod);
+		uint32_t mod);
 
 void fmpz_add_n(fmpz_t f, const fmpz_t g, const fmpz_t h);
 
@@ -68,7 +69,7 @@ void poly_starmultiply(fmpz_poly_t a,
 		fmpz_poly_t b,
 		fmpz_poly_t c,
 		ntru_context *ctx,
-		unsigned int modulus);
+		uint32_t modulus);
 
 bool poly_inverse_poly_q(fmpz_poly_t a,
 		fmpz_poly_t Fq,
