@@ -20,106 +20,185 @@
  */
 
 #include "context.h"
-#include "err.h"
 #include "mem.h"
 #include "poly.h"
 #include "ascii_poly.h"
 
-#include <math.h>
-#include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/types.h>
-#include <tommath.h>
-#include <tompoly.h>
 
-#define ASCII_DIGITS 7
+#include <fmpz_poly.h>
+#include <fmpz.h>
+
+
+/*
+ * static function declaration
+ */
+static char *get_int_to_bin_str(uint8_t value);
+static char *get_bin_arr_to_ascii(char *binary_rep);
+
 
 /**
- * Converts a string into a pb_poly of the size strlen(to_poly) * 7.
- * 7 bit per ASCII symbol.
+ * Convert an integer to it's binary representation
+ * as a string and return it.
  *
- * @param to_poly the string
- * @return the newly allocated polynom.
+ * @param value the integer to convert
+ * @return the binary representation as a newly allocated string
  */
-pb_poly *ascii_to_poly(char *to_poly)
+static char *get_int_to_bin_str(uint8_t value)
 {
-	size_t length = (strlen(to_poly) * ASCII_DIGITS);
-	char *tmp_ptr = to_poly;
-	u_int8_t binary_Number[ASCII_DIGITS + 1];
+    int i;
+	const size_t ascii_bit_size = 8;
+	const size_t bin_string_size = ascii_bit_size + 1;
+	char *bin_string = ntru_malloc(sizeof(char) *
+			(bin_string_size)); /* account for trailing null-byte */
 
-	if (!to_poly) {
-		return NULL;
-	}
+	/* terminate properly */
+    bin_string[bin_string_size - 1] = '\0';
 
-	mp_int chara;
-	init_integer(&chara);
+    for (i = 7; i >= 0; --i, value >>= 1)
+        bin_string[i] = (value & 1) + '0';
 
-	pb_poly *poly = ntru_malloc(sizeof(pb_poly));
-	init_polynom_size(poly, &chara, length);
-
-	/* for every char */
-	for (u_int32_t j = 0; j < strlen(to_poly); j++) {
-		u_int8_t quotient = (u_int8_t) *tmp_ptr++;
-		u_int8_t k = ASCII_DIGITS;
-		for (u_int8_t i = 1; i <= ASCII_DIGITS; i++) {
-			/* gets the least significant bit in an array*/
-			binary_Number[k--] = quotient % 2;
-			/* bitshift so the next bit becomes the lsb*/
-			quotient >>= 1;
-		}
-		for (u_int8_t i = 1; i <= ASCII_DIGITS; i++) {
-			/* the actual position of the bit in the polynom */
-			u_int32_t coefficient = (i - 1) + (j * ASCII_DIGITS);
-			MP_SET(&(poly->terms[coefficient]), binary_Number[i]);
-			/* set the array to 0 so the next run is garbage free */
-			binary_Number[i] = 0;
-			poly->terms[i].sign = 0;
-		}
-	}
-	poly->used = (int) length;
-	mp_clear(&chara);
-	return poly;
+	return bin_string;
 }
 
 /**
- * Converts a polynom into a newly allocated string.
+ * Converts a binary representation of multiple concatenated
+ * integers to the corresponding array of ascii chars, which
+ * is NULL-terminated.
  *
- * @param to_ascii the polynom you want to make a string of.
- * @return a pointer to the string ore a NULL pointer in the error case
+ * @param binary_rep the binary representation of multiple
+ * integers concatenated
+ * @return NULL-terminated array of corresponding ascii-chars,
+ * newly allocated
  */
-char *polynom_to_ascii(pb_poly *to_ascii)
+static char *get_bin_arr_to_ascii(char *binary_rep)
 {
-	if (!to_ascii) {
-		return NULL;
-	}
+	const size_t int_arr_size = strlen(binary_rep) / 8;
+	uint8_t int_arr[int_arr_size];
+	char *tmp_string = binary_rep;
+	uint32_t i = 0;
 
-	size_t length_poly = (size_t) to_ascii->used;
-	size_t length_string = (size_t) (length_poly / ASCII_DIGITS);
-	char *string = (char*) ntru_malloc(length_string);
-	char bit_buffer;
-	char *tmp_ptr = string;
-	u_int8_t ascii_value = 0;
+	char *int_string;
 
-	/* every char */
-	for (u_int32_t i = 0; i < length_poly; i += ASCII_DIGITS) {
-		/* every bit*/
-		for (u_int32_t j = 0; j < ASCII_DIGITS; j++) {
-			/* get the bit */
-			if (mp_toradix(&(to_ascii->terms[i + j]), &bit_buffer, 2)) {
-				return NULL;
-			}
-			/* bit as integer */
-			u_int8_t bit = atoi(&bit_buffer);
-			/* bitshift to the left */
-			ascii_value <<= 1;
-			/* set the new bit and keep the other */
-			ascii_value |= bit;
+	while (*tmp_string) {
+		int_arr[i] = 0;
+		for (uint32_t j = 0; j < 8; j++) {
+			if (*tmp_string == '1')
+				int_arr[i] = int_arr[i] * 2 + 1;
+			else if (*tmp_string == '0')
+				int_arr[i] *= 2;
+			tmp_string++;
 		}
-		/* char into string */
-		*tmp_ptr++ = (char) ascii_value;
-		/* reset for next char */
-		ascii_value = 0;
+		i++;
 	}
-	return string;
+
+	int_string = ntru_calloc(1, sizeof(char) * (i + 1));
+
+	for (uint32_t j = 0; j < i; j++)
+		int_string[j] = (char) int_arr[j];
+
+	return int_string;
+}
+
+/**
+ * Convert an ascii string to an array of polyomials.
+ *
+ * @param to_poly the string to get into polynomial format
+ * @param ctx the NTRUEncrypt context
+ * @return newly allocated array of polynomials
+ */
+fmpz_poly_t **ascii_to_poly(char *to_poly, ntru_context *ctx)
+{
+	uint32_t i = 0,
+			 polyc = 0;
+	char *cur = to_poly;
+	size_t out_size = sizeof(char) * (strlen(to_poly) * 90 + 1);
+	char *out = ntru_malloc(out_size);
+	fmpz_poly_t **poly_array;
+
+	*out = '\0';
+
+	while (*cur) {
+		char *tmp_string = get_int_to_bin_str((int)(*cur));
+		strcat(out, tmp_string);
+		cur++;
+		free(tmp_string);
+	}
+
+	poly_array = ntru_malloc(sizeof(**poly_array) * (strlen(out) / ctx->N));
+
+	while (out[i]) {
+		uint32_t j = 0;
+		fmpz_poly_t *new_poly = ntru_malloc(sizeof(*new_poly));
+		fmpz_poly_init(*new_poly);
+		poly_array[polyc] = new_poly;
+
+		while (out[i] && j < ctx->N) {
+			fmpz_poly_set_coeff_si(*new_poly,
+					j,
+					(out[i] == '0') ? -1 : 1);
+			i++;
+			j++;
+		}
+		polyc++;
+	}
+
+	free(out);
+
+	poly_array[polyc] = NULL;
+
+	return poly_array;
+}
+
+/**
+ * Convert an array of polynomials back to a real string.
+ *
+ * @param poly_array the array of polynomials
+ * @param ctx the NTRUEncrypt context
+ * @return the real string
+ */
+char *poly_to_ascii(fmpz_poly_t **poly_array, ntru_context *ctx)
+{
+	fmpz_poly_t *ascii_poly;
+	char *binary_rep = NULL;
+	char *ascii_string;
+	uint32_t i = 0;
+	size_t old_length = 0,
+		   new_length;
+
+	/*
+	 * parse the polynomial coefficients into a string
+	 */
+	binary_rep = ntru_malloc(sizeof(char) * (ctx->N + 1));
+	while ((ascii_poly = *poly_array++)) {
+		new_length = sizeof(char) * (ctx->N + 1);
+
+		REALLOC(binary_rep,
+				old_length +
+				new_length +
+				1); /* trailing null byte */
+
+		old_length += new_length;
+
+		for (uint32_t j = 0; j < ctx->N; j++) {
+			fmpz *coeff = fmpz_poly_get_coeff_ptr(*ascii_poly, j);
+
+			if (coeff) {
+				if (fmpz_cmp_si(coeff, 1))
+					binary_rep[i] = '0';
+				else if (fmpz_cmp_si(coeff, -1))
+					binary_rep[i] = '1';
+			}
+			i++;
+		}
+	}
+
+	binary_rep[i] = '\0';
+
+	ascii_string = get_bin_arr_to_ascii(binary_rep);
+	free(binary_rep);
+
+	return ascii_string;
 }
