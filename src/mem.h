@@ -30,6 +30,23 @@
 
 #include <stdlib.h>
 
+
+/**
+ * Realloc macro which checks if reallocation
+ * worked via a temporary pointer.
+ */
+#define REALLOC(ptr, size) \
+{ \
+	void *tmp_ptr = NULL; \
+	tmp_ptr = realloc(ptr, size); \
+	if (tmp_ptr == NULL) { \
+		fprintf(stderr,"NULL Pointer in %s [%d]",__FILE__,__LINE__); \
+		abort(); \
+	} \
+	ptr = tmp_ptr; \
+}
+
+
 void *ntru_malloc(size_t size);
 void *ntru_calloc(size_t nmemb, size_t size);
 
