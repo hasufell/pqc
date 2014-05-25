@@ -152,6 +152,9 @@ void poly_delete_all(fmpz_poly_t *poly, ...)
  * so we don't have to deal with the intermediate
  * nmod_poly_t type if we don't need it.
  *
+ * This also normalises the coefficients to the interval
+ * 0 <= r < m.
+ *
  * @param a the polynom to apply the modulus to
  * @param mod the modulus
  */
@@ -173,6 +176,9 @@ void fmpz_poly_mod_unsigned(fmpz_poly_t a,
  * fmpz_poly_set_nmod_poly() in a row,
  * so we don't have to deal with the intermediate
  * nmod_poly_t type if we don't need it.
+ *
+ * This also normalises the coefficients to the interval
+ * -m/2 <= r < m/2.
  *
  * @param a the polynom to apply the modulus to
  * @param mod the modulus
