@@ -19,6 +19,13 @@
  * MA  02110-1301  USA
  */
 
+/**
+ * @file ascii_poly.c
+ * This file allows to convert between ascii strings
+ * and polynomials.
+ * @brief asci->poly and poly->ascii
+ */
+
 #include "common.h"
 #include "context.h"
 #include "mem.h"

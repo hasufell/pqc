@@ -19,6 +19,12 @@
  * MA  02110-1301  USA
  */
 
+/**
+ * @file ascii_poly.h
+ * Header for the internal API of ascii_poly.c.
+ * @brief header for ascii_poly.c
+ */
+
 #ifndef ASCII_POLY_H_
 #define ASCII_POLY_H_
 
