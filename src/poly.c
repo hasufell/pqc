@@ -597,7 +597,7 @@ bool poly_inverse_poly_p(fmpz_poly_t a,
 		fmpz_poly_set_coeff_fmpz_n(Fp, j, b_i);
 	}
 
-	/* check if the f * Fq = 1 (mod p) condition holds true */
+	/* check if the f * Fp = 1 (mod p) condition holds true */
 	fmpz_poly_set(a_tmp, a);
 	poly_starmultiply(a_tmp, Fp, a_tmp, ctx, ctx->p);
 	if (!fmpz_poly_is_one(a_tmp))
