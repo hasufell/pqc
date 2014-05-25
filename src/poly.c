@@ -90,22 +90,21 @@ static void poly_mod2_to_modq(fmpz_poly_t a,
  * context ctx and returns a newly allocated polynomial.
  * For an empty polynom, both parameters can be NULL/0.
  *
+ * @param new_poly the polynomial to initialize and
+ * fill with coefficients
  * @param c array of polynomial coefficients, can be NULL
  * @param len size of the coefficient array, can be 0
  * @return newly allocated polynomial pointer, must be freed
  * with fmpz_poly_clear()
  */
-fmpz_poly_t *poly_new(int const * const c,
+void poly_new(fmpz_poly_t new_poly,
+		int const * const c,
 		const size_t len)
 {
-	fmpz_poly_t *new_poly = ntru_malloc(sizeof(*new_poly));
-
-	fmpz_poly_init(*new_poly);
+	fmpz_poly_init(new_poly);
 
 	for (unsigned int i = 0; i < len; i++)
-		fmpz_poly_set_coeff_si(*new_poly, i, c[i]);
-
-	return new_poly;
+		fmpz_poly_set_coeff_si(new_poly, i, c[i]);
 }
 
 /**
@@ -116,10 +115,9 @@ fmpz_poly_t *poly_new(int const * const c,
  *
  * @param poly the polynomial to delete
  */
-void poly_delete(fmpz_poly_t *poly)
+void poly_delete(fmpz_poly_t poly)
 {
-	fmpz_poly_clear(*poly);
-	free(poly);
+	fmpz_poly_clear(poly);
 }
 
 /**
@@ -132,16 +130,16 @@ void poly_delete(fmpz_poly_t *poly)
  * @param poly the polynomial to delete
  * @param ... follow up polynomials
  */
-void poly_delete_all(fmpz_poly_t *poly, ...)
+void poly_delete_all(fmpz_poly_t poly, ...)
 {
-	fmpz_poly_t *next_poly;
+	fmpz_poly_struct *next_poly;
 	va_list args;
 
 	next_poly = poly;
 	va_start(args, poly);
 	while (next_poly != NULL) {
 		poly_delete(next_poly);
-		next_poly = va_arg(args, fmpz_poly_t*);
+		next_poly = va_arg(args, fmpz_poly_struct*);
 	}
 	va_end(args);
 }

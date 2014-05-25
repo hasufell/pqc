@@ -38,12 +38,13 @@
 #include <fmpz_poly.h>
 
 
-fmpz_poly_t *poly_new(int const * const c,
+void poly_new(fmpz_poly_t new_poly,
+		int const * const c,
 		const size_t len);
 
-void poly_delete(fmpz_poly_t *poly);
+void poly_delete(fmpz_poly_t poly);
 
-void poly_delete_all(fmpz_poly_t *poly, ...);
+void poly_delete_all(fmpz_poly_t poly, ...);
 
 void fmpz_poly_mod_unsigned(fmpz_poly_t a,
 		unsigned int mod);
