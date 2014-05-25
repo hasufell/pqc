@@ -46,11 +46,10 @@ INCS = -I.
 
 ifndef UNBUNDLE
 LIBFLINT = ../external/flint-2.4.3/libflint.a
-INCS += -I../external/libtommath-0.42.0 \
-		-I../external/libtompoly-0.04 \
-		-I../external/flint-2.4.3
+INCS += -I../external/flint-2.4.3
 else
 LIBFLINT = -lflint
+INCS += -I/usr/include/flint
 endif
 
 
