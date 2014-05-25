@@ -82,7 +82,7 @@ static char *get_int_to_bin_str(uint8_t value)
  */
 static char *get_bin_arr_to_ascii(char *binary_rep)
 {
-	const size_t int_arr_size = strlen(binary_rep) / 8;
+	const size_t int_arr_size = strlen(binary_rep) / ASCII_BITS;
 	uint8_t int_arr[int_arr_size];
 	char *tmp_string = binary_rep;
 	uint32_t i = 0;
