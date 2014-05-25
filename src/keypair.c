@@ -19,6 +19,13 @@
  * MA  02110-1301  USA
  */
 
+/**
+ * @file keypair.c
+ * This file handles the creation of the
+ * key pair and possibly common operations on them.
+ * @brief key creation and operations
+ */
+
 #include "context.h"
 #include "keypair.h"
 #include "poly.h"
@@ -29,6 +36,16 @@
 #include <stdbool.h>
 
 
+/**
+ * Creates an NTRU key pair,
+ * consisting of public and private
+ * components.
+ *
+ * @param f a random polynomial
+ * @param g a random polynomial
+ * @param pair store private and public components here [out]
+ * @param ctx the NTRU context
+ */
 bool ntru_create_keypair(
 		fmpz_poly_t f,
 		fmpz_poly_t g,

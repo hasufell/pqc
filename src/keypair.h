@@ -19,6 +19,12 @@
  * MA  02110-1301  USA
  */
 
+/**
+ * @file keypair.h
+ * Header for internal API of keypair.c.
+ * @brief header for keypair.c
+ */
+
 #ifndef NTRU_KEYPAIR_H
 #define NTRU_KEYPAIR_H
 

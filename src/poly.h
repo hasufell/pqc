@@ -19,6 +19,11 @@
  * MA  02110-1301  USA
  */
 
+/**
+ * @file poly.h
+ * Header for the internal API of poly.c.
+ * @brief header for poly.c
+ */
 
 #ifndef NTRU_POLY_H
 #define NTRU_POLY_H

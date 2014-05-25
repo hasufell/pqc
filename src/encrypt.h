@@ -19,6 +19,12 @@
  * MA  02110-1301  USA
  */
 
+/**
+ * @file encrypt.h
+ * Header for the internal API of encrypt.c.
+ * @brief header for encrypt.c
+ */
+
 #ifndef PQC_ENCRYPT_H
 #define PQC_ENCRYPT_H
 

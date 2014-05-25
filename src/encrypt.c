@@ -19,6 +19,13 @@
  * MA  02110-1301  USA
  */
 
+/**
+ * @file encrypt.c
+ * This file handles the NTRU encryption
+ * algorithm.
+ * @brief NTRU encryption
+ */
+
 #include "encrypt.h"
 
 #include <fmpz_poly.h>

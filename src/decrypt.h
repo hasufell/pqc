@@ -19,6 +19,12 @@
  * MA  02110-1301  USA
  */
 
+/**
+ * @file decrypt.h
+ * Header for the external API of decrypt.c.
+ * @brief header for decrypt.c
+ */
+
 #ifndef NTRU_DECRYPT_H
 #define NTRU_DECRYPT_H
 

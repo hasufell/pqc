@@ -19,6 +19,14 @@
  * MA  02110-1301  USA
  */
 
+/**
+ * @file poly.c
+ * This files purpose is to handle polynomials
+ * in general, allowing modification, arithmetic
+ * and common algorithms like inverting them.
+ * @brief operations on polynomials
+ */
+
 #include "context.h"
 #include "err.h"
 #include "mem.h"

@@ -19,6 +19,12 @@
  * MA  02110-1301  USA
  */
 
+/**
+ * @file mem.h
+ * Header for the internal API of mem.c.
+ * @brief header for mem.c
+ */
+
 #ifndef NTRU_MEM_H
 #define NTRU_MEM_H
 

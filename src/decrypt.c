@@ -19,6 +19,13 @@
  * MA  02110-1301  USA
  */
 
+/**
+ * @file decrypt.c
+ * This file handles the NTRU decryption
+ * algorithm.
+ * @brief NTRU decryption
+ */
+
 #include "decrypt.h"
 
 #include <fmpz_poly.h>
