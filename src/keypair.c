@@ -90,3 +90,16 @@ cleanup:
 	return retval;
 }
 
+/**
+ * Used to free the inner structure
+ * of a keypair. This will not call free()
+ * on the pair itself.
+ *
+ * @param pair the pair to free the inner structure of
+ */
+void ntru_delete_keypair(keypair *pair)
+{
+	fmpz_poly_clear(pair->priv_inv);
+	fmpz_poly_clear(pair->priv);
+	fmpz_poly_clear(pair->pub);
+}

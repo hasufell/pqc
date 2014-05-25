@@ -68,5 +68,7 @@ bool ntru_create_keypair(
 		keypair *pair,
 		ntru_context *ctx);
 
+void ntru_delete_keypair(keypair *pair);
+
 
 #endif /* NTRU_KEYPAIR_H */
