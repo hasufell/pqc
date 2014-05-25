@@ -110,9 +110,7 @@ void poly_new(fmpz_poly_t new_poly,
 
 /**
  * This deletes the internal structure of a polynomial,
- * and frees the pointer. Don't call this on stack variables,
- * this is intended for use after ntru_ functions, that
- * return a polynomial pointer.
+ * and frees the pointer.
  *
  * @param poly the polynomial to delete
  */
@@ -122,10 +120,25 @@ void poly_delete(fmpz_poly_t poly)
 }
 
 /**
+ * Delete the internal structure of a polynomial
+ * array which must be NULL terminated.
+ *
+ * @param poly_array the polynomial array
+ */
+void poly_delete_array(fmpz_poly_t **poly_array)
+{
+	unsigned int i = 0;
+
+	while(poly_array[i]) {
+		poly_delete(*(poly_array[i]));
+		free(*(poly_array[i]));
+		i++;
+	}
+}
+
+/**
  * This deletes the internal structure of all polynomials,
- * and frees the pointers. Don't call this on stack variables,
- * this is intended for use after ntru_ functions, that
- * return a polynomial pointer.
+ * and frees the pointers.
  * You must call this with NULL as last argument!
  *
  * @param poly the polynomial to delete

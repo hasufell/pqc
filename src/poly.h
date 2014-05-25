@@ -44,6 +44,8 @@ void poly_new(fmpz_poly_t new_poly,
 
 void poly_delete(fmpz_poly_t poly);
 
+void poly_delete_array(fmpz_poly_t **poly_array);
+
 void poly_delete_all(fmpz_poly_t poly, ...);
 
 void fmpz_poly_mod_unsigned(fmpz_poly_t a,
