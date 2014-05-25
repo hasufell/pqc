@@ -121,7 +121,9 @@ void poly_delete(fmpz_poly_t poly)
 
 /**
  * Delete the internal structure of a polynomial
- * array which must be NULL terminated.
+ * array which must be NULL terminated. It is expected
+ * that poly_array is not on the stack and was obtained
+ * by a function like ascii_to_poly().
  *
  * @param poly_array the polynomial array
  */
@@ -134,6 +136,7 @@ void poly_delete_array(fmpz_poly_t **poly_array)
 		free(*(poly_array[i]));
 		i++;
 	}
+	free(poly_array);
 }
 
 /**
