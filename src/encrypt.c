@@ -32,23 +32,8 @@
 #include <fmpz.h>
 
 
-/**
- * encrypt the msg, using the math:
- * e = (h ∗ r) + m (mod q)
- *
- * e = the encrypted poly
- * h = the public key
- * r = the random poly
- * m = the message poly
- * q = large mod
- *
- * @param msg pb_poly* 		the message to encrypt
- * @param pub_key pb_poly* 	the public key
- * @param rnd pb_poly*   	the random poly
- * @param out pb_poly* 		the output poly [out]
- * @param ctx ntru_context* the ntru context
- */
-void ntru_encrypt_poly(
+void
+ntru_encrypt_poly(
 		fmpz_poly_t msg,
 		fmpz_poly_t pub_key,
 		fmpz_poly_t rnd,

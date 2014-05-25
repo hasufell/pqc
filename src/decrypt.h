@@ -35,7 +35,20 @@
 #include <fmpz.h>
 
 
-void ntru_decrypt_poly(
+/**
+ * Decryption of the given Polynom with the private key, its inverse
+ * and the fitting ntru_context
+ *
+ * @param encr_msg encrypted polynom with maximum length of N from
+ * 		the given context
+ * @param priv_key the polynom containing the private key to decrypt
+ * 		the message
+ * @param priv_key_inv the inverse polynome to the private key
+ * @param out the result polynom is written in here [out]
+ * @param ctx the ntru_context
+ */
+void
+ntru_decrypt_poly(
 		fmpz_poly_t encr_msg,
 		fmpz_poly_t priv_key,
 		fmpz_poly_t priv_key_inv,

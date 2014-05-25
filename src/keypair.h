@@ -62,13 +62,32 @@ struct keypair {
 };
 
 
-bool ntru_create_keypair(
+/**
+ * Creates an NTRU key pair,
+ * consisting of public and private
+ * components.
+ *
+ * @param f a random polynomial
+ * @param g a random polynomial
+ * @param pair store private and public components here [out]
+ * @param ctx the NTRU context
+ */
+bool
+ntru_create_keypair(
 		fmpz_poly_t f,
 		fmpz_poly_t g,
 		keypair *pair,
 		ntru_context *ctx);
 
-void ntru_delete_keypair(keypair *pair);
+/**
+ * Used to free the inner structure
+ * of a keypair. This will not call free()
+ * on the pair itself.
+ *
+ * @param pair the pair to free the inner structure of
+ */
+void
+ntru_delete_keypair(keypair *pair);
 
 
 #endif /* NTRU_KEYPAIR_H */
