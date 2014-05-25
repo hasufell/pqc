@@ -25,8 +25,8 @@
  * @brief header for ascii_poly.c
  */
 
-#ifndef ASCII_POLY_H_
-#define ASCII_POLY_H_
+#ifndef NTRU_ASCII_POLY_H_
+#define NTRU_ASCII_POLY_H_
 
 
 #include "context.h"
@@ -39,4 +39,4 @@ fmpz_poly_t **ascii_to_poly(char *to_poly, ntru_context *ctx);
 char *poly_to_ascii(fmpz_poly_t **poly_array, ntru_context *ctx);
 
 
-#endif /* ASCII_POLY_H_ */
+#endif /* NTRU_ASCII_POLY_H_ */
