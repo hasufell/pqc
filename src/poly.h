@@ -19,6 +19,11 @@
  * MA  02110-1301  USA
  */
 
+/**
+ * @file poly.h
+ * Header for the internal API of poly.c.
+ * @brief header for poly.c
+ */
 
 #ifndef NTRU_POLY_H
 #define NTRU_POLY_H
@@ -26,199 +31,54 @@
 #include "context.h"
 #include "err.h"
 
-#include <tompoly.h>
-#include <tommath.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
-
-#define MP_SET(...) mp_set(__VA_ARGS__)
-
-#define MP_SET_INT(a, b) \
-{ \
-	int result; \
-	if ((result = mp_set_int(a, (unsigned long)abs(b))) != MP_OKAY) \
-			NTRU_ABORT("Error setting long constant. %s", \
-				mp_error_to_string(result)); \
-	if ((int)b < 0) \
-		mp_neg(a, a); \
-}
-
-#define MP_MUL(...) \
-{ \
-	int result; \
-	if ((result = mp_mul(__VA_ARGS__)) != MP_OKAY) \
-			NTRU_ABORT("Error multiplying terms. %s", \
-				mp_error_to_string(result)); \
-}
-
-#define MP_DIV(...) \
-{ \
-	int result; \
-	if ((result = mp_div(__VA_ARGS__)) != MP_OKAY) \
-			NTRU_ABORT("Error dividing terms. %s", \
-				mp_error_to_string(result)); \
-}
-
-#define MP_ADD(...) \
-{ \
-	int result; \
-	if ((result = mp_add(__VA_ARGS__)) != MP_OKAY) \
-			NTRU_ABORT("Error adding terms. %s", \
-				mp_error_to_string(result)); \
-}
-
-#define MP_SUB(...) \
-{ \
-	int result; \
-	if ((result = mp_sub(__VA_ARGS__)) != MP_OKAY) \
-			NTRU_ABORT("Error substracting terms. %s", \
-				mp_error_to_string(result)); \
-}
-
-#define MP_MOD(...) \
-{ \
-	int result; \
-	if ((result = mp_mod(__VA_ARGS__)) != MP_OKAY) \
-			NTRU_ABORT("Error reducing term by modulo. %s", \
-				mp_error_to_string(result)); \
-}
-
-#define MP_COPY(...) \
-{ \
-	int result; \
-	if ((result = mp_copy(__VA_ARGS__)) != MP_OKAY) \
-			NTRU_ABORT("Error copying terms. %s", \
-				mp_error_to_string(result)); \
-}
-
-#define MP_XOR(...) \
-{ \
-	int result; \
-	if ((result = mp_xor(__VA_ARGS__)) != MP_OKAY) \
-			NTRU_ABORT("Error XORing terms. %s", \
-				mp_error_to_string(result)); \
-}
-
-#define MP_EXPTMOD(...) \
-{ \
-	int result; \
-	if ((result = mp_exptmod(__VA_ARGS__)) != MP_OKAY) \
-			NTRU_ABORT("Error computing modular exponentiation. %s", \
-				mp_error_to_string(result)); \
-}
-
-#define MP_INVMOD(...) \
-{ \
-	int result; \
-	if ((result = mp_invmod(__VA_ARGS__)) != MP_OKAY) \
-			NTRU_ABORT("Error computing modular inverse. %s", \
-				mp_error_to_string(result)); \
-}
-
-#define MP_EXPT_D(...) \
-{ \
-	int result; \
-	if ((result = mp_expt_d(__VA_ARGS__)) != MP_OKAY) \
-			NTRU_ABORT("Error computing modular exponentiation. %s", \
-				mp_error_to_string(result)); \
-}
-
-#define PB_MUL(...) \
-{ \
-	int result; \
-	if ((result = pb_mul(__VA_ARGS__)) != MP_OKAY) \
-			NTRU_ABORT("Error multiplying polynomials. %s", \
-				mp_error_to_string(result)); \
-}
-
-#define PB_MP_MUL(...) \
-{ \
-	int result; \
-	if ((result = pb_mp_mul(__VA_ARGS__)) != MP_OKAY) \
-			NTRU_ABORT("Error multiplying polynomial with mp_int. %s", \
-				mp_error_to_string(result)); \
-}
-
-#define PB_ADD(...) \
-{ \
-	int result; \
-	if ((result = pb_add(__VA_ARGS__)) != MP_OKAY) \
-			NTRU_ABORT("Error adding polynomials. %s", \
-				mp_error_to_string(result)); \
-}
-
-#define PB_SUB(...) \
-{ \
-	int result; \
-	if ((result = pb_sub(__VA_ARGS__)) != MP_OKAY) \
-			NTRU_ABORT("Error substracting polynomials. %s", \
-				mp_error_to_string(result)); \
-}
-
-#define PB_MOD(poly_a, mp_int, poly_out, len) \
-{ \
-	for (unsigned int i = 0; i < len; i++) \
-		MP_DIV(&(poly_a->terms[i]), mp_int, NULL, &(poly_out->terms[i])); \
-}
-
-#define PB_COPY(...) \
-{ \
-	int result; \
-	if ((result = pb_copy(__VA_ARGS__)) != MP_OKAY) \
-			NTRU_ABORT("Error copying polynomial. %s", \
-				mp_error_to_string(result)); \
-}
+#include <fmpz_poly.h>
 
 
-void init_integer(mp_int *new_int);
-
-void init_integers(mp_int *new_int, ...);
-
-void init_polynom(pb_poly *new_poly, mp_int *chara);
-
-void init_polynom_size(pb_poly *new_poly, mp_int *chara, size_t size);
-
-pb_poly *build_polynom(int const * const c,
+void poly_new(fmpz_poly_t new_poly,
+		int const * const c,
 		const size_t len);
 
-void erase_polynom(pb_poly *poly, size_t len);
+void poly_delete(fmpz_poly_t poly);
 
-void delete_polynom(pb_poly *new_poly);
+void poly_delete_all(fmpz_poly_t poly, ...);
 
-void delete_polynom_multi(pb_poly *poly, ...);
+void fmpz_poly_mod_unsigned(fmpz_poly_t a,
+		unsigned int mod);
 
-void pb_starmultiply(pb_poly *a,
-		pb_poly *b,
-		pb_poly *c,
+void fmpz_poly_mod(fmpz_poly_t a,
+		unsigned int mod);
+
+void fmpz_poly_set_coeff_fmpz_n(fmpz_poly_t poly,
+		slong n,
+		const fmpz_t x);
+
+int fmpz_invmod_ui(fmpz_t f,
+		const fmpz_t g,
+		unsigned int mod);
+
+void fmpz_add_n(fmpz_t f, const fmpz_t g, const fmpz_t h);
+
+void poly_starmultiply(fmpz_poly_t a,
+		fmpz_poly_t b,
+		fmpz_poly_t c,
 		ntru_context *ctx,
 		unsigned int modulus);
 
-int pb_mp_mul(pb_poly *a, mp_int *b, pb_poly *c);
-
-void pb_xor(pb_poly *a,
-		pb_poly *b,
-		pb_poly *c,
-		const size_t len);
-
-int get_degree(pb_poly const * const poly);
-
-bool pb_inverse_poly_q(pb_poly *a,
-		pb_poly *Fq,
+bool poly_inverse_poly_q(fmpz_poly_t a,
+		fmpz_poly_t Fq,
 		ntru_context *ctx);
 
-bool pb_inverse_poly_p(pb_poly *a,
-		pb_poly *Fp,
+bool poly_inverse_poly_p(fmpz_poly_t a,
+		fmpz_poly_t Fp,
 		ntru_context *ctx);
 
-void draw_polynom(pb_poly * const poly);
+void poly_draw(fmpz_poly_t poly);
 
-void pb_normalize(pb_poly*,
-		int,
-		int,
-		ntru_context*);
+void poly_draw_pretty(fmpz_poly_t poly);
 
-void draw_mp_int(mp_int*);
 
 #endif /* NTRU_POLY_H */

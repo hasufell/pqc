@@ -19,6 +19,12 @@
  * MA  02110-1301  USA
  */
 
+/**
+ * @file err.h
+ * This file provides error macros
+ * and functions for the NTRU cryptosystem.
+ * @brief error handling
+ */
 
 #ifndef NTRU_ERR_H
 #define NTRU_ERR_H

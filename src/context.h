@@ -19,6 +19,12 @@
  * MA  02110-1301  USA
  */
 
+/**
+ * @file context.h
+ * This file defines the ntru_context
+ * and related data types.
+ * @brief NTRU context types
+ */
 
 #ifndef NTRU_CONTEXT_H
 #define NTRU_CONTEXT_H

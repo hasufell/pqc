@@ -19,6 +19,13 @@
  * MA  02110-1301  USA
  */
 
+/**
+ * @file mem.c
+ * This file provides functions for
+ * memory management.
+ * @brief memory management
+ */
+
 #include "mem.h"
 
 #include <stdio.h>
