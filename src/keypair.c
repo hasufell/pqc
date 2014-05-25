@@ -77,6 +77,7 @@ bool ntru_create_keypair(
 	fmpz_poly_mod(pub, ctx->q);
 
 	fmpz_poly_init(pair->priv);
+	fmpz_poly_init(pair->priv_inv);
 	fmpz_poly_init(pair->pub);
 
 	fmpz_poly_set(pair->priv, f);
