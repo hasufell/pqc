@@ -19,10 +19,24 @@
  * MA  02110-1301  USA
  */
 
-#ifndef ASCII_POLY_H_
-#define ASCII_POLY_H_
+/**
+ * @file ascii_poly.h
+ * Header for the internal API of ascii_poly.c.
+ * @brief header for ascii_poly.c
+ */
 
-pb_poly *ascii_to_poly(char *to_poly);
-char *polynom_to_ascii(pb_poly *to_ascii);
+#ifndef NTRU_ASCII_POLY_H_
+#define NTRU_ASCII_POLY_H_
 
-#endif /* ASCII_POLY_H_ */
+
+#include "context.h"
+
+#include <fmpz_poly.h>
+#include <fmpz.h>
+
+
+fmpz_poly_t **ascii_to_poly(char *to_poly, ntru_context *ctx);
+char *poly_to_ascii(fmpz_poly_t **poly_array, ntru_context *ctx);
+
+
+#endif /* NTRU_ASCII_POLY_H_ */

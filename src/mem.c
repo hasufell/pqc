@@ -53,3 +53,26 @@ void *ntru_malloc(size_t size)
 
 	return ptr;
 }
+
+/**
+ * Allocate memory of size and return
+ * a void pointer. The memory is zeroed.
+ *
+ * @param nmemb amount of blocks to allocate
+ * @param size of the memory blocks to allocate in bytes
+ * @return void pointer to the beginning of the allocated memory block
+ */
+void *ntru_calloc(size_t nmemb, size_t size)
+{
+	void *ptr;
+
+	ptr = calloc(nmemb, size);
+
+	if (size)
+		if (!ptr) {
+			fprintf(stderr, "failed to allocate memory, aborting!");
+			abort();
+		}
+
+	return ptr;
+}

@@ -20,35 +20,19 @@
  */
 
 /**
- * @file mem.h
- * Header for the internal API of mem.c.
- * @brief header for mem.c
+ * @file common.h
+ * This file holds common macros and functions
+ * shared throughout the whole codebase without
+ * any particular purpose.
+ * @brief common macros/functions
  */
 
-#ifndef NTRU_MEM_H
-#define NTRU_MEM_H
-
-#include <stdlib.h>
+#ifndef NTRU_COMMON_H
+#define NTRU_COMMON_H
 
 
-/**
- * Realloc macro which checks if reallocation
- * worked via a temporary pointer.
- */
-#define REALLOC(ptr, size) \
-{ \
-	void *tmp_ptr = NULL; \
-	tmp_ptr = realloc(ptr, size); \
-	if (tmp_ptr == NULL) { \
-		fprintf(stderr,"NULL Pointer in %s [%d]",__FILE__,__LINE__); \
-		abort(); \
-	} \
-	ptr = tmp_ptr; \
-}
+#define CHAR_SIZE sizeof(char)
+#define ASCII_BITS 8
 
 
-void *ntru_malloc(size_t size);
-void *ntru_calloc(size_t nmemb, size_t size);
-
-
-#endif /* NTRU_MEM_H */
+#endif /* NTRU_COMMON_H */
