@@ -30,6 +30,7 @@
 
 
 #include "common.h"
+#include "ntru_string.h"
 
 
 /**
