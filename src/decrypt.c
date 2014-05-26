@@ -57,7 +57,7 @@ ntru_decrypt_poly(
 	fmpz_poly_clear(a);
 }
 
-char *
+string *
 ntru_decrypt_string(
 		string *encr_msg,
 		fmpz_poly_t priv_key,
@@ -65,10 +65,10 @@ ntru_decrypt_string(
 		ntru_context *ctx)
 {
 	uint32_t i = 0;
-	char *decr_msg;
+	string *decr_msg;
 	fmpz_poly_t **poly_array;
 
-	poly_array = ascii_to_poly(encr_msg, ctx);
+	poly_array = ascii_to_poly_arr(encr_msg, ctx);
 
 	while (*poly_array[i]) {
 		ntru_decrypt_poly(*poly_array[i], priv_key, priv_key_inv,
@@ -76,7 +76,7 @@ ntru_decrypt_string(
 		i++;
 	}
 
-	decr_msg = tern_poly_to_ascii(poly_array, ctx);
+	decr_msg = tern_poly_arr_to_ascii(poly_array, ctx);
 
 	poly_delete_array(poly_array);
 

@@ -65,7 +65,7 @@ ntru_decrypt_poly(
  * @param priv_key_inv the inverse polynome to the private key
  * @param ctx the ntru_context
  */
-char *
+string *
 ntru_decrypt_string(
 		string *encr_msg,
 		fmpz_poly_t priv_key,

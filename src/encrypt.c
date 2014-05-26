@@ -69,14 +69,14 @@ ntru_encrypt_string(
 	string *enc_msg;
 	fmpz_poly_t **poly_array;
 
-	poly_array = ascii_to_tern_poly(msg, ctx);
+	poly_array = ascii_to_tern_poly_arr(msg, ctx);
 
 	while (*poly_array[i]) {
 		ntru_encrypt_poly(*poly_array[i], pub_key, rnd, *poly_array[i], ctx);
 		i++;
 	}
 
-	enc_msg = poly_to_ascii(poly_array, ctx);
+	enc_msg = poly_arr_to_ascii(poly_array, ctx);
 
 	poly_delete_array(poly_array);
 
