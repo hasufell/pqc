@@ -88,7 +88,6 @@ get_bin_arr_to_ascii(char *binary_rep)
 	uint8_t int_arr[int_arr_size];
 	char *tmp_string = binary_rep;
 	uint32_t i = 0;
-
 	char *int_string;
 
 	while (*tmp_string) {
@@ -135,6 +134,7 @@ ascii_to_poly(char *to_poly, ntru_context *ctx)
 	while (out[i]) {
 		uint32_t j = 0;
 		fmpz_poly_t *new_poly = ntru_malloc(sizeof(*new_poly));
+
 		fmpz_poly_init(*new_poly);
 		poly_array[polyc] = new_poly;
 
