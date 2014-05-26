@@ -51,6 +51,9 @@ struct string {
 };
 
 
+void
+prints(string *print_string);
+
 /**
  * Delete the inner structure
  * of the string and frees the string

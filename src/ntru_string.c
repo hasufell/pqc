@@ -28,6 +28,16 @@
 
 #include "ntru_string.h"
 
+#include <stdio.h>
+
+
+void
+prints(string *print_string)
+{
+	for (size_t i = 0; i < print_string->len; i++)
+		printf("%c", print_string->ptr[i]);
+}
+
 
 void
 string_delete(string *del_string)
