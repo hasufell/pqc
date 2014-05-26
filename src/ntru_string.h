@@ -42,6 +42,9 @@ struct string {
 	/**
 	 * Pointer to the char array,
 	 * holding the actual string.
+	 * THIS IS NOT NULL TERMINATED
+	 * (at least not necessarily,
+	 * don't ever assume it).
 	 */
 	char *ptr;
 	/**
