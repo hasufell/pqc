@@ -26,7 +26,11 @@
  * @brief NTRU encryption
  */
 
+#include "ascii_poly.h"
 #include "encrypt.h"
+#include "mem.h"
+
+#include <string.h>
 
 #include <fmpz_poly.h>
 #include <fmpz.h>
@@ -34,14 +38,46 @@
 
 void
 ntru_encrypt_poly(
-		fmpz_poly_t msg,
+		fmpz_poly_t msg_tern,
 		fmpz_poly_t pub_key,
 		fmpz_poly_t rnd,
 		fmpz_poly_t out,
 		ntru_context *ctx)
 {
+	/* allow aliasing */
+	fmpz_poly_t tmp_poly_msg;
+	fmpz_poly_init(tmp_poly_msg);
+	fmpz_poly_set(tmp_poly_msg, msg_tern);
+
 	fmpz_poly_zero(out);
 	poly_starmultiply(pub_key, rnd, out, ctx, ctx->q);
-	fmpz_poly_add(out, out, msg);
+	fmpz_poly_add(out, out, tmp_poly_msg);
 	fmpz_poly_mod_unsigned(out, ctx->q);
+
+	fmpz_poly_clear(tmp_poly_msg);
+}
+
+string *
+ntru_encrypt_string(
+		char *msg,
+		fmpz_poly_t pub_key,
+		fmpz_poly_t rnd,
+		ntru_context *ctx)
+{
+	uint32_t i = 0;
+	string *enc_msg;
+	fmpz_poly_t **poly_array;
+
+	poly_array = ascii_to_tern_poly(msg, ctx);
+
+	while (*poly_array[i]) {
+		ntru_encrypt_poly(*poly_array[i], pub_key, rnd, *poly_array[i], ctx);
+		i++;
+	}
+
+	enc_msg = poly_to_ascii(poly_array, ctx);
+
+	poly_delete_array(poly_array);
+
+	return enc_msg;
 }

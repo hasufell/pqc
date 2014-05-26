@@ -31,8 +31,30 @@
 #define NTRU_COMMON_H
 
 
+#include <stdlib.h>
+
+
 #define CHAR_SIZE sizeof(char)
 #define ASCII_BITS 8
+
+
+typedef struct string string;
+
+
+/**
+ * Represents a string.
+ */
+struct string {
+	/**
+	 * Pointer to the char array,
+	 * holding the actual string.
+	 */
+	char *ptr;
+	/**
+	 * Length of the string.
+	 */
+	size_t len;
+};
 
 
 #endif /* NTRU_COMMON_H */

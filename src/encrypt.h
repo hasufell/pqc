@@ -29,6 +29,7 @@
 #define PQC_ENCRYPT_H
 
 
+#include "common.h"
 #include "context.h"
 #include "poly.h"
 
@@ -41,23 +42,47 @@
  * e = (h ∗ r) + m (mod q)
  *
  * e = the encrypted poly
+ *
  * h = the public key
+ *
  * r = the random poly
+ *
  * m = the message poly
+ *
  * q = large mod
  *
- * @param msg pb_poly* 		the message to encrypt
- * @param pub_key pb_poly* 	the public key
- * @param rnd pb_poly*   	the random poly
- * @param out pb_poly* 		the output poly [out]
- * @param ctx ntru_context* the ntru context
+ * @param msg_tern the message to encrypt, in ternary format
+ * @param pub_key the public key
+ * @param rnd the random poly (should have relatively small
+ * coefficients, but not restricted to {-1, 0, 1})
+ * @param out the output poly which is in the range {0, q-1}
+ * (not ternary!) [out]
+ * @param ctx ntru_context the ntru context
  */
 void
 ntru_encrypt_poly(
-		fmpz_poly_t msg,
+		fmpz_poly_t msg_tern,
 		fmpz_poly_t pub_key,
 		fmpz_poly_t rnd,
 		fmpz_poly_t out,
+		ntru_context *ctx);
+
+/**
+ * Encrypt a message int he form of a null-terminated char array and
+ * return a string.
+ *
+ * @param msg the message
+ * @param pub_key the public key
+ * @param rnd the random poly (should have relatively small
+ * coefficients, but not restricted to {-1, 0, 1})
+ * @param ctx ntru_context the ntru context
+ * @return the newly allocated encrypted string
+ */
+string *
+ntru_encrypt_string(
+		char *msg,
+		fmpz_poly_t pub_key,
+		fmpz_poly_t rnd,
 		ntru_context *ctx);
 
 

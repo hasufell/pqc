@@ -28,8 +28,9 @@
 #ifndef NTRU_DECRYPT_H
 #define NTRU_DECRYPT_H
 
-#include "poly.h"
+#include "common.h"
 #include "context.h"
+#include "poly.h"
 
 #include <fmpz_poly.h>
 #include <fmpz.h>
@@ -44,7 +45,7 @@
  * @param priv_key the polynom containing the private key to decrypt
  * 		the message
  * @param priv_key_inv the inverse polynome to the private key
- * @param out the result polynom is written in here [out]
+ * @param out_tern the resulting ternary polynom [out]
  * @param ctx the ntru_context
  */
 void
@@ -52,7 +53,23 @@ ntru_decrypt_poly(
 		fmpz_poly_t encr_msg,
 		fmpz_poly_t priv_key,
 		fmpz_poly_t priv_key_inv,
-		fmpz_poly_t out,
+		fmpz_poly_t out_tern,
+		ntru_context *ctx);
+
+/**
+ * Decryption of a given encrypted string.
+ *
+ * @param encr_msg the encrypted message in the form of a string
+ * @param priv_key the polynom containing the private key to decrypt
+ * 		the message
+ * @param priv_key_inv the inverse polynome to the private key
+ * @param ctx the ntru_context
+ */
+char *
+ntru_decrypt_string(
+		string *encr_msg,
+		fmpz_poly_t priv_key,
+		fmpz_poly_t priv_key_inv,
 		ntru_context *ctx);
 
 

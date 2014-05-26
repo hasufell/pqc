@@ -26,7 +26,10 @@
  * @brief NTRU decryption
  */
 
+#include "ascii_poly.h"
 #include "decrypt.h"
+
+#include <string.h>
 
 #include <fmpz_poly.h>
 #include <fmpz.h>
@@ -37,7 +40,7 @@ ntru_decrypt_poly(
 		fmpz_poly_t encr_msg,
 		fmpz_poly_t priv_key,
 		fmpz_poly_t priv_key_inv,
-		fmpz_poly_t out,
+		fmpz_poly_t out_tern,
 		ntru_context *ctx)
 {
 	fmpz_poly_t a;
@@ -47,8 +50,34 @@ ntru_decrypt_poly(
 
 	poly_starmultiply(priv_key, encr_msg, a, ctx, ctx->q);
 	fmpz_poly_mod(a, ctx->q);
-	poly_starmultiply(a, priv_key_inv, out, ctx, ctx->p);
-	fmpz_poly_mod(out, ctx->p);
+	poly_starmultiply(a, priv_key_inv, out_tern, ctx, ctx->p);
+	fmpz_poly_mod(out_tern, ctx->p);
 
 	fmpz_poly_clear(a);
+}
+
+char *
+ntru_decrypt_string(
+		string *encr_msg,
+		fmpz_poly_t priv_key,
+		fmpz_poly_t priv_key_inv,
+		ntru_context *ctx)
+{
+	uint32_t i = 0;
+	char *decr_msg;
+	fmpz_poly_t **poly_array;
+
+	poly_array = ascii_to_poly(encr_msg, ctx);
+
+	while (*poly_array[i]) {
+		ntru_decrypt_poly(*poly_array[i], priv_key, priv_key_inv,
+				*poly_array[i], ctx);
+		i++;
+	}
+
+	decr_msg = tern_poly_to_ascii(poly_array, ctx);
+
+	poly_delete_array(poly_array);
+
+	return decr_msg;
 }
