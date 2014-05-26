@@ -42,6 +42,13 @@
 string *
 read_file(char const * const filename);
 
+/**
+ * Write a string to a file. The file will be pruned or created
+ * if it does not exist.
+ *
+ * @param wstring the string to write to the file
+ * @param filename the name of the file to write to
+ */
 void
 write_file(string const *wstring, char const * const filename);
 

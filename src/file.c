@@ -21,7 +21,7 @@
 
 /**
  * @file file.c
- * Allows operations of files, such as reading
+ * Allows operations on files, such as reading
  * and writing.
  * @brief file operations
  */
