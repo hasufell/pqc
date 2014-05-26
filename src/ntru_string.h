@@ -20,22 +20,35 @@
  */
 
 /**
- * @file common.h
- * This file holds common macros and functions
- * shared throughout the whole codebase without
- * any particular purpose.
- * @brief common macros/functions
+ * @file ntru_string.h
+ * Header for the external API of ntru_string.c.
+ * @brief header for ntru_string.c
  */
 
-#ifndef NTRU_COMMON_H
-#define NTRU_COMMON_H
+#ifndef NTRU_STRING_H
+#define NTRU_STRING_H
 
 
 #include <stdlib.h>
 
 
-#define CHAR_SIZE sizeof(char)
-#define ASCII_BITS 8
+typedef struct string string;
 
 
-#endif /* NTRU_COMMON_H */
+/**
+ * Represents a string.
+ */
+struct string {
+	/**
+	 * Pointer to the char array,
+	 * holding the actual string.
+	 */
+	char *ptr;
+	/**
+	 * Length of the string.
+	 */
+	size_t len;
+};
+
+
+#endif /* NTRU_STRING_H */

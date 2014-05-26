@@ -26,11 +26,12 @@
  * @brief asci->poly and poly->ascii
  */
 
+#include "ascii_poly.h"
 #include "common.h"
 #include "context.h"
 #include "mem.h"
+#include "ntru_string.h"
 #include "poly.h"
-#include "ascii_poly.h"
 
 #include <stdint.h>
 #include <stdlib.h>

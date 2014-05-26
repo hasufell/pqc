@@ -28,8 +28,8 @@
 #ifndef NTRU_DECRYPT_H
 #define NTRU_DECRYPT_H
 
-#include "common.h"
 #include "context.h"
+#include "ntru_string.h"
 #include "poly.h"
 
 #include <fmpz_poly.h>

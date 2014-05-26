@@ -29,6 +29,7 @@
 #include "ascii_poly.h"
 #include "encrypt.h"
 #include "mem.h"
+#include "ntru_string.h"
 
 #include <string.h>
 

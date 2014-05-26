@@ -20,22 +20,8 @@
  */
 
 /**
- * @file common.h
- * This file holds common macros and functions
- * shared throughout the whole codebase without
- * any particular purpose.
- * @brief common macros/functions
+ * @file ntru_string.c
+ * Sets up a string type that does not suck
+ * like C strings and provides operations on it.
+ * @brief string type and operations
  */
-
-#ifndef NTRU_COMMON_H
-#define NTRU_COMMON_H
-
-
-#include <stdlib.h>
-
-
-#define CHAR_SIZE sizeof(char)
-#define ASCII_BITS 8
-
-
-#endif /* NTRU_COMMON_H */

@@ -31,6 +31,7 @@
 
 #include "common.h"
 #include "context.h"
+#include "ntru_string.h"
 
 #include <fmpz_poly.h>
 #include <fmpz.h>

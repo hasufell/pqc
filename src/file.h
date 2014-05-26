@@ -20,22 +20,30 @@
  */
 
 /**
- * @file common.h
- * This file holds common macros and functions
- * shared throughout the whole codebase without
- * any particular purpose.
- * @brief common macros/functions
+ * @file file.h
+ * Header for the external API of file.c.
+ * @brief header for file.c
  */
 
-#ifndef NTRU_COMMON_H
-#define NTRU_COMMON_H
+#ifndef NTRU_FILE_H
+#define NTRU_FILE_H
 
 
-#include <stdlib.h>
+#include "common.h"
 
 
-#define CHAR_SIZE sizeof(char)
-#define ASCII_BITS 8
+/**
+ * Reads a file and returns a newly allocated string.
+ *
+ * @param filename file to open
+ * @return a newly allocated string which must be freed by the caller
+ * or NULL on failure
+ */
+string *
+read_file(char const * const filename);
+
+void
+write_file(string const *file_content, char const * const filename);
 
 
-#endif /* NTRU_COMMON_H */
+#endif /* NTRU_FILE_H */

@@ -28,6 +28,7 @@
 
 #include "ascii_poly.h"
 #include "decrypt.h"
+#include "ntru_string.h"
 
 #include <string.h>
 

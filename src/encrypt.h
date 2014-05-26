@@ -29,8 +29,8 @@
 #define PQC_ENCRYPT_H
 
 
-#include "common.h"
 #include "context.h"
+#include "ntru_string.h"
 #include "poly.h"
 
 #include <fmpz_poly.h>
@@ -68,7 +68,7 @@ ntru_encrypt_poly(
 		ntru_context *ctx);
 
 /**
- * Encrypt a message int he form of a null-terminated char array and
+ * Encrypt a message in the form of a null-terminated char array and
  * return a string.
  *
  * @param msg the message
