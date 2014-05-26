@@ -25,3 +25,13 @@
  * like C strings and provides operations on it.
  * @brief string type and operations
  */
+
+#include "ntru_string.h"
+
+
+void
+string_delete(string *del_string)
+{
+	free(del_string->ptr);
+	free(del_string);
+}

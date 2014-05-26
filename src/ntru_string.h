@@ -51,4 +51,16 @@ struct string {
 };
 
 
+/**
+ * Delete the inner structure
+ * of the string and frees the string
+ * itself from the heap. Must not be
+ * called on stack variables.
+ *
+ * @param del_string the string to delete
+ */
+void
+string_delete(string *del_string);
+
+
 #endif /* NTRU_STRING_H */
