@@ -187,6 +187,8 @@ poly_to_ascii(fmpz_poly_t **poly_array, ntru_context *ctx)
 					binary_rep[i] = '0';
 				else if (fmpz_cmp_si(coeff, -1))
 					binary_rep[i] = '1';
+			} else {
+				binary_rep[i] = '0';
 			}
 			i++;
 		}
