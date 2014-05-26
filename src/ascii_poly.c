@@ -45,6 +45,8 @@
  * Convert an integer to it's binary representation
  * as a string and return it.
  *
+ * As in: 90 => "10110101"
+ *
  * @param value the integer to convert
  * @return the binary representation as a newly allocated string
  */
@@ -55,6 +57,10 @@ get_int_to_bin_str(uint8_t value);
  * Converts a binary representation of multiple concatenated
  * integers to the corresponding array of ascii chars, which
  * is NULL-terminated.
+ *
+ * It reads in 8bit chunks, as in:
+ *
+ * 10110101|00111100|01011001 => 90|60|89 => "Z<Y"
  *
  * @param binary_rep the binary representation of multiple
  * integers concatenated
