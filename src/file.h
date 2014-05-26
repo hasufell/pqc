@@ -43,7 +43,7 @@ string *
 read_file(char const * const filename);
 
 void
-write_file(string const *file_content, char const * const filename);
+write_file(string const *wstring, char const * const filename);
 
 
 #endif /* NTRU_FILE_H */

@@ -91,7 +91,7 @@ read_file(char const * const filename)
 }
 
 void
-write_file(string const *file_content, char const * const filename)
+write_file(string const *wstring, char const * const filename)
 {
 	FILE *fp;
 
@@ -100,8 +100,8 @@ write_file(string const *file_content, char const * const filename)
 	if (!fp)
 		NTRU_ABORT("Failed while creating file\n");
 
-	for (uint32_t i = 0; i < file_content->len; i++)
-		fprintf(fp, "%c", file_content->ptr[i]);
+	for (uint32_t i = 0; i < wstring->len; i++)
+		fprintf(fp, "%c", wstring->ptr[i]);
 
 	fclose(fp);
 }
