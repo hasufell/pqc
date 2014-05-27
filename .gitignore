@@ -9,7 +9,18 @@ latex/
 *.o
 *.d
 
-# targets
+# junk
+blah.txt
+core
+html.zip
+priv.key
+pub.key
+.ycm_extra_conf.py
+.ycm_extra_conf.pyc
+*.orig
+vgcore*
+core
+tags
 
 
 # tmp files
