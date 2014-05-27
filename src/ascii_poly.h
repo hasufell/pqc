@@ -38,7 +38,7 @@
 
 
 /**
- * Convert an ascii string to a ternary polyomial.
+ * Convert a "binary" ascii string to a binary polyomial.
  * The ascii string will be converted to a binary representation
  * and the following mapping will apply between binary -> poly:
  *
@@ -47,17 +47,17 @@
  * 0 => -1
  *
  * If the polynomial is of degree less than N -1, then it will
- * be filled with trailing 2's for later use in tern_poly_to_ascii().
+ * be filled with trailing 2's for later use in bin_poly_to_ascii().
  *
- * @param to_poly the string to get into ternary polynomial format
+ * @param to_poly the string to get into binary polynomial format
  * @param ctx the NTRUEncrypt context
- * @return newly allocated array of ternary polynomials
+ * @return newly allocated array of binary polynomials
  */
 fmpz_poly_t *
-ascii_to_tern_poly(char *to_poly, ntru_context *ctx);
+ascii_bin_to_bin_poly(char *to_poly, ntru_context *ctx);
 
 /**
- * Convert an ascii string to an array of ternary polyomials.
+ * Convert an ascii string to an array of binary polyomials.
  * The ascii string will be converted to a binary representation
  * and the following mapping will apply between binary -> poly:
  *
@@ -66,53 +66,17 @@ ascii_to_tern_poly(char *to_poly, ntru_context *ctx);
  * 0 => -1
  *
  * If the last polynomial is of degree less than N -1, then it will
- * be filled with trailing 2's for later use in tern_poly_arr_to_ascii().
+ * be filled with trailing 2's for later use in bin_poly_arr_to_ascii().
  *
- * @param to_poly the string to get into ternary polynomial format
+ * @param to_poly the string to get into binary polynomial format
  * @param ctx the NTRUEncrypt context
- * @return newly allocated array of ternary polynomials
+ * @return newly allocated array of binary polynomials
  */
 fmpz_poly_t **
-ascii_to_tern_poly_arr(char *to_poly, ntru_context *ctx);
+ascii_to_bin_poly_arr(char *to_poly, ntru_context *ctx);
 
 /**
- * Convert an ascii string to a polyomial with coefficients
- * which are expected to be in the range [0, q-1].
- * The chars will be converted to their integer representation and
- * directly put into the coefficients.
- *
- * If the polynomial is of degree less than N -1, then it will
- * be filled with trailing q's for later user in poly_to_ascii().
- *
- * @param to_poly the string to get into polynomial format,
- * which is of type string, so we can iterate safely over it
- * (the string might have null-bytes in the middle of it)
- * @param ctx the NTRUEncrypt context
- * @return newly allocated polynomial
- */
-fmpz_poly_t *
-ascii_to_poly(string *to_poly, ntru_context *ctx);
-
-/**
- * Convert an ascii string to an array of polyomials with coefficients
- * which are expected to be in the range [0, q-1].
- * The chars will be converted to their integer representation and
- * directly put into the coefficients.
- *
- * If the last polynomial is of degree less than N -1, then it will
- * be filled with trailing q's for later user in poly_arr_to_ascii().
- *
- * @param to_poly the string to get into polynomial format,
- * which is of type string, so we can iterate safely over it
- * (the string might have null-bytes in the middle of it)
- * @param ctx the NTRUEncrypt context
- * @return newly allocated array of polynomials
- */
-fmpz_poly_t **
-ascii_to_poly_arr(string *to_poly, ntru_context *ctx);
-
-/**
- * Convert an single ternary polynomial back to a real string.
+ * Convert a single binary polynomial back to a real string.
  * The polynomial coefficients represent a binary format of the
  * ascii string with the following mapping:
  *
@@ -126,16 +90,16 @@ ascii_to_poly_arr(string *to_poly, ntru_context *ctx);
  * so they will just end up as '\0's at the end of the string and will
  * not confuse the result.
  *
- * @param poly the polynomial to convert
+ * @param poly the binary polynomial to convert
  * @param ctx the NTRUEncrypt context
  * @return the real string, newly allocated
  */
 string *
-tern_poly_to_ascii(fmpz_poly_t poly,
+bin_poly_to_ascii(fmpz_poly_t poly,
 		ntru_context *ctx);
 
 /**
- * Convert an array of ternary polynomials back to a real string.
+ * Convert an array of binary polynomials back to a real string.
  * The polynomial coefficients represent a binary format of the
  * ascii string with the following mapping:
  *
@@ -149,53 +113,63 @@ tern_poly_to_ascii(fmpz_poly_t poly,
  * just end up as '\0's at the end of the string and will not confuse
  * the result.
  *
- * @param tern_poly_arr the array of polynomials
+ * @param bin_poly_arr the array of polynomials
  * @param ctx the NTRUEncrypt context
  * @return the real string, newly allocated
  */
 string *
-tern_poly_arr_to_ascii(fmpz_poly_t **tern_poly_arr, ntru_context *ctx);
+bin_poly_arr_to_ascii(fmpz_poly_t **bin_poly_arr, ntru_context *ctx);
 
 /**
- * Convert a single polynom back to a real string.
+ * Convert an base64 encoded string to an array of polyomials with
+ * coefficients which are expected to be in the range [0, q-1].
+ * The chars will be converted (after decoding) to their integer
+ * representation and directly put into the coefficients.
+ *
+ * If the last polynomial is of degree less than N -1, then it will
+ * be filled with trailing q's for later user in poly_arr_to_base64().
+ *
+ * @param to_poly the string to get into polynomial format,
+ * which is of type string, so we can iterate safely over it
+ * (the string might have null-bytes in the middle of it)
+ * @param ctx the NTRUEncrypt context
+ * @return newly allocated array of polynomials
+ */
+fmpz_poly_t **
+base64_to_poly_arr(string *to_poly, ntru_context *ctx);
+
+/**
+ * Convert a single polynom back to a real string which is
+ * base64 encoded.
  * The polynomial coefficients are expected to be in the range
  * [0, q-1] and will be casted back to chars without any mapping.
  *
- * Trailing q's are only used for filling up the rest of a polynomial,
- * so they will just end up as '\0's at the end of the string and
- * will not confuse the result.
- *
- * A struct of type string is returned, because we cannot
- * rely on null-termination in ascii_to_poly(), since there
- * may be null-bytes in the middle of the string as well.
+ * Trailing q coefficients are only used for filling up the rest of
+ * a polynomial with '\0', so they will not confuse the result.
  *
  * @param poly the polynomial to convert
  * @param ctx the NTRUEncrypt context
  * @return the real string, newly allocated
  */
 string *
-poly_to_ascii(fmpz_poly_t poly,
+poly_to_base64(fmpz_poly_t poly,
 		ntru_context *ctx);
 
 /**
- * Convert an array of polynomials back to a real string.
+ * Convert an array of polynomials back to a real string which
+ * is base64 encoded.
  * The polynomial coefficients are expected to be in the range
  * [0, q-1] and will be casted back to chars without any mapping.
  *
- * Trailing q's are only used for filling up the last polynomial,
- * so they will just end up as '\0's at the end of the string and
- * will not confuse the result.
- *
- * A struct of type string is returned, because we cannot
- * rely on null-termination in ascii_to_poly_arr(), since there
- * may be null-bytes in the middle of the string as well.
+ * Trailing q coefficients are only used for filling up the rest of
+ * a polynomial with '\0', so they will not confuse the result.
  *
  * @param poly_arr the array of polynomials
  * @param ctx the NTRUEncrypt context
  * @return the real string, newly allocated
  */
 string *
-poly_arr_to_ascii(fmpz_poly_t **poly_arr, ntru_context *ctx);
+poly_arr_to_base64(fmpz_poly_t **poly_arr, ntru_context *ctx);
 
 
 #endif /* NTRU_ASCII_POLY_H_ */

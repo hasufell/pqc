@@ -19,6 +19,9 @@
  * MA  02110-1301  USA
  */
 
+/* TODO: clean up some iterators */
+/* TODO: ascii_to_bin_poly() should accept a string, not a c_str */
+
 /**
  * @file ascii_poly.c
  * This file allows to convert between ascii strings
@@ -32,6 +35,8 @@
 #include "mem.h"
 #include "ntru_string.h"
 #include "poly.h"
+
+#include <glib.h>
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -93,18 +98,17 @@ get_bin_arr_to_ascii(char *binary_rep)
 {
 	const size_t int_arr_size = strlen(binary_rep) / ASCII_BITS;
 	uint8_t int_arr[int_arr_size];
-	char *tmp_string = binary_rep;
 	uint32_t i = 0;
 	char *int_string;
 
-	while (*tmp_string) {
+	while (*binary_rep) {
 		int_arr[i] = 0;
 		for (uint32_t j = 0; j < ASCII_BITS; j++) {
-			if (*tmp_string == '1')
+			if (*binary_rep == '1')
 				int_arr[i] = int_arr[i] * 2 + 1;
-			else if (*tmp_string == '0')
+			else if (*binary_rep == '0')
 				int_arr[i] *= 2;
-			tmp_string++;
+			binary_rep++;
 		}
 		i++;
 	}
@@ -118,7 +122,7 @@ get_bin_arr_to_ascii(char *binary_rep)
 }
 
 fmpz_poly_t *
-ascii_to_tern_poly(char *to_poly, ntru_context *ctx)
+ascii_bin_to_bin_poly(char *to_poly, ntru_context *ctx)
 {
 	uint32_t i = 0;
 	uint32_t j = 0;
@@ -145,7 +149,7 @@ ascii_to_tern_poly(char *to_poly, ntru_context *ctx)
 }
 
 fmpz_poly_t **
-ascii_to_tern_poly_arr(char *to_poly, ntru_context *ctx)
+ascii_to_bin_poly_arr(char *to_poly, ntru_context *ctx)
 {
 	uint32_t polyc = 0;
 	char *cur = to_poly;
@@ -174,7 +178,7 @@ ascii_to_tern_poly_arr(char *to_poly, ntru_context *ctx)
 		memcpy(chunk, out + i, real_chunk_size);
 		chunk[real_chunk_size] = '\0';
 
-		poly_array[polyc] = ascii_to_tern_poly(chunk, ctx);
+		poly_array[polyc] = ascii_bin_to_bin_poly(chunk, ctx);
 
 		polyc++;
 	}
@@ -186,67 +190,8 @@ ascii_to_tern_poly_arr(char *to_poly, ntru_context *ctx)
 	return poly_array;
 }
 
-fmpz_poly_t *
-ascii_to_poly(string *to_poly, ntru_context *ctx)
-{
-	uint32_t i = 0;
-	uint32_t j = 0;
-	fmpz_poly_t *new_poly = ntru_malloc(sizeof(*new_poly));
-
-	fmpz_poly_init(*new_poly);
-
-	while (i < to_poly->len && j < ctx->N) {
-		fmpz_poly_set_coeff_si(*new_poly,
-				j,
-				(uint8_t)(to_poly->ptr[i]));
-		i++;
-		j++;
-	}
-
-	/* fill the last poly with q (which is a non-standard
-	 * coefficient) */
-	for (uint32_t i = j; i < ctx->N; i++) {
-		fmpz_poly_set_coeff_si(*new_poly,
-				i,
-				ctx->q);
-	}
-
-	return new_poly;
-}
-
-fmpz_poly_t **
-ascii_to_poly_arr(string *to_poly, ntru_context *ctx)
-{
-	uint32_t polyc = 0;
-	fmpz_poly_t **poly_array;
-
-	poly_array = ntru_malloc(sizeof(**poly_array) *
-			(strlen(to_poly->ptr) / ctx->N));
-
-	for (uint32_t i = 0; i < to_poly->len; i += ctx->N) {
-		char chunk[ctx->N + 1];
-		string string_chunk;
-		size_t real_chunk_size;
-
-		real_chunk_size =
-			((to_poly->len - i) > ctx->N) ? ctx->N : (to_poly->len - i);
-
-		memcpy(chunk, to_poly->ptr + i, real_chunk_size);
-
-		string_chunk.ptr = chunk;
-		string_chunk.len = real_chunk_size;
-		poly_array[polyc] = ascii_to_poly(&string_chunk, ctx);
-
-		polyc++;
-	}
-
-	poly_array[polyc] = NULL;
-
-	return poly_array;
-}
-
 string *
-tern_poly_to_ascii(fmpz_poly_t poly,
+bin_poly_to_ascii(fmpz_poly_t poly,
 		ntru_context *ctx)
 {
 	string *result_string = ntru_malloc(sizeof(*result_string));
@@ -274,12 +219,12 @@ tern_poly_to_ascii(fmpz_poly_t poly,
 }
 
 string *
-tern_poly_arr_to_ascii(fmpz_poly_t **tern_poly_arr, ntru_context *ctx)
+bin_poly_arr_to_ascii(fmpz_poly_t **bin_poly_arr, ntru_context *ctx)
 {
 	fmpz_poly_t *ascii_poly;
 	char *binary_rep = NULL;
 	size_t string_len = 0;
-	char *ascii_string;
+	char *ascii_string = NULL;
 	string *result_string = ntru_malloc(sizeof(*result_string));
 	size_t old_length = 0,
 		   new_length;
@@ -288,7 +233,7 @@ tern_poly_arr_to_ascii(fmpz_poly_t **tern_poly_arr, ntru_context *ctx)
 	 * parse the polynomial coefficients into a string
 	 */
 	binary_rep = ntru_calloc(1, CHAR_SIZE * (ctx->N + 1));
-	while ((ascii_poly = *tern_poly_arr++)) {
+	while ((ascii_poly = *bin_poly_arr++)) {
 		string *single_poly_string;
 
 		new_length = CHAR_SIZE * (ctx->N + 1);
@@ -300,31 +245,90 @@ tern_poly_arr_to_ascii(fmpz_poly_t **tern_poly_arr, ntru_context *ctx)
 
 		old_length += new_length;
 
-		single_poly_string = tern_poly_to_ascii(*ascii_poly, ctx);
+		single_poly_string = bin_poly_to_ascii(*ascii_poly, ctx);
 		memcpy(binary_rep + string_len,
 				single_poly_string->ptr,
 				single_poly_string->len);
 		string_len += single_poly_string->len;
+
+		string_delete(single_poly_string);
 	}
 
 	binary_rep[string_len] = '\0';
 
 	ascii_string = get_bin_arr_to_ascii(binary_rep);
-	free(binary_rep);
 
 	result_string->ptr = ascii_string;
-	result_string->len = string_len;
+	result_string->len = strlen(ascii_string);
 
-	return result_string;}
+	free(binary_rep);
 
+	return result_string;
+}
+
+fmpz_poly_t **
+base64_to_poly_arr(string *to_poly, ntru_context *ctx)
+{
+	uint32_t i = 0,
+			 polyc = 0;
+	gsize out_len;
+	guchar *base64_decoded;
+	string *new_string = ntru_malloc(sizeof(*new_string));
+	fmpz_poly_t **poly_array;
+	char tmp[to_poly->len + 1];
+
+	/* g_base64_decode() needs it null-terminated */
+	memcpy(tmp, to_poly->ptr, to_poly->len);
+	tmp[to_poly->len] = '\0';
+
+	base64_decoded = g_base64_decode((const gchar *)tmp, &out_len);
+	new_string->ptr = (char *)base64_decoded;
+	new_string->len = (unsigned long)(out_len);
+
+	poly_array = ntru_malloc(sizeof(**poly_array) *
+			(strlen(new_string->ptr) / ctx->N));
+
+	while (i < new_string->len) {
+		uint32_t j = 0;
+		fmpz_poly_t *new_poly = ntru_malloc(sizeof(*new_poly));
+
+		fmpz_poly_init(*new_poly);
+
+		while (j < ctx->N) {
+			fmpz_poly_set_coeff_si(*new_poly,
+					j,
+					(uint8_t)(base64_decoded[i]));
+			j++;
+			i++;
+		}
+
+		/* fill the last poly with q (which is a non-standard
+		 * coefficient) */
+		for (uint32_t k = j; k < ctx->N; k++) {
+			fmpz_poly_set_coeff_si(*new_poly,
+					k,
+					ctx->q);
+		}
+
+		poly_array[polyc] = new_poly;
+		polyc++;
+	}
+
+	poly_array[polyc] = NULL;
+
+	string_delete(new_string);
+
+	return poly_array;
+}
 
 string *
-poly_to_ascii(fmpz_poly_t poly,
+poly_to_base64(fmpz_poly_t poly,
 		ntru_context *ctx)
 {
 	string *result_string = ntru_malloc(sizeof(*result_string));
 	char *string_rep = ntru_malloc(CHAR_SIZE * (ctx->N));
 	uint32_t i = 0;
+	gchar *base64_string = NULL;
 
 	for (uint32_t j = 0; j < ctx->N; j++) {
 		uint8_t coeff = fmpz_poly_get_coeff_ui(poly, j);
@@ -335,14 +339,18 @@ poly_to_ascii(fmpz_poly_t poly,
 		i++;
 	}
 
-	result_string->ptr = string_rep;
-	result_string->len = i;
+	base64_string = g_base64_encode((const guchar *)string_rep, i);
+
+	result_string->ptr = base64_string;
+	result_string->len = strlen(base64_string);
+
+	free(string_rep);
 
 	return result_string;
 }
 
 string *
-poly_arr_to_ascii(fmpz_poly_t **poly_array,
+poly_arr_to_base64(fmpz_poly_t **poly_array,
 		ntru_context *ctx)
 {
 	fmpz_poly_t *ascii_poly;
@@ -357,22 +365,22 @@ poly_arr_to_ascii(fmpz_poly_t **poly_array,
 	 */
 	string_rep = ntru_calloc(1, CHAR_SIZE * (ctx->N + 1));
 	while ((ascii_poly = *poly_array++)) {
-		string *single_poly_string;
+		string *poly_str;
 
-		new_length = CHAR_SIZE * (ctx->N + 1);
+		poly_str = poly_to_base64(*ascii_poly, ctx);
 
+		new_length = CHAR_SIZE * poly_str->len;
 		REALLOC(string_rep,
 				old_length +
-				new_length +
-				1); /* trailing null byte */
-
+				new_length);
 		old_length += new_length;
 
-		single_poly_string = poly_to_ascii(*ascii_poly, ctx);
 		memcpy(string_rep + string_len,
-				single_poly_string->ptr,
-				single_poly_string->len);
-		string_len += single_poly_string->len;
+				poly_str->ptr,
+				poly_str->len);
+		string_len += poly_str->len;
+
+		string_delete(poly_str);
 	}
 
 	result_string->ptr = string_rep;

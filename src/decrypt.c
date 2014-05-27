@@ -41,7 +41,7 @@ ntru_decrypt_poly(
 		fmpz_poly_t encr_msg,
 		fmpz_poly_t priv_key,
 		fmpz_poly_t priv_key_inv,
-		fmpz_poly_t out_tern,
+		fmpz_poly_t out_bin,
 		ntru_context *ctx)
 {
 	fmpz_poly_t a;
@@ -51,8 +51,8 @@ ntru_decrypt_poly(
 
 	poly_starmultiply(priv_key, encr_msg, a, ctx, ctx->q);
 	fmpz_poly_mod(a, ctx->q);
-	poly_starmultiply(a, priv_key_inv, out_tern, ctx, ctx->p);
-	fmpz_poly_mod(out_tern, ctx->p);
+	poly_starmultiply(a, priv_key_inv, out_bin, ctx, ctx->p);
+	fmpz_poly_mod(out_bin, ctx->p);
 
 	fmpz_poly_clear(a);
 }
@@ -68,7 +68,7 @@ ntru_decrypt_string(
 	string *decr_msg;
 	fmpz_poly_t **poly_array;
 
-	poly_array = ascii_to_poly_arr(encr_msg, ctx);
+	poly_array = base64_to_poly_arr(encr_msg, ctx);
 
 	while (*poly_array[i]) {
 		ntru_decrypt_poly(*poly_array[i], priv_key, priv_key_inv,
@@ -76,7 +76,7 @@ ntru_decrypt_string(
 		i++;
 	}
 
-	decr_msg = tern_poly_arr_to_ascii(poly_array, ctx);
+	decr_msg = bin_poly_arr_to_ascii(poly_array, ctx);
 
 	poly_delete_array(poly_array);
 

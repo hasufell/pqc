@@ -34,7 +34,7 @@ else
 PQC_LIBS = libpqc.a
 endif
 # CUNIT_LIBS = -lcunit
-LIBS += -L. -lgmp -lmpfr -lm
+LIBS += -L. -lgmp -lmpfr -lm $(shell $(PKG_CONFIG) --libs glib-2.0)
 
 # objects
 PQC_OBJS = poly.o mem.o encrypt.o decrypt.o keypair.o ascii_poly.o file.o \
@@ -44,7 +44,7 @@ PQC_HEADERS = err.h poly.h context.h encrypt.h decrypt.h keypair.h \
 # CUNIT_OBJS = cunit.o
 
 # includes
-INCS = -I.
+INCS = -I. $(shell $(PKG_CONFIG) --cflags glib-2.0)
 
 ifndef UNBUNDLE
 LIBFLINT = ../external/flint-2.4.3/libflint.a

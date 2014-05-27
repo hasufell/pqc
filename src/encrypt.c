@@ -39,7 +39,7 @@
 
 void
 ntru_encrypt_poly(
-		fmpz_poly_t msg_tern,
+		fmpz_poly_t msg_bin,
 		fmpz_poly_t pub_key,
 		fmpz_poly_t rnd,
 		fmpz_poly_t out,
@@ -48,7 +48,7 @@ ntru_encrypt_poly(
 	/* allow aliasing */
 	fmpz_poly_t tmp_poly_msg;
 	fmpz_poly_init(tmp_poly_msg);
-	fmpz_poly_set(tmp_poly_msg, msg_tern);
+	fmpz_poly_set(tmp_poly_msg, msg_bin);
 
 	fmpz_poly_zero(out);
 	poly_starmultiply(pub_key, rnd, out, ctx, ctx->q);
@@ -69,14 +69,14 @@ ntru_encrypt_string(
 	string *enc_msg;
 	fmpz_poly_t **poly_array;
 
-	poly_array = ascii_to_tern_poly_arr(msg, ctx);
+	poly_array = ascii_to_bin_poly_arr(msg, ctx);
 
 	while (*poly_array[i]) {
 		ntru_encrypt_poly(*poly_array[i], pub_key, rnd, *poly_array[i], ctx);
 		i++;
 	}
 
-	enc_msg = poly_arr_to_ascii(poly_array, ctx);
+	enc_msg = poly_arr_to_base64(poly_array, ctx);
 
 	poly_delete_array(poly_array);
 
