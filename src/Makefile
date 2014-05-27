@@ -1,30 +1,4 @@
-# compiler, tools
-CC = gcc
-PKG_CONFIG ?= pkg-config
-
-# flags
-CFLAGS ?= -march=native -O2 -pipe
-CFLAGS += -std=c99 -pedantic -Wall -Wextra -Werror -Wno-unused-variable -Wno-unused-parameter -Wno-unused-function
-ifeq ($(shell $(CC) -v 2>&1 | grep 'gcc version' &>/dev/null && echo 1),1)
-CFLAGS += -Wno-unused-but-set-variable
-endif
-LDFLAGS ?= -Wl,-O1 -Wl,--as-needed -Wl,--hash-style=gnu
-# ifndef NOSTATIC
-# LDFLAGS += -static
-# endif
-
-ifndef NODEBUG
-CFLAGS += -O0 -g3
-endif
-
-# install variables
-INSTALL = install
-INSTALL_BIN = install -m755
-INSTALL_DIR = install -d
-PREFIX = /usr/local
-LIBDIR = lib64
-INSTALL_BINDIR = $(PREFIX)/bin
-INSTALL_LIBDIR = $(PREFIX)/$(LIBDIR)
+include ../common.mk
 
 
 # libs
@@ -36,12 +10,29 @@ endif
 # CUNIT_LIBS = -lcunit
 LIBS += -L. -lgmp -lmpfr -lm $(shell $(PKG_CONFIG) --libs glib-2.0)
 
-# objects
-PQC_OBJS = poly.o mem.o encrypt.o decrypt.o keypair.o ascii_poly.o file.o \
-		   ntru_string.o
-PQC_HEADERS = err.h poly.h context.h encrypt.h decrypt.h keypair.h \
-			  ascii_poly.h common.h file.h ntru_string.h
-# CUNIT_OBJS = cunit.o
+
+# sources, headers, objects
+PQC_SOURCES = poly.c \
+			  mem.c \
+			  encrypt.c \
+			  decrypt.c \
+			  keypair.c \
+			  ascii_poly.c \
+			  file.c \
+			  ntru_string.c
+
+PQC_OBJS = $(patsubst %.c, %.o, $(PQC_SOURCES))
+
+PQC_HEADERS = err.h \
+			  poly.h \
+			  context.h \
+			  encrypt.h \
+			  decrypt.h \
+			  keypair.h \
+			  ascii_poly.h \
+			  common.h \
+			  file.h \
+			  ntru_string.h
 
 # includes
 INCS = -I. $(shell $(PKG_CONFIG) --cflags glib-2.0)
