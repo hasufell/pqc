@@ -36,6 +36,8 @@
 #include <stdbool.h>
 
 
+/*------------------------------------------------------------------------*/
+
 bool
 ntru_create_keypair(
 		fmpz_poly_t f,
@@ -82,6 +84,8 @@ cleanup:
 	return retval;
 }
 
+/*------------------------------------------------------------------------*/
+
 void
 ntru_delete_keypair(keypair *pair)
 {
@@ -89,3 +93,5 @@ ntru_delete_keypair(keypair *pair)
 	fmpz_poly_clear(pair->priv);
 	fmpz_poly_clear(pair->pub);
 }
+
+/*------------------------------------------------------------------------*/

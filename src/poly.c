@@ -57,6 +57,8 @@ void poly_mod2_to_modq(fmpz_poly_t a,
 		ntru_context *ctx);
 
 
+/*------------------------------------------------------------------------*/
+
 static void
 poly_mod2_to_modq(fmpz_poly_t a,
 		fmpz_poly_t Fq,
@@ -85,6 +87,8 @@ poly_mod2_to_modq(fmpz_poly_t a,
 
 }
 
+/*------------------------------------------------------------------------*/
+
 void
 poly_new(fmpz_poly_t new_poly,
 		int const * const c,
@@ -96,11 +100,15 @@ poly_new(fmpz_poly_t new_poly,
 		fmpz_poly_set_coeff_si(new_poly, i, c[i]);
 }
 
+/*------------------------------------------------------------------------*/
+
 void
 poly_delete(fmpz_poly_t poly)
 {
 	fmpz_poly_clear(poly);
 }
+
+/*------------------------------------------------------------------------*/
 
 void
 poly_delete_array(fmpz_poly_t **poly_array)
@@ -114,6 +122,8 @@ poly_delete_array(fmpz_poly_t **poly_array)
 	}
 	free(poly_array);
 }
+
+/*------------------------------------------------------------------------*/
 
 void
 poly_delete_all(fmpz_poly_t poly, ...)
@@ -130,6 +140,8 @@ poly_delete_all(fmpz_poly_t poly, ...)
 	va_end(args);
 }
 
+/*------------------------------------------------------------------------*/
+
 void
 fmpz_poly_mod_unsigned(fmpz_poly_t a,
 		uint32_t mod)
@@ -143,6 +155,8 @@ fmpz_poly_mod_unsigned(fmpz_poly_t a,
 
 	nmod_poly_clear(nmod_tmp);
 }
+
+/*------------------------------------------------------------------------*/
 
 void
 fmpz_poly_mod(fmpz_poly_t a,
@@ -158,6 +172,8 @@ fmpz_poly_mod(fmpz_poly_t a,
 	nmod_poly_clear(nmod_tmp);
 }
 
+/*------------------------------------------------------------------------*/
+
 void
 fmpz_poly_set_coeff_fmpz_n(fmpz_poly_t poly, slong n,
 		const fmpz_t x)
@@ -168,6 +184,8 @@ fmpz_poly_set_coeff_fmpz_n(fmpz_poly_t poly, slong n,
 		fmpz_poly_set_coeff_si(poly, n, 0);
 }
 
+/*------------------------------------------------------------------------*/
+
 int
 fmpz_invmod_ui(fmpz_t f, const fmpz_t g, uint32_t mod)
 {
@@ -177,6 +195,8 @@ fmpz_invmod_ui(fmpz_t f, const fmpz_t g, uint32_t mod)
 
 	return fmpz_invmod(f, g, modulus);
 }
+
+/*------------------------------------------------------------------------*/
 
 void
 fmpz_add_n(fmpz_t f, const fmpz_t g, const fmpz_t h)
@@ -192,6 +212,8 @@ fmpz_add_n(fmpz_t f, const fmpz_t g, const fmpz_t h)
 			fmpz_add(f, g, h);
 	}
 }
+
+/*------------------------------------------------------------------------*/
 
 void
 poly_starmultiply(fmpz_poly_t a,
@@ -248,6 +270,8 @@ poly_starmultiply(fmpz_poly_t a,
 
 	fmpz_poly_clear(a_tmp);
 }
+
+/*------------------------------------------------------------------------*/
 
 bool
 poly_inverse_poly_q(fmpz_poly_t a,
@@ -363,6 +387,8 @@ cleanup:
 
 	return retval;
 }
+
+/*------------------------------------------------------------------------*/
 
 bool
 poly_inverse_poly_p(fmpz_poly_t a,
@@ -532,6 +558,8 @@ cleanup:
 	return retval;
 }
 
+/*------------------------------------------------------------------------*/
+
 void
 poly_draw(fmpz_poly_t poly)
 {
@@ -539,9 +567,13 @@ poly_draw(fmpz_poly_t poly)
 	flint_printf("\n");
 }
 
+/*------------------------------------------------------------------------*/
+
 void
 poly_draw_pretty(fmpz_poly_t poly)
 {
 	fmpz_poly_print_pretty(poly, "x");
 	flint_printf("\n");
 }
+
+/*------------------------------------------------------------------------*/

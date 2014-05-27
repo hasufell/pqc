@@ -37,6 +37,8 @@
 #include <fmpz.h>
 
 
+/*------------------------------------------------------------------------*/
+
 void
 ntru_encrypt_poly(
 		fmpz_poly_t msg_bin,
@@ -57,6 +59,8 @@ ntru_encrypt_poly(
 
 	fmpz_poly_clear(tmp_poly_msg);
 }
+
+/*------------------------------------------------------------------------*/
 
 string *
 ntru_encrypt_string(
@@ -82,3 +86,5 @@ ntru_encrypt_string(
 
 	return enc_msg;
 }
+
+/*------------------------------------------------------------------------*/

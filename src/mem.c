@@ -32,6 +32,8 @@
 #include <stdlib.h>
 
 
+/*------------------------------------------------------------------------*/
+
 void *
 ntru_malloc(size_t size)
 {
@@ -48,6 +50,8 @@ ntru_malloc(size_t size)
 	return ptr;
 }
 
+/*------------------------------------------------------------------------*/
+
 void *
 ntru_calloc(size_t nmemb, size_t size)
 {
@@ -63,3 +67,5 @@ ntru_calloc(size_t nmemb, size_t size)
 
 	return ptr;
 }
+
+/*------------------------------------------------------------------------*/

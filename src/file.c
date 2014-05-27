@@ -44,6 +44,8 @@
 #define STD_FILE_BUF 4096
 
 
+/*------------------------------------------------------------------------*/
+
 string *
 read_file(char const * const filename)
 {
@@ -90,6 +92,8 @@ read_file(char const * const filename)
 	}
 }
 
+/*------------------------------------------------------------------------*/
+
 void
 write_file(string const *wstring, char const * const filename)
 {
@@ -105,3 +109,5 @@ write_file(string const *wstring, char const * const filename)
 
 	fclose(fp);
 }
+
+/*------------------------------------------------------------------------*/

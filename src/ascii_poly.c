@@ -76,6 +76,8 @@ static char *
 get_bin_arr_to_ascii(char *binary_rep);
 
 
+/*------------------------------------------------------------------------*/
+
 static char *
 get_int_to_bin_str(uint8_t value)
 {
@@ -92,6 +94,8 @@ get_int_to_bin_str(uint8_t value)
 
 	return bin_string;
 }
+
+/*------------------------------------------------------------------------*/
 
 static char *
 get_bin_arr_to_ascii(char *binary_rep)
@@ -121,6 +125,8 @@ get_bin_arr_to_ascii(char *binary_rep)
 	return int_string;
 }
 
+/*------------------------------------------------------------------------*/
+
 fmpz_poly_t *
 ascii_bin_to_bin_poly(char *to_poly, ntru_context *ctx)
 {
@@ -147,6 +153,8 @@ ascii_bin_to_bin_poly(char *to_poly, ntru_context *ctx)
 
 	return new_poly;
 }
+
+/*------------------------------------------------------------------------*/
 
 fmpz_poly_t **
 ascii_to_bin_poly_arr(char *to_poly, ntru_context *ctx)
@@ -190,6 +198,8 @@ ascii_to_bin_poly_arr(char *to_poly, ntru_context *ctx)
 	return poly_array;
 }
 
+/*------------------------------------------------------------------------*/
+
 string *
 bin_poly_to_ascii(fmpz_poly_t poly,
 		ntru_context *ctx)
@@ -217,6 +227,8 @@ bin_poly_to_ascii(fmpz_poly_t poly,
 
 	return result_string;
 }
+
+/*------------------------------------------------------------------------*/
 
 string *
 bin_poly_arr_to_ascii(fmpz_poly_t **bin_poly_arr, ntru_context *ctx)
@@ -265,6 +277,8 @@ bin_poly_arr_to_ascii(fmpz_poly_t **bin_poly_arr, ntru_context *ctx)
 
 	return result_string;
 }
+
+/*------------------------------------------------------------------------*/
 
 fmpz_poly_t **
 base64_to_poly_arr(string *to_poly, ntru_context *ctx)
@@ -321,6 +335,8 @@ base64_to_poly_arr(string *to_poly, ntru_context *ctx)
 	return poly_array;
 }
 
+/*------------------------------------------------------------------------*/
+
 string *
 poly_to_base64(fmpz_poly_t poly,
 		ntru_context *ctx)
@@ -348,6 +364,8 @@ poly_to_base64(fmpz_poly_t poly,
 
 	return result_string;
 }
+
+/*------------------------------------------------------------------------*/
 
 string *
 poly_arr_to_base64(fmpz_poly_t **poly_array,
@@ -388,3 +406,5 @@ poly_arr_to_base64(fmpz_poly_t **poly_array,
 
 	return result_string;
 }
+
+/*------------------------------------------------------------------------*/
