@@ -66,7 +66,6 @@ ntru_encrypt_poly(
 	 * TODO: investigate
 	 */
 	for (uint32_t i = 0; i < ctx->N; i++) {
-		printf("go ");
 		fmpz_t e_coeff_i;
 		fmpz *m_coeff_i = fmpz_poly_get_coeff_ptr(tmp_poly_msg, i);
 		fmpz_init(e_coeff_i);
@@ -96,7 +95,6 @@ ntru_encrypt_string(
 	poly_array = ascii_to_bin_poly_arr(msg, ctx);
 
 	while (*poly_array[i]) {
-		poly_draw(*poly_array[i]);
 		ntru_encrypt_poly(*poly_array[i],
 				pub_key,
 				rnd,
