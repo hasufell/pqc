@@ -59,9 +59,6 @@ ntru_encrypt_poly(
 	fmpz_poly_zero(out);
 	poly_starmultiply(pub_key, rnd, out, ctx, ctx->q);
 
-	fmpz_poly_add(out, out, tmp_poly_msg);
-	fmpz_poly_mod(out, ctx->q);
-
 	/*
 	 * using the flint functions
 	 *   fmpz_poly_add(out, out, tmp_poly_msg);
