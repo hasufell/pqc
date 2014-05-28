@@ -84,8 +84,12 @@ ntru_decrypt_string(
 	poly_array = base64_to_poly_arr(encr_msg, ctx);
 
 	while (*poly_array[i]) {
-		ntru_decrypt_poly(*poly_array[i], priv_key, priv_key_inv,
-				*poly_array[i], ctx);
+		if (!ntru_decrypt_poly(*poly_array[i],
+					priv_key,
+					priv_key_inv,
+					*poly_array[i],
+					ctx))
+			NTRU_ABORT("failed encrypting string!\n");
 		i++;
 	}
 
