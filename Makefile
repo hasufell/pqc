@@ -10,9 +10,6 @@ main:
 clean:
 	$(MAKE) -C src clean
 
-clean-all: clean
-	$(MAKE) -C external/flint-2.4.3 clean
-
 doc:
 	doxygen
 
@@ -20,4 +17,4 @@ doc-pdf: doc
 	$(MAKE) -C latex pdf
 
 
-.PHONY: clean clean-all doc doc-pdf
+.PHONY: clean doc doc-pdf

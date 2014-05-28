@@ -1,16 +1,6 @@
 include ../common.mk
 
 
-# libs
-ifdef SHARED_LIB
-PQC_LIBS = libpqc.so
-else
-PQC_LIBS = libpqc.a
-endif
-# CUNIT_LIBS = -lcunit
-LIBS += -L. -lgmp -lmpfr -lm $(shell $(PKG_CONFIG) --libs glib-2.0)
-
-
 # sources, headers, objects
 PQC_SOURCES = poly.c \
 			  mem.c \
@@ -34,32 +24,17 @@ PQC_HEADERS = err.h \
 			  file.h \
 			  ntru_string.h
 
-# includes
-INCS = -I. $(shell $(PKG_CONFIG) --cflags glib-2.0)
+# libs
+LIBS += -L. -lgmp -lmpfr -lflint $(shell $(PKG_CONFIG) --libs glib-2.0) -lm
 
-ifndef UNBUNDLE
-LIBFLINT = ../external/flint-2.4.3/libflint.a
-INCS += -I../external/flint-2.4.3
-else
-LIBFLINT = -lflint
-INCS += -I/usr/include/flint
-endif
+# includes
+INCS = -I. -I/usr/include/flint $(shell $(PKG_CONFIG) --cflags glib-2.0)
 
 
 %.o: %.c
 	$(CC) -fPIC $(CFLAGS) $(CPPFLAGS) $(INCS) -c $*.c
 
 all: libpqc.a libpqc.so
-
-
-# test: $(CUNIT_OBJS) $(PQC_LIBS)
-	# $(CC) $(CFLAGS) -o $@ $(CUNIT_OBJS) $(LDFLAGS) $(CUNIT_LIBS) $(PQC_LIBS) $(LIBS)
-
-ifndef UNBUNDLE
-$(LIBFLINT):
-	cd ../external/flint-2.4.3 && ./configure --prefix=/usr --with-gmp=/usr --with-mpfr=/usr --disable-shared
-	$(MAKE) -C ../external/flint-2.4.3
-endif
 
 libpqc.a: $(PQC_OBJS) $(PQC_HEADERS)
 	$(AR) cru libpqc.a $(PQC_OBJS)
@@ -80,11 +55,8 @@ install:
 uninstall:
 	[ -e "$(DESTDIR)$(INSTALL_LIBDIR)/libpqc.so" ] && rm "$(DESTDIR)$(INSTALL_LIBDIR)/libpqc.so"
 
-# check:
-	# ./test
-
 clean:
 	rm -f *.o test libpqc.a libpqc.so main
 
 
-.PHONY: clean install
+.PHONY: clean install uninstall

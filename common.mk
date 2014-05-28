@@ -9,13 +9,6 @@ ifeq ($(shell $(CC) -v 2>&1 | grep 'gcc version' &>/dev/null && echo 1),1)
 CFLAGS += -Wno-unused-but-set-variable
 endif
 LDFLAGS ?= -Wl,-O1 -Wl,--as-needed -Wl,--hash-style=gnu
-# ifndef NOSTATIC
-# LDFLAGS += -static
-# endif
-
-ifndef NODEBUG
-CFLAGS += -O0 -g3
-endif
 
 # install variables
 INSTALL = install
