@@ -30,6 +30,7 @@
 #include "decrypt.h"
 #include "ntru_string.h"
 
+#include <stdbool.h>
 #include <string.h>
 
 #include <fmpz_poly.h>
@@ -38,7 +39,7 @@
 
 /*------------------------------------------------------------------------*/
 
-void
+bool
 ntru_decrypt_poly(
 		fmpz_poly_t encr_msg,
 		fmpz_poly_t priv_key,
@@ -47,6 +48,9 @@ ntru_decrypt_poly(
 		ntru_context *ctx)
 {
 	fmpz_poly_t a;
+
+	if (!encr_msg || !priv_key || !priv_key_inv || !out_bin || !ctx)
+		return false;
 
 	fmpz_poly_init(a);
 	fmpz_poly_zero(a);
@@ -57,6 +61,8 @@ ntru_decrypt_poly(
 	fmpz_poly_mod(out_bin, ctx->p);
 
 	fmpz_poly_clear(a);
+
+	return true;
 }
 
 /*------------------------------------------------------------------------*/
@@ -71,6 +77,9 @@ ntru_decrypt_string(
 	uint32_t i = 0;
 	string *decr_msg;
 	fmpz_poly_t **poly_array;
+
+	if (!encr_msg || !encr_msg->len)
+		return NULL;
 
 	poly_array = base64_to_poly_arr(encr_msg, ctx);
 

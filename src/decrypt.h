@@ -32,6 +32,8 @@
 #include "ntru_string.h"
 #include "poly.h"
 
+#include <stdbool.h>
+
 #include <fmpz_poly.h>
 #include <fmpz.h>
 
@@ -47,8 +49,9 @@
  * @param priv_key_inv the inverse polynome to the private key
  * @param out_tern the resulting ternary polynom [out]
  * @param ctx the ntru_context
+ * @return true/false for success/failure
  */
-void
+bool
 ntru_decrypt_poly(
 		fmpz_poly_t encr_msg,
 		fmpz_poly_t priv_key,
@@ -64,6 +67,7 @@ ntru_decrypt_poly(
  * 		the message
  * @param priv_key_inv the inverse polynome to the private key
  * @param ctx the ntru_context
+ * @return the decrypted string or NULL on failure
  */
 string *
 ntru_decrypt_string(
