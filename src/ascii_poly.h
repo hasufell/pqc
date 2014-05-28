@@ -73,7 +73,7 @@ ascii_bin_to_bin_poly(char *to_poly, ntru_context *ctx);
  * @return newly allocated array of binary polynomials
  */
 fmpz_poly_t **
-ascii_to_bin_poly_arr(char *to_poly, ntru_context *ctx);
+ascii_to_bin_poly_arr(string *to_poly, ntru_context *ctx);
 
 /**
  * Convert a single binary polynomial back to a real string.

@@ -69,10 +69,10 @@ get_int_to_bin_str(uint8_t value);
  *
  * @param binary_rep the binary representation of multiple
  * integers concatenated
- * @return NULL-terminated array of corresponding ascii-chars,
+ * @return string of corresponding ascii-chars,
  * newly allocated
  */
-static char *
+static string *
 get_bin_arr_to_ascii(char *binary_rep);
 
 
@@ -97,13 +97,14 @@ get_int_to_bin_str(uint8_t value)
 
 /*------------------------------------------------------------------------*/
 
-static char *
+static string *
 get_bin_arr_to_ascii(char *binary_rep)
 {
 	size_t int_arr_size = 0;
 	uint8_t *int_arr = NULL;
 	uint32_t i = 0;
 	char *int_string = NULL;
+	string *result = ntru_malloc(sizeof(*result));
 
 	if (!binary_rep || !*binary_rep)
 		return NULL;
@@ -125,16 +126,20 @@ get_bin_arr_to_ascii(char *binary_rep)
 
 		i++; /* amount of real integers */
 	}
+	/* we are one over the top */
+	i--;
 
-	int_string = ntru_malloc(CHAR_SIZE * (i + 1));
+	int_string = ntru_malloc(CHAR_SIZE * i);
 
 	for (uint32_t j = 0; j < i; j++)
 		int_string[j] = (char) int_arr[j];
-	int_string[i] = '\0';
+
+	result->ptr = int_string;
+	result->len = i;
 
 	free(int_arr);
 
-	return int_string;
+	return result;
 }
 
 /*------------------------------------------------------------------------*/
@@ -167,17 +172,17 @@ ascii_bin_to_bin_poly(char *to_poly, ntru_context *ctx)
 /*------------------------------------------------------------------------*/
 
 fmpz_poly_t **
-ascii_to_bin_poly_arr(char *to_poly, ntru_context *ctx)
+ascii_to_bin_poly_arr(string *to_poly, ntru_context *ctx)
 {
 	uint32_t polyc = 0;
-	char *cur = to_poly;
-	size_t out_size = CHAR_SIZE * (strlen(to_poly) * ASCII_BITS + 1);
+	char *cur = to_poly->ptr;
+	size_t out_size = CHAR_SIZE * (to_poly->len * ASCII_BITS + 1);
 	char *out = ntru_malloc(out_size);
 	fmpz_poly_t **poly_array;
 
 	*out = '\0';
 
-	while (*cur) {
+	for (uint32_t i = 0; i < to_poly->len; i++) {
 		char *tmp_string = get_int_to_bin_str((int)(*cur));
 		strcat(out, tmp_string);
 		cur++;
@@ -249,8 +254,7 @@ bin_poly_arr_to_ascii(fmpz_poly_t **bin_poly_arr, ntru_context *ctx)
 	fmpz_poly_t *ascii_poly;
 	char *binary_rep = NULL;
 	size_t string_len = 0;
-	char *ascii_string = NULL;
-	string *result_string = ntru_malloc(sizeof(*result_string));
+	string *ascii_string = NULL;
 	size_t old_length = 0,
 		   new_length;
 
@@ -284,12 +288,9 @@ bin_poly_arr_to_ascii(fmpz_poly_t **bin_poly_arr, ntru_context *ctx)
 
 	ascii_string = get_bin_arr_to_ascii(binary_rep);
 
-	result_string->ptr = ascii_string;
-	result_string->len = strlen(ascii_string);
-
 	free(binary_rep);
 
-	return result_string;
+	return ascii_string;
 }
 
 /*------------------------------------------------------------------------*/
@@ -348,7 +349,7 @@ base64_to_poly_arr(string *to_poly, ntru_context *ctx)
 	new_string->len = (unsigned long)(out_len);
 
 	poly_array = ntru_malloc(sizeof(**poly_array) *
-			(strlen(new_string->ptr) / ctx->N));
+			(new_string->len / ctx->N));
 
 	while (i < new_string->len) {
 		uint32_t j = 0;
