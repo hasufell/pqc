@@ -39,7 +39,7 @@
 
 /*------------------------------------------------------------------------*/
 
-void
+bool
 ntru_encrypt_poly(
 		fmpz_poly_t msg_bin,
 		fmpz_poly_t pub_key,
@@ -47,8 +47,12 @@ ntru_encrypt_poly(
 		fmpz_poly_t out,
 		ntru_context *ctx)
 {
-	/* allow aliasing */
 	fmpz_poly_t tmp_poly_msg;
+
+	if (!msg_bin || !pub_key || !rnd || !out || !ctx)
+		return false;
+
+	/* allow aliasing */
 	fmpz_poly_init(tmp_poly_msg);
 	fmpz_poly_set(tmp_poly_msg, msg_bin);
 
@@ -77,13 +81,15 @@ ntru_encrypt_poly(
 	}
 
 	fmpz_poly_clear(tmp_poly_msg);
+
+	return true;
 }
 
 /*------------------------------------------------------------------------*/
 
 string *
 ntru_encrypt_string(
-		char *msg,
+		string *msg,
 		fmpz_poly_t pub_key,
 		fmpz_poly_t rnd,
 		ntru_context *ctx)
@@ -92,14 +98,18 @@ ntru_encrypt_string(
 	string *enc_msg;
 	fmpz_poly_t **poly_array;
 
+	if (!msg || !msg->len)
+		return NULL;
+
 	poly_array = ascii_to_bin_poly_arr(msg, ctx);
 
 	while (*poly_array[i]) {
-		ntru_encrypt_poly(*poly_array[i],
+		if (!ntru_encrypt_poly(*poly_array[i],
 				pub_key,
 				rnd,
 				*poly_array[i],
-				ctx);
+				ctx))
+			NTRU_ABORT("failed encrypting string!\n");
 		i++;
 	}
 

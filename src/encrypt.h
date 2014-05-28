@@ -33,6 +33,8 @@
 #include "ntru_string.h"
 #include "poly.h"
 
+#include <stdbool.h>
+
 #include <fmpz_poly.h>
 #include <fmpz.h>
 
@@ -58,8 +60,9 @@
  * @param out the output poly which is in the range {0, q-1}
  * (not ternary!) [out]
  * @param ctx ntru_context the ntru context
+ * @return true/false for success/failure
  */
-void
+bool
 ntru_encrypt_poly(
 		fmpz_poly_t msg_tern,
 		fmpz_poly_t pub_key,
@@ -76,11 +79,11 @@ ntru_encrypt_poly(
  * @param rnd the random poly (should have relatively small
  * coefficients, but not restricted to {-1, 0, 1})
  * @param ctx ntru_context the ntru context
- * @return the newly allocated encrypted string
+ * @return the newly allocated encrypted string, NULL on failure
  */
 string *
 ntru_encrypt_string(
-		char *msg,
+		string *msg,
 		fmpz_poly_t pub_key,
 		fmpz_poly_t rnd,
 		ntru_context *ctx);
