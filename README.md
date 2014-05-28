@@ -10,4 +10,4 @@ implementation with the primary goal of learning.
 
 ## Compiling
 
-```make```
+Run ```make``` to build.
