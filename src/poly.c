@@ -390,7 +390,7 @@ poly_inverse_poly_p(fmpz_poly_t a,
 		fmpz_poly_t Fp,
 		ntru_context *ctx)
 {
-	bool retval = true;
+	bool retval = false;
 	int k = 0,
 		j = 0;
 	fmpz *b_last;
@@ -437,10 +437,8 @@ poly_inverse_poly_p(fmpz_poly_t a,
 
 			k++;
 
-			if (fmpz_poly_degree(f) == -1) {
-				retval = false;
+			if (fmpz_poly_degree(f) == -1)
 				goto cleanup;
-			}
 		}
 
 		if (fmpz_poly_degree(f) == 0)
@@ -497,10 +495,8 @@ poly_inverse_poly_p(fmpz_poly_t a,
 	k = k % ctx->N;
 
 	b_last = fmpz_poly_get_coeff_ptr(b, ctx->N);
-	if (b_last && fmpz_cmp_si(b_last, 0)) {
-		retval = false;
+	if (b_last && fmpz_cmp_si(b_last, 0))
 		goto cleanup;
-	}
 
 	/* Fp(x) = x^(N-k) * b(x) */
 	for (int i = ctx->N - 1; i >= 0; i--) {
@@ -537,8 +533,10 @@ poly_inverse_poly_p(fmpz_poly_t a,
 	/* check if the f * Fp = 1 (mod p) condition holds true */
 	fmpz_poly_set(a_tmp, a);
 	poly_starmultiply(a_tmp, Fp, a_tmp, ctx, ctx->p);
-	if (!fmpz_poly_is_one(a_tmp))
-		retval = false;
+	if (fmpz_poly_is_one(a_tmp))
+		retval = true;
+	else
+		fmpz_poly_zero(Fp);
 
 cleanup:
 	fmpz_poly_clear(a_tmp);
@@ -546,9 +544,6 @@ cleanup:
 	fmpz_poly_clear(c);
 	fmpz_poly_clear(f);
 	fmpz_poly_clear(g);
-
-	if (!retval)
-		fmpz_poly_zero(Fp);
 
 	return retval;
 }
