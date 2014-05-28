@@ -121,6 +121,23 @@ string *
 bin_poly_arr_to_ascii(fmpz_poly_t **bin_poly_arr, ntru_context *ctx);
 
 /**
+ * Convert a single polynom back to a real string which is
+ * ascii encoded (full 256 C char spectrum).
+ * The polynomial coefficients are expected to be in the range
+ * [0, q-1] and will be casted back to chars without any mapping.
+ *
+ * Trailing q coefficients are only used for filling up the rest of
+ * a polynomial with '\0', so they will not confuse the result.
+ *
+ * @param poly the polynomial to convert
+ * @param ctx the NTRUEncrypt context
+ * @return the real string, newly allocated
+ */
+string *
+poly_to_ascii(fmpz_poly_t poly,
+		ntru_context *ctx);
+
+/**
  * Convert an base64 encoded string to an array of polyomials with
  * coefficients which are expected to be in the range [0, q-1].
  * The chars will be converted (after decoding) to their integer
