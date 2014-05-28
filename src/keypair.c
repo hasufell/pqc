@@ -45,25 +45,23 @@ ntru_create_keypair(
 		keypair *pair,
 		ntru_context *ctx)
 {
-	bool retval = true;
+	bool retval = false;
 	fmpz_poly_t Fq,
 				Fp,
 				pub;
+
+	if (!f || !g || !ctx)
+		goto _return;
 
 	fmpz_poly_init(Fq);
 	fmpz_poly_init(Fp);
 	fmpz_poly_init(pub);
 
+	if (!poly_inverse_poly_q(f, Fq, ctx))
+		goto _cleanup;
 
-	if (!poly_inverse_poly_q(f, Fq, ctx)) {
-		retval = false;
-		goto cleanup;
-	}
-
-	if (!poly_inverse_poly_p(f, Fp, ctx)) {
-		retval = false;
-		goto cleanup;
-	}
+	if (!poly_inverse_poly_p(f, Fp, ctx))
+		goto _cleanup;
 
 	poly_starmultiply(Fq, g, pub, ctx, ctx->q);
 	fmpz_poly_scalar_mul_ui(pub, pub, ctx->p);
@@ -77,10 +75,13 @@ ntru_create_keypair(
 	fmpz_poly_set(pair->priv_inv, Fp);
 	fmpz_poly_set(pair->pub, pub);
 
-cleanup:
+	retval = true;
+
+_cleanup:
 	fmpz_poly_clear(Fq);
 	fmpz_poly_clear(Fp);
 	fmpz_poly_clear(pub);
+_return:
 	return retval;
 }
 
