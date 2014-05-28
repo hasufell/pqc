@@ -54,8 +54,28 @@ ntru_encrypt_poly(
 
 	fmpz_poly_zero(out);
 	poly_starmultiply(pub_key, rnd, out, ctx, ctx->q);
+
 	fmpz_poly_add(out, out, tmp_poly_msg);
-	fmpz_poly_mod_unsigned(out, ctx->q);
+	fmpz_poly_mod(out, ctx->q);
+
+	/*
+	 * using the flint functions
+	 *   fmpz_poly_add(out, out, tmp_poly_msg);
+	 *   fmpz_poly_mod_unsigned(out, ctx->q);
+	 * here instead caused very rare glitches in some cases,
+	 * TODO: investigate
+	 */
+	for (uint32_t i = 0; i < ctx->N; i++) {
+		printf("go ");
+		fmpz_t e_coeff_i;
+		fmpz *m_coeff_i = fmpz_poly_get_coeff_ptr(tmp_poly_msg, i);
+		fmpz_init(e_coeff_i);
+
+		fmpz_add_n(e_coeff_i, e_coeff_i, m_coeff_i);
+		fmpz_mod_ui(e_coeff_i, e_coeff_i, ctx->q);
+
+		fmpz_poly_set_coeff_fmpz_n(out, i, e_coeff_i);
+	}
 
 	fmpz_poly_clear(tmp_poly_msg);
 }
