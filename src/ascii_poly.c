@@ -110,11 +110,13 @@ get_bin_arr_to_ascii(char *binary_rep)
 
 	printf("YO %sEND\n", binary_rep);
 
-	int_arr_size = strlen(binary_rep) / ASCII_BITS;
+	int_arr_size = strlen(binary_rep) / ASCII_BITS + 1;
 	int_arr = ntru_malloc(sizeof(*int_arr) * int_arr_size);
 
-	for (i = 0; i < strlen(binary_rep); i++) {
+	while (*binary_rep) {
 		int_arr[i] = 0;
+
+		/* convert one binary integer to real integer */
 		for (uint32_t j = 0; j < ASCII_BITS && *binary_rep; j++) {
 			if (*binary_rep == '1')
 				int_arr[i] = int_arr[i] * 2 + 1;
@@ -122,6 +124,8 @@ get_bin_arr_to_ascii(char *binary_rep)
 				int_arr[i] *= 2;
 			binary_rep++;
 		}
+
+		i++; /* amount of real integers */
 	}
 
 	int_string = ntru_calloc(1, CHAR_SIZE * (i + 1));
