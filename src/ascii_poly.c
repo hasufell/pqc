@@ -108,8 +108,6 @@ get_bin_arr_to_ascii(char *binary_rep)
 	if (!binary_rep || !*binary_rep)
 		return NULL;
 
-	printf("YO %sEND\n", binary_rep);
-
 	int_arr_size = strlen(binary_rep) / ASCII_BITS + 1;
 	int_arr = ntru_malloc(sizeof(*int_arr) * int_arr_size);
 
@@ -185,7 +183,8 @@ ascii_to_bin_poly_arr(char *to_poly, ntru_context *ctx)
 		free(tmp_string);
 	}
 
-	poly_array = ntru_malloc(sizeof(**poly_array) * (strlen(out) / ctx->N));
+	poly_array = ntru_malloc(sizeof(**poly_array) *
+			(strlen(out) / ctx->N));
 
 	for (uint32_t i = 0; i < strlen(out); i += ctx->N) {
 		char chunk[ctx->N + 1];
