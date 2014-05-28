@@ -126,10 +126,11 @@ get_bin_arr_to_ascii(char *binary_rep)
 		i++; /* amount of real integers */
 	}
 
-	int_string = ntru_calloc(1, CHAR_SIZE * (i + 1));
+	int_string = ntru_malloc(CHAR_SIZE * (i + 1));
 
 	for (uint32_t j = 0; j < i; j++)
 		int_string[j] = (char) int_arr[j];
+	int_string[i] = '\0';
 
 	free(int_arr);
 
