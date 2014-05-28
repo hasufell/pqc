@@ -96,7 +96,12 @@ ntru_encrypt_string(
 	poly_array = ascii_to_bin_poly_arr(msg, ctx);
 
 	while (*poly_array[i]) {
-		ntru_encrypt_poly(*poly_array[i], pub_key, rnd, *poly_array[i], ctx);
+		poly_draw(*poly_array[i]);
+		ntru_encrypt_poly(*poly_array[i],
+				pub_key,
+				rnd,
+				*poly_array[i],
+				ctx);
 		i++;
 	}
 
