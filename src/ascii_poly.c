@@ -309,19 +309,17 @@ poly_to_ascii(fmpz_poly_t poly,
 {
 	string *result_string = ntru_malloc(sizeof(*result_string));
 	char *string_rep = ntru_malloc(CHAR_SIZE * (ctx->N));
-	uint32_t i = 0;
 
 	for (uint32_t j = 0; j < ctx->N; j++) {
 		uint8_t coeff = fmpz_poly_get_coeff_ui(poly, j);
 		if (coeff == ctx->q)
-			string_rep[i] = '\0';
+			string_rep[j] = '\0';
 		else
-			string_rep[i] = (char)coeff;
-		i++;
+			string_rep[j] = (char)coeff;
 	}
 
 	result_string->ptr = string_rep;
-	result_string->len = i;
+	result_string->len = ctx->N;
 
 	return result_string;
 }
