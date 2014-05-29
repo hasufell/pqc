@@ -67,6 +67,8 @@ get_int_to_bin_str(uint8_t value);
  *
  * 10110101|00111100|01011001 => 90|60|89 => "Z<Y"
  *
+ * Chunks that are 00000000 are stripped from the result.
+ *
  * @param binary_rep the binary representation of multiple
  * integers concatenated
  * @return string of corresponding ascii-chars,
