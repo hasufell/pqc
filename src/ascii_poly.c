@@ -129,13 +129,19 @@ get_bin_arr_to_ascii(char *binary_rep)
 	/* we are one over the top */
 	i--;
 
-	int_string = ntru_malloc(CHAR_SIZE * i);
+	int_string = ntru_malloc(CHAR_SIZE * (i + 1));
 
 	for (uint32_t j = 0; j < i; j++)
 		int_string[j] = (char) int_arr[j];
 
+	/* make sure this is always terminated, because
+	 * of following strlen call */
+	int_string[i] = '\0';
+
 	result->ptr = int_string;
-	result->len = i;
+	/* we can't use "i" here as length, because we
+	 * want to get rid of trailing null-bytes */
+	result->len = strlen(int_string);
 
 	free(int_arr);
 
