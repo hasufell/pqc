@@ -65,7 +65,7 @@ ntru_create_keypair(
 
 	poly_starmultiply(Fq, g, pub, ctx, ctx->q);
 	fmpz_poly_scalar_mul_ui(pub, pub, ctx->p);
-	fmpz_poly_mod(pub, ctx->q);
+	fmpz_poly_mod_unsigned(pub, ctx->q);
 
 	fmpz_poly_init(pair->priv);
 	fmpz_poly_init(pair->priv_inv);
