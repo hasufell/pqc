@@ -128,22 +128,14 @@ get_bin_arr_to_ascii(char *binary_rep)
 
 		i++; /* amount of real integers */
 	}
-	/* we are one over the top */
-	i--;
 
 	int_string = ntru_malloc(CHAR_SIZE * (i + 1));
 
 	for (uint32_t j = 0; j < i; j++)
 		int_string[j] = (char) int_arr[j];
 
-	/* make sure this is always terminated, because
-	 * of following strlen call */
-	int_string[i] = '\0';
-
 	result->ptr = int_string;
-	/* we can't use "i" here as length, because we
-	 * want to get rid of trailing null-bytes */
-	result->len = strlen(int_string);
+	result->len = i;
 
 	free(int_arr);
 
@@ -167,13 +159,6 @@ ascii_bin_to_bin_poly(char *to_poly, ntru_context *ctx)
 		i++;
 	}
 
-	/* fill the last poly with 2 */
-	for (uint32_t j = i; j < ctx->N; j++) {
-		fmpz_poly_set_coeff_si(*new_poly,
-				i,
-				2);
-	}
-
 	return new_poly;
 }
 
@@ -182,10 +167,9 @@ ascii_bin_to_bin_poly(char *to_poly, ntru_context *ctx)
 fmpz_poly_t **
 ascii_to_bin_poly_arr(string *to_poly, ntru_context *ctx)
 {
-	uint32_t polyc = 0;
 	char *cur = to_poly->ptr;
-	size_t out_size = CHAR_SIZE * (to_poly->len * ASCII_BITS + 1);
-	char *out = ntru_malloc(out_size);
+	char *out = ntru_malloc(CHAR_SIZE * (to_poly->len * ASCII_BITS + 1));
+	uint32_t polyc = 0;
 	fmpz_poly_t **poly_array;
 
 	*out = '\0';
@@ -198,7 +182,7 @@ ascii_to_bin_poly_arr(string *to_poly, ntru_context *ctx)
 	}
 
 	poly_array = ntru_malloc(sizeof(**poly_array) *
-			(strlen(out) / ctx->N));
+			(strlen(out) / ctx->N + 1));
 
 	for (uint32_t i = 0; i < strlen(out); i += ctx->N) {
 		char chunk[ctx->N + 1];
@@ -236,15 +220,14 @@ bin_poly_to_ascii(fmpz_poly_t poly,
 		fmpz *coeff = fmpz_poly_get_coeff_ptr(poly, j);
 
 		if (coeff) {
-			if (fmpz_cmp_si(coeff, 1))
-				binary_rep[i] = '0';
-			else if (fmpz_cmp_si(coeff, -1))
+			if (!fmpz_cmp_si(coeff, 1))
 				binary_rep[i] = '1';
-			else if (fmpz_cmp_si(coeff, 2))
+			else if (!fmpz_cmp_si(coeff, -1))
 				binary_rep[i] = '0';
 		} else {
-			binary_rep[i] = '0';
+			break;
 		}
+
 		i++;
 	}
 
