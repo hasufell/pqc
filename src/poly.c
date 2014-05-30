@@ -420,16 +420,16 @@ poly_inverse_poly_p(fmpz_poly_t a,
 	while (1) {
 		while (fmpz_is_zero(fmpz_poly_get_coeff_ptr(f, 0))) {
 			for (uint32_t i = 1; i <= ctx->N; i++) {
-				fmpz *f_coeff_tmp = fmpz_poly_get_coeff_ptr(f, i);
-				fmpz *c_coeff_tmp = fmpz_poly_get_coeff_ptr(c, ctx->N - i);
+				fmpz *f_coeff = fmpz_poly_get_coeff_ptr(f, i);
+				fmpz *c_coeff = fmpz_poly_get_coeff_ptr(c, ctx->N - i);
 
 				/* f(x) = f(x) / x */
 				fmpz_poly_set_coeff_fmpz_n(f, i - 1,
-						f_coeff_tmp);
+						f_coeff);
 
 				/* c(x) = c(x) * x */
 				fmpz_poly_set_coeff_fmpz_n(c, ctx->N + 1 - i,
-						c_coeff_tmp);
+						c_coeff);
 			}
 
 			fmpz_poly_set_coeff_si(f, ctx->N, 0);
