@@ -172,7 +172,7 @@ import_priv_key(char const * const filename,
 	/* if the array exceeds one element, then something
 	 * went horribly wrong */
 	if (*imported[1])
-		NTRU_ABORT("Failed importing public key!\n");
+		NTRU_ABORT("Failed importing private key!\n");
 
 	fmpz_poly_set(priv, **imported);
 
