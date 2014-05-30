@@ -56,7 +56,7 @@ uninstall:
 	[ -e "$(DESTDIR)$(INSTALL_LIBDIR)/libpqc.so" ] && rm "$(DESTDIR)$(INSTALL_LIBDIR)/libpqc.so"
 
 clean:
-	rm -f *.o test libpqc.a libpqc.so main
+	rm -f *.o test libpqc.a libpqc.so main *.dec *.enc *.hex *.orig core
 
 
 .PHONY: clean install uninstall
