@@ -1,5 +1,5 @@
 # compiler, tools
-CC = $(shell type -P clang || echo gcc)
+CC ?= $(shell type -P clang || echo gcc)
 PKG_CONFIG ?= pkg-config
 
 # flags
