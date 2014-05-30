@@ -397,7 +397,7 @@ poly_to_base64(fmpz_poly_t poly,
 	result_string->ptr = base64_string;
 	result_string->len = strlen(base64_string);
 
-	free(string_rep);
+	string_delete(string_rep);
 	free(tmp);
 
 	return result_string;

@@ -121,6 +121,7 @@ export_priv_key(char const * const filename,
 	priv_string = poly_to_base64(priv_u, ctx);
 	write_file(priv_string, filename);
 
+	fmpz_poly_clear(priv_u);
 	string_delete(priv_string);
 }
 
@@ -145,7 +146,7 @@ import_public_key(char const * const filename,
 	fmpz_poly_set(pub, **imported);
 
 	string_delete(pub_string);
-	poly_delete(**imported);
+	poly_delete_array(imported);
 	free(imported);
 }
 
@@ -185,7 +186,7 @@ import_priv_key(char const * const filename,
 
 cleanup:
 	string_delete(pub_string);
-	poly_delete(**imported);
+	poly_delete_array(imported);
 	free(imported);
 }
 

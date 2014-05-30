@@ -117,10 +117,13 @@ poly_delete_array(fmpz_poly_t **poly_array)
 
 	while(poly_array[i]) {
 		poly_delete(*(poly_array[i]));
-		free(*(poly_array[i]));
+		free(poly_array[i]);
 		i++;
 	}
-	free(poly_array);
+
+	/* avoid double free */
+	if (i > 1)
+		free(poly_array);
 }
 
 /*------------------------------------------------------------------------*/
