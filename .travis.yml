@@ -1,0 +1,6 @@
+language: c
+compiler: clang
+before_script:
+    - sudo apt-get install -qq libflint-dev
+script:
+    - make

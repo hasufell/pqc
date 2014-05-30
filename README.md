@@ -11,3 +11,6 @@ implementation with the primary goal of learning.
 ## Compiling
 
 Run ```make``` to build.
+
+### Build Status
+[![Build Status](https://travis-ci.org/hasufell/pqc.png)](https://travis-ci.org/hasufell/pqc)
