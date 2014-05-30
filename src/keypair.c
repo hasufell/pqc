@@ -26,14 +26,18 @@
  * @brief key creation and operations
  */
 
+#include "ascii_poly.h"
 #include "context.h"
+#include "file.h"
 #include "keypair.h"
+#include "ntru_string.h"
 #include "poly.h"
 
 #include <fmpz_poly.h>
 #include <fmpz.h>
 
 #include <stdbool.h>
+#include <string.h>
 
 
 /*------------------------------------------------------------------------*/
@@ -83,6 +87,106 @@ _cleanup:
 	fmpz_poly_clear(pub);
 _return:
 	return retval;
+}
+
+/*------------------------------------------------------------------------*/
+
+void
+export_public_key(char const * const filename,
+		fmpz_poly_t pub,
+		ntru_context *ctx)
+{
+	string *pub_string;
+
+	pub_string = poly_to_base64(pub, ctx);
+	write_file(pub_string, filename);
+
+	string_delete(pub_string);
+}
+
+/*------------------------------------------------------------------------*/
+
+void
+export_priv_key(char const * const filename,
+		fmpz_poly_t priv,
+		ntru_context *ctx)
+{
+	string *priv_string;
+	fmpz_poly_t priv_u;
+
+	fmpz_poly_init(priv_u);
+	fmpz_poly_set(priv_u, priv);
+	fmpz_poly_mod_unsigned(priv_u, ctx->p);
+
+	priv_string = poly_to_base64(priv_u, ctx);
+	write_file(priv_string, filename);
+
+	string_delete(priv_string);
+}
+
+/*------------------------------------------------------------------------*/
+
+void
+import_public_key(char const * const filename,
+		fmpz_poly_t pub,
+		ntru_context *ctx)
+{
+	string *pub_string;
+	fmpz_poly_t **imported;
+
+	pub_string = read_file(filename);
+	imported = base64_to_poly_arr(pub_string, ctx);
+
+	/* if the array exceeds one element, then something
+	 * went horribly wrong */
+	if (*imported[1])
+		NTRU_ABORT("Failed importing public key!\n");
+
+	fmpz_poly_set(pub, **imported);
+
+	string_delete(pub_string);
+	poly_delete(**imported);
+	free(imported);
+}
+
+/*------------------------------------------------------------------------*/
+
+void
+import_priv_key(char const * const filename,
+		fmpz_poly_t priv,
+		fmpz_poly_t priv_inv,
+		ntru_context *ctx)
+{
+	string *pub_string;
+	fmpz_poly_t **imported,
+				Fp;
+
+	fmpz_poly_init(Fp);
+
+	pub_string = read_file(filename);
+
+	imported = base64_to_poly_arr(pub_string, ctx);
+	fmpz_poly_mod(**imported, ctx->p);
+
+	/* if the array exceeds one element, then something
+	 * went horribly wrong */
+	if (*imported[1])
+		NTRU_ABORT("Failed importing public key!\n");
+
+	fmpz_poly_set(priv, **imported);
+
+	if (!poly_inverse_poly_p(priv, Fp, ctx))
+		goto cleanup;
+
+	fmpz_poly_mod(Fp, ctx->p);
+
+	fmpz_poly_set(priv_inv, Fp);
+	fmpz_poly_clear(Fp);
+
+cleanup:
+	string_delete(pub_string);
+	poly_delete(**imported);
+	free(imported);
 }
 
 /*------------------------------------------------------------------------*/

@@ -80,6 +80,56 @@ ntru_create_keypair(
 		ntru_context *ctx);
 
 /**
+ * Export the public key to a file.
+ *
+ * @param filename the file to save the public key into
+ * @param pub the public key
+ * @param ctx the NTRU context
+ */
+void
+export_public_key(char const * const filename,
+		fmpz_poly_t pub,
+		ntru_context *ctx);
+
+/**
+ * Export the private key to a file.
+ *
+ * @param filename the file to save the private key into
+ * @param priv the private key
+ * @param ctx the NTRU context
+ */
+void
+export_priv_key(char const * const filename,
+		fmpz_poly_t priv,
+		ntru_context *ctx);
+
+/**
+ * Import the public key from a file.
+ * @param filename the file to get the public key from
+ * @param pub where to save the public key [out]
+ * @param ctx the NTRU context
+ */
+void
+import_public_key(char const * const filename,
+		fmpz_poly_t pub,
+		ntru_context *ctx);
+
+/**
+ * Import the private key from a file and store him
+ * along with his inverse.
+ *
+ * @param filename the file to get the private key from
+ * @param priv where to save the private key [out]
+ * @param priv_inv where to save the inverse of the private key [out]
+ * @param ctx the NTRU context
+ */
+void
+import_priv_key(char const * const filename,
+		fmpz_poly_t priv,
+		fmpz_poly_t priv_inv,
+		ntru_context *ctx);
+
+/**
  * Used to free the inner structure
  * of a keypair. This will not call free()
  * on the pair itself.
