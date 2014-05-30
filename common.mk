@@ -5,7 +5,7 @@ PKG_CONFIG ?= pkg-config
 # flags
 CFLAGS ?= -march=native -O2 -pipe
 CFLAGS += -std=c99 -pedantic -Wall -Wextra -Werror -Wno-unused-variable -Wno-unused-parameter -Wno-unused-function
-ifeq ($(shell $(CC) -v 2>&1 | grep 'gcc version' &>/dev/null && echo 1),1)
+ifeq ($(CC),gcc)
 CFLAGS += -Wno-unused-but-set-variable
 endif
 LDFLAGS ?= -Wl,-O1 -Wl,--as-needed -Wl,--hash-style=gnu
