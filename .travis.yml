@@ -8,5 +8,6 @@ before_script:
     - ./configure --prefix=/usr --with-gmp=/usr --with-mpfr=/usr CC=gcc CXX=g++
     - make
     - sudo make install
+    - cd ..
 script:
     - make
