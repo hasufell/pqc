@@ -2,12 +2,11 @@ language: c
 compiler: clang
 before_script:
     - sudo apt-get install -qq libgmp-dev libmpfr-dev
-    - mkdir flint
     - wget http://www.flintlib.org/flint-2.4.3.tar.gz
     - tar -xzf flint-2.4.3.tar.gz
     - cd flint-2.4.3
     - ./configure --prefix=/usr --with-gmp=/usr --with-mpfr=/usr CC=gcc CXX=g++
     - make
-    - make install
+    - sudo make install
 script:
     - make
