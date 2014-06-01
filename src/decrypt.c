@@ -47,7 +47,10 @@ ntru_decrypt_poly(
 		fmpz_poly_t out_bin,
 		ntru_context *ctx)
 {
-	fmpz_poly_t a;
+	fmpz_poly_t a,
+				priv_key_tmp,
+				priv_key_inv_tmp,
+				encr_msg_tmp;
 
 	if (!encr_msg || !priv_key || !priv_key_inv || !out_bin || !ctx)
 		return false;
@@ -55,12 +58,29 @@ ntru_decrypt_poly(
 	fmpz_poly_init(a);
 	fmpz_poly_zero(a);
 
-	poly_starmultiply(priv_key, encr_msg, a, ctx, ctx->q);
+	/*
+	 * make sure all are shifted to
+	 * [-q/2, q/2]
+	 */
+	fmpz_poly_init(priv_key_tmp);
+	fmpz_poly_init(priv_key_inv_tmp);
+	fmpz_poly_init(encr_msg_tmp);
+	fmpz_poly_set(priv_key_tmp, priv_key);
+	fmpz_poly_set(priv_key_inv_tmp, priv_key_inv);
+	fmpz_poly_set(encr_msg_tmp, encr_msg);
+	fmpz_poly_mod(priv_key_tmp, ctx->q);
+	fmpz_poly_mod(priv_key_inv_tmp, ctx->q);
+	fmpz_poly_mod(encr_msg_tmp, ctx->q);
+
+	poly_starmultiply(priv_key_tmp, encr_msg_tmp, a, ctx, ctx->q);
 	fmpz_poly_mod(a, ctx->q);
-	poly_starmultiply(a, priv_key_inv, out_bin, ctx, ctx->p);
+	poly_starmultiply(a, priv_key_inv_tmp, out_bin, ctx, ctx->p);
 	fmpz_poly_mod(out_bin, ctx->p);
 
 	fmpz_poly_clear(a);
+	fmpz_poly_clear(priv_key_tmp);
+	fmpz_poly_clear(priv_key_inv_tmp);
+	fmpz_poly_clear(encr_msg_tmp);
 
 	return true;
 }
