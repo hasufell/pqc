@@ -55,7 +55,7 @@ struct string {
 
 
 void
-prints(string *print_string);
+prints(const string *print_string);
 
 /**
  * Delete the inner structure

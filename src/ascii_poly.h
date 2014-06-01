@@ -54,7 +54,7 @@
  * @return newly allocated array of binary polynomials
  */
 fmpz_poly_t *
-ascii_bin_to_bin_poly(char *to_poly, ntru_context *ctx);
+ascii_bin_to_bin_poly(const char *to_poly, const ntru_context *ctx);
 
 /**
  * Convert an ascii string to an array of binary polyomials.
@@ -73,7 +73,7 @@ ascii_bin_to_bin_poly(char *to_poly, ntru_context *ctx);
  * @return newly allocated array of binary polynomials
  */
 fmpz_poly_t **
-ascii_to_bin_poly_arr(string *to_poly, ntru_context *ctx);
+ascii_to_bin_poly_arr(const string *to_poly, const ntru_context *ctx);
 
 /**
  * Convert a single binary polynomial back to a real string.
@@ -95,8 +95,8 @@ ascii_to_bin_poly_arr(string *to_poly, ntru_context *ctx);
  * @return the real string, newly allocated
  */
 string *
-bin_poly_to_ascii(fmpz_poly_t poly,
-		ntru_context *ctx);
+bin_poly_to_ascii(const fmpz_poly_t poly,
+		const ntru_context *ctx);
 
 /**
  * Convert an array of binary polynomials back to a real string.
@@ -118,7 +118,8 @@ bin_poly_to_ascii(fmpz_poly_t poly,
  * @return the real string, newly allocated
  */
 string *
-bin_poly_arr_to_ascii(fmpz_poly_t **bin_poly_arr, ntru_context *ctx);
+bin_poly_arr_to_ascii(fmpz_poly_t **bin_poly_arr,
+		const ntru_context *ctx);
 
 /**
  * Convert a single polynom back to a real string which is
@@ -134,8 +135,8 @@ bin_poly_arr_to_ascii(fmpz_poly_t **bin_poly_arr, ntru_context *ctx);
  * @return the real string, newly allocated
  */
 string *
-poly_to_ascii(fmpz_poly_t poly,
-		ntru_context *ctx);
+poly_to_ascii(const fmpz_poly_t poly,
+		const ntru_context *ctx);
 
 /**
  * Convert an base64 encoded string to an array of polyomials with
@@ -153,7 +154,7 @@ poly_to_ascii(fmpz_poly_t poly,
  * @return newly allocated array of polynomials
  */
 fmpz_poly_t **
-base64_to_poly_arr(string *to_poly, ntru_context *ctx);
+base64_to_poly_arr(const string *to_poly, const ntru_context *ctx);
 
 /**
  * Convert a single polynom back to a real string which is
@@ -169,8 +170,8 @@ base64_to_poly_arr(string *to_poly, ntru_context *ctx);
  * @return the real string, newly allocated
  */
 string *
-poly_to_base64(fmpz_poly_t poly,
-		ntru_context *ctx);
+poly_to_base64(const fmpz_poly_t poly,
+		const ntru_context *ctx);
 
 /**
  * Convert an array of polynomials back to a real string which
@@ -186,7 +187,7 @@ poly_to_base64(fmpz_poly_t poly,
  * @return the real string, newly allocated
  */
 string *
-poly_arr_to_base64(fmpz_poly_t **poly_arr, ntru_context *ctx);
+poly_arr_to_base64(fmpz_poly_t **poly_arr, const ntru_context *ctx);
 
 
 #endif /* NTRU_ASCII_POLY_H_ */

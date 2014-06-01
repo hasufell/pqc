@@ -52,17 +52,17 @@
  * @param ctx NTRU context
  */
 static
-void poly_mod2_to_modq(fmpz_poly_t a,
+void poly_mod2_to_modq(const fmpz_poly_t a,
 		fmpz_poly_t Fq,
-		ntru_context *ctx);
+		const ntru_context *ctx);
 
 
 /*------------------------------------------------------------------------*/
 
 static void
-poly_mod2_to_modq(fmpz_poly_t a,
+poly_mod2_to_modq(const fmpz_poly_t a,
 		fmpz_poly_t Fq,
-		ntru_context *ctx)
+		const ntru_context *ctx)
 {
 	int v = 2;
 	fmpz_poly_t poly_tmp, two;
@@ -147,7 +147,7 @@ poly_delete_all(fmpz_poly_t poly, ...)
 
 void
 fmpz_poly_mod_unsigned(fmpz_poly_t a,
-		uint32_t mod)
+		const uint32_t mod)
 {
 	nmod_poly_t nmod_tmp;
 
@@ -163,7 +163,7 @@ fmpz_poly_mod_unsigned(fmpz_poly_t a,
 
 void
 fmpz_poly_mod(fmpz_poly_t a,
-		uint32_t mod)
+		const uint32_t mod)
 {
 	nmod_poly_t nmod_tmp;
 
@@ -190,7 +190,7 @@ fmpz_poly_set_coeff_fmpz_n(fmpz_poly_t poly, slong n,
 /*------------------------------------------------------------------------*/
 
 int
-fmpz_invmod_ui(fmpz_t f, const fmpz_t g, uint32_t mod)
+fmpz_invmod_ui(fmpz_t f, const fmpz_t g, const uint32_t mod)
 {
 	fmpz_t modulus;
 
@@ -219,10 +219,10 @@ fmpz_add_n(fmpz_t f, const fmpz_t g, const fmpz_t h)
 /*------------------------------------------------------------------------*/
 
 void
-poly_starmultiply(fmpz_poly_t a,
-		fmpz_poly_t b,
+poly_starmultiply(const fmpz_poly_t a,
+		const fmpz_poly_t b,
 		fmpz_poly_t c,
-		ntru_context *ctx,
+		const ntru_context *ctx,
 		uint32_t modulus)
 {
 	fmpz_poly_t a_tmp;
@@ -277,9 +277,9 @@ poly_starmultiply(fmpz_poly_t a,
 /*------------------------------------------------------------------------*/
 
 bool
-poly_inverse_poly_q(fmpz_poly_t a,
+poly_inverse_poly_q(const fmpz_poly_t a,
 		fmpz_poly_t Fq,
-		ntru_context *ctx)
+		const ntru_context *ctx)
 {
 	bool retval = false;
 	int k = 0,
@@ -389,9 +389,9 @@ _cleanup:
 /*------------------------------------------------------------------------*/
 
 bool
-poly_inverse_poly_p(fmpz_poly_t a,
+poly_inverse_poly_p(const fmpz_poly_t a,
 		fmpz_poly_t Fp,
-		ntru_context *ctx)
+		const ntru_context *ctx)
 {
 	bool retval = false;
 	int k = 0,
@@ -554,7 +554,7 @@ cleanup:
 /*------------------------------------------------------------------------*/
 
 void
-poly_draw(fmpz_poly_t poly)
+poly_draw(const fmpz_poly_t poly)
 {
 	fmpz_poly_print(poly);
 	flint_printf("\n");
@@ -563,7 +563,7 @@ poly_draw(fmpz_poly_t poly)
 /*------------------------------------------------------------------------*/
 
 void
-poly_draw_pretty(fmpz_poly_t poly)
+poly_draw_pretty(const fmpz_poly_t poly)
 {
 	fmpz_poly_print_pretty(poly, "x");
 	flint_printf("\n");

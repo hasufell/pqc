@@ -102,7 +102,7 @@ poly_delete_all(fmpz_poly_t poly, ...);
  */
 void
 fmpz_poly_mod_unsigned(fmpz_poly_t a,
-		uint32_t mod);
+		const uint32_t mod);
 
 /**
  * Calls fmpz_poly_get_nmod_poly() and
@@ -118,7 +118,7 @@ fmpz_poly_mod_unsigned(fmpz_poly_t a,
  */
 void
 fmpz_poly_mod(fmpz_poly_t a,
-		uint32_t mod);
+		const uint32_t mod);
 
 /**
  * The same as fmpz_poly_set_coeff_fmpz() except that it
@@ -145,7 +145,7 @@ fmpz_poly_set_coeff_fmpz_n(fmpz_poly_t poly,
 int
 fmpz_invmod_ui(fmpz_t f,
 		const fmpz_t g,
-		uint32_t mod);
+		const uint32_t mod);
 
 /**
  * The same as fmpz_add() except that it handles NULL
@@ -165,10 +165,10 @@ fmpz_add_n(fmpz_t f, const fmpz_t g, const fmpz_t h);
  * @param modulus whether we use p or q
  */
 void
-poly_starmultiply(fmpz_poly_t a,
-		fmpz_poly_t b,
+poly_starmultiply(const fmpz_poly_t a,
+		const fmpz_poly_t b,
 		fmpz_poly_t c,
-		ntru_context *ctx,
+		const ntru_context *ctx,
 		uint32_t modulus);
 
 /**
@@ -184,9 +184,9 @@ poly_starmultiply(fmpz_poly_t a,
  * @return true if invertible, false if not
  */
 bool
-poly_inverse_poly_q(fmpz_poly_t a,
+poly_inverse_poly_q(const fmpz_poly_t a,
 		fmpz_poly_t Fq,
-		ntru_context *ctx);
+		const ntru_context *ctx);
 
 /**
  * Compute the inverse of a polynomial in (Z/pZ)[X]/(X^N - 1).
@@ -198,9 +198,9 @@ poly_inverse_poly_q(fmpz_poly_t a,
  * @param ctx NTRU context
  */
 bool
-poly_inverse_poly_p(fmpz_poly_t a,
+poly_inverse_poly_p(const fmpz_poly_t a,
 		fmpz_poly_t Fp,
-		ntru_context *ctx);
+		const ntru_context *ctx);
 
 /**
  * Draws a polynomial to stdout.
@@ -208,7 +208,7 @@ poly_inverse_poly_p(fmpz_poly_t a,
  * @param poly draw this
  */
 void
-poly_draw(fmpz_poly_t poly);
+poly_draw(const fmpz_poly_t poly);
 
 /**
  * Draws a polynomial to stdout,
@@ -217,7 +217,7 @@ poly_draw(fmpz_poly_t poly);
  * @param poly draw this
  */
 void
-poly_draw_pretty(fmpz_poly_t poly);
+poly_draw_pretty(const fmpz_poly_t poly);
 
 
 #endif /* NTRU_POLY_H */

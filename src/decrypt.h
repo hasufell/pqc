@@ -53,11 +53,11 @@
  */
 bool
 ntru_decrypt_poly(
-		fmpz_poly_t encr_msg,
-		fmpz_poly_t priv_key,
-		fmpz_poly_t priv_key_inv,
+		const fmpz_poly_t encr_msg,
+		const fmpz_poly_t priv_key,
+		const fmpz_poly_t priv_key_inv,
 		fmpz_poly_t out_tern,
-		ntru_context *ctx);
+		const ntru_context *ctx);
 
 /**
  * Decryption of a given encrypted string.
@@ -71,10 +71,10 @@ ntru_decrypt_poly(
  */
 string *
 ntru_decrypt_string(
-		string *encr_msg,
-		fmpz_poly_t priv_key,
-		fmpz_poly_t priv_key_inv,
-		ntru_context *ctx);
+		const string *encr_msg,
+		const fmpz_poly_t priv_key,
+		const fmpz_poly_t priv_key_inv,
+		const ntru_context *ctx);
 
 
 #endif /* NTRU_DECRYPT */

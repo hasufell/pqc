@@ -64,11 +64,11 @@
  */
 bool
 ntru_encrypt_poly(
-		fmpz_poly_t msg_tern,
-		fmpz_poly_t pub_key,
-		fmpz_poly_t rnd,
+		const fmpz_poly_t msg_tern,
+		const fmpz_poly_t pub_key,
+		const fmpz_poly_t rnd,
 		fmpz_poly_t out,
-		ntru_context *ctx);
+		const ntru_context *ctx);
 
 /**
  * Encrypt a message in the form of a null-terminated char array and
@@ -83,10 +83,10 @@ ntru_encrypt_poly(
  */
 string *
 ntru_encrypt_string(
-		string *msg,
-		fmpz_poly_t pub_key,
-		fmpz_poly_t rnd,
-		ntru_context *ctx);
+		const string *msg,
+		const fmpz_poly_t pub_key,
+		const fmpz_poly_t rnd,
+		const ntru_context *ctx);
 
 
 #endif /* PQC_ENCRYPT_H */
