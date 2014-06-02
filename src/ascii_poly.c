@@ -19,9 +19,6 @@
  * MA  02110-1301  USA
  */
 
-/* TODO: clean up some iterators */
-/* TODO: ascii_to_bin_poly() should accept a string, not a c_str */
-
 /**
  * @file ascii_poly.c
  * This file allows to convert between ascii strings
