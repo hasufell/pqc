@@ -89,6 +89,23 @@ poly_mod2_to_modq(const fmpz_poly_t a,
 
 /*------------------------------------------------------------------------*/
 
+int
+fmpz_cmp_si_n(const fmpz_t f, slong g)
+{
+	fmpz_t f_cmp;
+
+	fmpz_init(f_cmp);
+
+	if (f)
+		fmpz_set(f_cmp, f);
+	else
+		fmpz_set_si(f_cmp, 0);
+
+	return fmpz_cmp_si(f_cmp, g);
+}
+
+/*------------------------------------------------------------------------*/
+
 void
 poly_new(fmpz_poly_t new_poly,
 		int const * const c,
@@ -252,8 +269,8 @@ poly_starmultiply(const fmpz_poly_t a,
 			a_tmp_coeff_i = fmpz_poly_get_coeff_ptr(a_tmp, i);
 			b_coeff_j = fmpz_poly_get_coeff_ptr(b, j);
 
-			if (a_tmp_coeff_i && fmpz_cmp_si(a_tmp_coeff_i, 0) &&
-					b_coeff_j && fmpz_cmp_si(b_coeff_j, 0)) {
+			if (fmpz_cmp_si_n(a_tmp_coeff_i, 0) &&
+					fmpz_cmp_si_n(b_coeff_j, 0)) {
 				fmpz_t fmpz_tmp;
 
 				fmpz_init(fmpz_tmp);
@@ -350,7 +367,7 @@ poly_inverse_poly_q(const fmpz_poly_t a,
 	k = k % ctx->N;
 
 	b_last = fmpz_poly_get_coeff_ptr(b, ctx->N);
-	if (b_last && fmpz_cmp_si(b_last, 0))
+	if (fmpz_cmp_si_n(b_last, 0))
 		goto _cleanup;
 
 	/* Fq(x) = x^(N-k) * b(x) */
@@ -498,7 +515,7 @@ poly_inverse_poly_p(const fmpz_poly_t a,
 	k = k % ctx->N;
 
 	b_last = fmpz_poly_get_coeff_ptr(b, ctx->N);
-	if (b_last && fmpz_cmp_si(b_last, 0))
+	if (fmpz_cmp_si_n(b_last, 0))
 		goto cleanup;
 
 	/* Fp(x) = x^(N-k) * b(x) */

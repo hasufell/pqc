@@ -40,6 +40,17 @@
 
 
 /**
+ * The same as fmpz_cmp_si except that it
+ * will interpret f as a 0-coefficient if it is a NULL pointer.
+ *
+ * @param poly the polynom we want to compare
+ * @param n the coefficient we want to compare
+ * @return negative value if f < g, positiv evalue if g < f, otherwise 0
+ */
+int
+fmpz_cmp_si_n(const fmpz_t f, slong g);
+
+/**
  * Initializes and builds a polynomial with the
  * coefficient values of c[] of size len within NTRU
  * context ctx and returns a newly allocated polynomial.
