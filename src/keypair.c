@@ -32,6 +32,7 @@
 #include "keypair.h"
 #include "ntru_string.h"
 #include "poly.h"
+#include "poly_ascii.h"
 
 #include <fmpz_poly.h>
 #include <fmpz.h>

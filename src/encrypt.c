@@ -30,6 +30,7 @@
 #include "encrypt.h"
 #include "mem.h"
 #include "ntru_string.h"
+#include "poly_ascii.h"
 
 #include <string.h>
 

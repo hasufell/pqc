@@ -9,7 +9,8 @@ PQC_SOURCES = poly.c \
 			  keypair.c \
 			  ascii_poly.c \
 			  file.c \
-			  ntru_string.c
+			  ntru_string.c \
+			  poly_ascii.c
 
 PQC_OBJS = $(patsubst %.c, %.o, $(PQC_SOURCES))
 
@@ -22,7 +23,8 @@ PQC_HEADERS = err.h \
 			  ascii_poly.h \
 			  common.h \
 			  file.h \
-			  ntru_string.h
+			  ntru_string.h \
+			  poly_ascii.h
 
 # libs
 LIBS += -L. -lgmp -lmpfr -lflint $(shell $(PKG_CONFIG) --libs glib-2.0) -lm
