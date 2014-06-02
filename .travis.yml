@@ -10,4 +10,4 @@ before_script:
     - sudo make install
     - cd ..
 script:
-    - make
+    - make CC=clang
