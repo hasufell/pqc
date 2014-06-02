@@ -60,8 +60,6 @@ ntru_encrypt_poly(
 	fmpz_poly_zero(out);
 	poly_starmultiply(pub_key, rnd, out, ctx, ctx->q);
 
-	/* FIXME: causes rare junk chars in some cases,
-	 * which is perfectly reproducible, so this is not UB */
 	fmpz_poly_add(out, out, tmp_poly_msg);
 	fmpz_poly_mod_unsigned(out, ctx->q);
 
