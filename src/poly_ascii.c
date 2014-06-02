@@ -213,35 +213,7 @@ poly_to_ascii(const fmpz_poly_t poly,
 /*------------------------------------------------------------------------*/
 
 string *
-poly_to_base64(const fmpz_poly_t poly,
-		const ntru_context *ctx)
-{
-	string *result_string = ntru_malloc(sizeof(*result_string));
-	string *string_rep = NULL;
-	gchar *base64_string = NULL,
-		  *tmp = NULL;
-
-	string_rep = poly_to_ascii(poly, ctx);
-
-	tmp = g_base64_encode((const guchar *)string_rep->ptr,
-			string_rep->len);
-
-	base64_string = g_base64_encode((const guchar *)tmp,
-			strlen(tmp));
-
-	result_string->ptr = base64_string;
-	result_string->len = strlen(base64_string);
-
-	string_delete(string_rep);
-	free(tmp);
-
-	return result_string;
-}
-
-/*------------------------------------------------------------------------*/
-
-string *
-poly_arr_to_base64(fmpz_poly_t **poly_array,
+poly_arr_to_ascii(fmpz_poly_t **poly_array,
 		const ntru_context *ctx)
 {
 	fmpz_poly_t *ascii_poly;
@@ -250,8 +222,6 @@ poly_arr_to_base64(fmpz_poly_t **poly_array,
 	string *result_string = ntru_malloc(sizeof(*result_string));
 	size_t old_length = 0,
 		   new_length;
-	gchar *base64_string = NULL,
-		  *tmp = NULL;
 
 	/*
 	 * parse the polynomial coefficients into a string
@@ -276,14 +246,61 @@ poly_arr_to_base64(fmpz_poly_t **poly_array,
 		string_delete(poly_str);
 	}
 
-	tmp = g_base64_encode((const guchar *)string_rep, string_len);
+	result_string->ptr = string_rep;
+	result_string->len = string_len;
+
+	return result_string;
+}
+
+/*------------------------------------------------------------------------*/
+
+string *
+poly_to_base64(const fmpz_poly_t poly,
+		const ntru_context *ctx)
+{
+	string *result_string = ntru_malloc(sizeof(*result_string));
+	string *string_rep = NULL;
+	gchar *base64_string = NULL,
+		  *tmp = NULL;
+
+	string_rep = poly_to_ascii(poly, ctx);
+
+	tmp = g_base64_encode((const guchar *)string_rep->ptr,
+			string_rep->len);
 	base64_string = g_base64_encode((const guchar *)tmp,
 			strlen(tmp));
 
 	result_string->ptr = base64_string;
 	result_string->len = strlen(base64_string);
 
-	free(string_rep);
+	string_delete(string_rep);
+	free(tmp);
+
+	return result_string;
+}
+
+/*------------------------------------------------------------------------*/
+
+string *
+poly_arr_to_base64(fmpz_poly_t **poly_array,
+		const ntru_context *ctx)
+{
+	string *string_rep;
+	string *result_string = ntru_malloc(sizeof(*result_string));
+
+	gchar *base64_string = NULL,
+		  *tmp = NULL;
+
+	string_rep = poly_arr_to_ascii(poly_array, ctx);
+
+	tmp = g_base64_encode((const guchar *)string_rep->ptr, string_rep->len);
+	base64_string = g_base64_encode((const guchar *)tmp,
+			strlen(tmp));
+
+	result_string->ptr = base64_string;
+	result_string->len = strlen(base64_string);
+
+	string_delete(string_rep);
 	free(tmp);
 
 	return result_string;
