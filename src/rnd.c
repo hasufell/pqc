@@ -38,7 +38,7 @@
 
 /*------------------------------------------------------------------------*/
 
-static int
+int
 get_rnd_int(void)
 {
 	int rnd_data = open("/dev/random", O_RDONLY);
@@ -62,7 +62,7 @@ get_rnd_int(void)
 
 /*------------------------------------------------------------------------*/
 
-static int
+int
 get_urnd_int(void)
 {
 	int rnd_data = open("/dev/urandom", O_RDONLY);

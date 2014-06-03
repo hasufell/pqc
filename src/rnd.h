@@ -36,6 +36,22 @@
 
 
 /**
+ * Get a random integer from /dev/random.
+ *
+ * @return random integer
+ */
+int
+get_rnd_int(void);
+
+/**
+ * Get a pseudo random integer from /dev/urandom.
+ *
+ * @return pseudo-random integer.
+ */
+int
+get_urnd_int(void);
+
+/**
  * Get a random ternary polynomial with specified numbers
  * of 1 coefficients and -1 coefficients.
  *
