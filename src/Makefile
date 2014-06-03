@@ -10,7 +10,8 @@ PQC_SOURCES = poly.c \
 			  ascii_poly.c \
 			  file.c \
 			  ntru_string.c \
-			  poly_ascii.c
+			  poly_ascii.c \
+			  rnd.c
 
 PQC_OBJS = $(patsubst %.c, %.o, $(PQC_SOURCES))
 
@@ -24,13 +25,16 @@ PQC_HEADERS = err.h \
 			  common.h \
 			  file.h \
 			  ntru_string.h \
-			  poly_ascii.h
+			  poly_ascii.h \
+			  rnd.h
 
 # libs
 LIBS += -L. -lgmp -lmpfr -lflint $(shell $(PKG_CONFIG) --libs glib-2.0) -lm
 
 # includes
 INCS = -I. -I/usr/include/flint $(shell $(PKG_CONFIG) --cflags glib-2.0)
+
+CFLAGS += -D_XOPEN_SOURCE -D_XOPEN_SOURCE_EXTENDED
 
 
 %.o: %.c
