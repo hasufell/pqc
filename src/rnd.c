@@ -86,7 +86,8 @@ void
 ntru_get_rnd_tern_poly_num(fmpz_poly_t poly,
 		const ntru_context *ctx,
 		uint32_t num_ones,
-		uint32_t num_neg_ones)
+		uint32_t num_neg_ones,
+		int (*rnd_int)(void))
 {
 	if (!poly || ! ctx)
 		NTRU_ABORT("unexpected NULL parameters in"
@@ -95,7 +96,7 @@ ntru_get_rnd_tern_poly_num(fmpz_poly_t poly,
 	fmpz_poly_zero(poly);
 
 	while (num_ones != 0 || num_neg_ones != 0) {
-		int32_t pos = get_rnd_int() % ctx->N;
+		int32_t pos = rnd_int() % ctx->N;
 
 		if (!fmpz_cmp_si_n(fmpz_poly_get_coeff_ptr(poly, pos), 0)) {
 			if (num_ones > 0) {

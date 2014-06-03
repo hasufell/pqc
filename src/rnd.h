@@ -59,12 +59,15 @@ get_urnd_int(void);
  * @param ctx the NTRU context
  * @param num_ones the number of 1 coefficients
  * @param num_neg_ones the number of -1 coefficients
+ * @param rnd_int function callback which should return
+ * a random integer
  */
 void
 ntru_get_rnd_tern_poly_num(fmpz_poly_t poly,
 		const ntru_context *ctx,
 		uint32_t num_ones,
-		uint32_t num_neg_ones);
+		uint32_t num_neg_ones,
+		int (*rnd_int)(void));
 
 
 #endif /* NTRU_RND_H */
