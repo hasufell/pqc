@@ -108,7 +108,7 @@ poly_to_ascii(const fmpz_poly_t poly,
  * Trailing q coefficients are only used for filling up the rest of
  * a polynomial with '\0', so they will not confuse the result.
  *
- * @param poly_arr the array of polynomials
+ * @param poly_array the array of polynomials
  * @param ctx the NTRUEncrypt context
  * @return the real string, newly allocated
  */

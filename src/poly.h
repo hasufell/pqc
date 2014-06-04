@@ -43,8 +43,8 @@
  * The same as fmpz_cmp_si except that it
  * will interpret f as a 0-coefficient if it is a NULL pointer.
  *
- * @param poly the polynom we want to compare
- * @param n the coefficient we want to compare
+ * @param f the fmpz value to use for comparison
+ * @param g the signed long integer to use for comparison
  * @return negative value if f < g, positiv evalue if g < f, otherwise 0
  */
 int
