@@ -13,5 +13,9 @@ implementation with the primary goal of learning.
 
 Run ```make``` to build.
 
+### Building the documentation
+
+Run ```make doc ```. The result will be in the doxygen/html/ subfolder.
+
 ### Build Status
 [![Build Status](https://travis-ci.org/hasufell/pqc.png)](https://travis-ci.org/hasufell/pqc)
