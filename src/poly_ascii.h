@@ -30,8 +30,8 @@
 
 
 #include "common.h"
-#include "context.h"
 #include "ntru_string.h"
+#include "params.h"
 
 #include <fmpz_poly.h>
 #include <fmpz.h>
@@ -53,12 +53,12 @@
  * not confuse the result.
  *
  * @param poly the binary polynomial to convert
- * @param ctx the NTRUEncrypt context
+ * @param params the NTRU parameters
  * @return the real string, newly allocated
  */
 string *
 bin_poly_to_ascii(const fmpz_poly_t poly,
-		const ntru_context *ctx);
+		const ntru_params *params);
 
 /**
  * Convert an array of binary polynomials back to a real string.
@@ -76,12 +76,12 @@ bin_poly_to_ascii(const fmpz_poly_t poly,
  * the result.
  *
  * @param bin_poly_arr the array of polynomials
- * @param ctx the NTRUEncrypt context
+ * @param params the NTRU parameters
  * @return the real string, newly allocated
  */
 string *
 bin_poly_arr_to_ascii(fmpz_poly_t **bin_poly_arr,
-		const ntru_context *ctx);
+		const ntru_params *params);
 
 /**
  * Convert a single polynom back to a real string which is
@@ -93,12 +93,12 @@ bin_poly_arr_to_ascii(fmpz_poly_t **bin_poly_arr,
  * a polynomial with '\0', so they will not confuse the result.
  *
  * @param poly the polynomial to convert
- * @param ctx the NTRUEncrypt context
+ * @param params the NTRU parameters
  * @return the real string, newly allocated
  */
 string *
 poly_to_ascii(const fmpz_poly_t poly,
-		const ntru_context *ctx);
+		const ntru_params *params);
 
 /**
  * Convert an array of polynomials back to a real string.
@@ -109,12 +109,12 @@ poly_to_ascii(const fmpz_poly_t poly,
  * a polynomial with '\0', so they will not confuse the result.
  *
  * @param poly_array the array of polynomials
- * @param ctx the NTRUEncrypt context
+ * @param params the NTRU parameters
  * @return the real string, newly allocated
  */
 string *
 poly_arr_to_ascii(fmpz_poly_t **poly_array,
-		const ntru_context *ctx);
+		const ntru_params *params);
 
 /**
  * Convert a single polynom back to a real string which is
@@ -126,12 +126,12 @@ poly_arr_to_ascii(fmpz_poly_t **poly_array,
  * a polynomial with '\0', so they will not confuse the result.
  *
  * @param poly the polynomial to convert
- * @param ctx the NTRUEncrypt context
+ * @param params the NTRU parameters
  * @return the real string, newly allocated
  */
 string *
 poly_to_base64(const fmpz_poly_t poly,
-		const ntru_context *ctx);
+		const ntru_params *params);
 
 /**
  * Convert an array of polynomials back to a real string which
@@ -143,11 +143,11 @@ poly_to_base64(const fmpz_poly_t poly,
  * a polynomial with '\0', so they will not confuse the result.
  *
  * @param poly_arr the array of polynomials
- * @param ctx the NTRUEncrypt context
+ * @param params the NTRU parameters
  * @return the real string, newly allocated
  */
 string *
-poly_arr_to_base64(fmpz_poly_t **poly_arr, const ntru_context *ctx);
+poly_arr_to_base64(fmpz_poly_t **poly_arr, const ntru_params *params);
 
 
 #endif /* NTRU_POLY_ASCII_H_ */

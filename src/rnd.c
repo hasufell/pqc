@@ -25,9 +25,9 @@
  * @brief random polynomials
  */
 
-#include "context.h"
 #include "err.h"
 #include "math.h"
+#include "params.h"
 #include "poly.h"
 
 #include <fmpz_poly.h>
@@ -84,19 +84,19 @@ get_urnd_int(void)
 
 void
 ntru_get_rnd_tern_poly_num(fmpz_poly_t poly,
-		const ntru_context *ctx,
+		const ntru_params *params,
 		uint32_t num_ones,
 		uint32_t num_neg_ones,
 		int (*rnd_int)(void))
 {
-	if (!poly || ! ctx)
+	if (!poly || ! params)
 		NTRU_ABORT("unexpected NULL parameters in"
 				"ntru_get_rnd_tern_poly_num()!\n");
 
 	fmpz_poly_zero(poly);
 
 	while (num_ones != 0 || num_neg_ones != 0) {
-		int32_t pos = rnd_int() % ctx->N;
+		int32_t pos = rnd_int() % params->N;
 
 		if (!fmpz_cmp_si_n(fmpz_poly_get_coeff_ptr(poly, pos), 0)) {
 			if (num_ones > 0) {

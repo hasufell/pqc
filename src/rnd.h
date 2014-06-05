@@ -28,7 +28,7 @@
 #ifndef NTRU_RND_H
 #define NTRU_RND_H
 
-#include "context.h"
+#include "params.h"
 
 #include <stdlib.h>
 
@@ -56,7 +56,7 @@ get_urnd_int(void);
  * of 1 coefficients and -1 coefficients.
  *
  * @param poly the resulting random polynomial [out]
- * @param ctx the NTRU context
+ * @param params the NTRU context
  * @param num_ones the number of 1 coefficients
  * @param num_neg_ones the number of -1 coefficients
  * @param rnd_int function callback which should return
@@ -64,7 +64,7 @@ get_urnd_int(void);
  */
 void
 ntru_get_rnd_tern_poly_num(fmpz_poly_t poly,
-		const ntru_context *ctx,
+		const ntru_params *params,
 		uint32_t num_ones,
 		uint32_t num_neg_ones,
 		int (*rnd_int)(void));

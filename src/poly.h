@@ -28,8 +28,8 @@
 #ifndef NTRU_POLY_H
 #define NTRU_POLY_H
 
-#include "context.h"
 #include "err.h"
+#include "params.h"
 
 #include <stdarg.h>
 #include <stdbool.h>
@@ -53,7 +53,7 @@ fmpz_cmp_si_n(const fmpz_t f, slong g);
 /**
  * Initializes and builds a polynomial with the
  * coefficient values of c[] of size len within NTRU
- * context ctx and returns a newly allocated polynomial.
+ * parameters and returns a newly allocated polynomial.
  * For an empty polynom, both parameters can be NULL/0.
  *
  * @param new_poly the polynomial to initialize and
@@ -172,14 +172,14 @@ fmpz_add_n(fmpz_t f, const fmpz_t g, const fmpz_t h);
  * @param a polynom to multiply (can be the same as c)
  * @param b polynom to multiply
  * @param c polynom [out]
- * @param ctx NTRU context
+ * @param params NTRU parameters
  * @param modulus whether we use p or q
  */
 void
 poly_starmultiply(const fmpz_poly_t a,
 		const fmpz_poly_t b,
 		fmpz_poly_t c,
-		const ntru_context *ctx,
+		const ntru_params *params,
 		uint32_t modulus);
 
 /**
@@ -191,13 +191,13 @@ poly_starmultiply(const fmpz_poly_t a,
  *
  * @param a polynomial to invert (is allowed to be the same as param Fq)
  * @param Fq polynomial [out]
- * @param ctx NTRU context
+ * @param params NTRU parameters
  * @return true if invertible, false if not
  */
 bool
 poly_inverse_poly_q(const fmpz_poly_t a,
 		fmpz_poly_t Fq,
-		const ntru_context *ctx);
+		const ntru_params *params);
 
 /**
  * Compute the inverse of a polynomial in (Z/pZ)[X]/(X^N - 1).
@@ -206,12 +206,12 @@ poly_inverse_poly_q(const fmpz_poly_t a,
  *
  * @param a polynomial to invert
  * @param Fp polynomial [out]
- * @param ctx NTRU context
+ * @param params NTRU parameters
  */
 bool
 poly_inverse_poly_p(const fmpz_poly_t a,
 		fmpz_poly_t Fp,
-		const ntru_context *ctx);
+		const ntru_params *params);
 
 /**
  * Draws a polynomial to stdout.

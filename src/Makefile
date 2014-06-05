@@ -17,12 +17,12 @@ PQC_OBJS = $(patsubst %.c, %.o, $(PQC_SOURCES))
 
 PQC_HEADERS = err.h \
 			  poly.h \
-			  context.h \
+			  params.h \
 			  encrypt.h \
 			  decrypt.h \
 			  keypair.h \
 			  ascii_poly.h \
-			  common.h \
+			  params.h \
 			  file.h \
 			  ntru_string.h \
 			  poly_ascii.h \

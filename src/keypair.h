@@ -29,7 +29,7 @@
 #define NTRU_KEYPAIR_H
 
 
-#include "context.h"
+#include "params.h"
 
 #include <fmpz_poly.h>
 #include <fmpz.h>
@@ -70,49 +70,49 @@ struct keypair {
  * @param f a random polynomial
  * @param g a random polynomial
  * @param pair store private and public components here [out]
- * @param ctx the NTRU context
+ * @param params the NTRU context
  */
 bool
 ntru_create_keypair(
 		fmpz_poly_t f,
 		fmpz_poly_t g,
 		keypair *pair,
-		ntru_context *ctx);
+		ntru_params *params);
 
 /**
  * Export the public key to a file.
  *
  * @param filename the file to save the public key into
  * @param pub the public key
- * @param ctx the NTRU context
+ * @param params the NTRU context
  */
 void
 export_public_key(char const * const filename,
 		fmpz_poly_t pub,
-		ntru_context *ctx);
+		ntru_params *params);
 
 /**
  * Export the private key to a file.
  *
  * @param filename the file to save the private key into
  * @param priv the private key
- * @param ctx the NTRU context
+ * @param params the NTRU context
  */
 void
 export_priv_key(char const * const filename,
 		fmpz_poly_t priv,
-		ntru_context *ctx);
+		ntru_params *params);
 
 /**
  * Import the public key from a file.
  * @param filename the file to get the public key from
  * @param pub where to save the public key [out]
- * @param ctx the NTRU context
+ * @param params the NTRU context
  */
 void
 import_public_key(char const * const filename,
 		fmpz_poly_t pub,
-		ntru_context *ctx);
+		ntru_params *params);
 
 /**
  * Import the private key from a file and store him
@@ -121,13 +121,13 @@ import_public_key(char const * const filename,
  * @param filename the file to get the private key from
  * @param priv where to save the private key [out]
  * @param priv_inv where to save the inverse of the private key [out]
- * @param ctx the NTRU context
+ * @param params the NTRU context
  */
 void
 import_priv_key(char const * const filename,
 		fmpz_poly_t priv,
 		fmpz_poly_t priv_inv,
-		ntru_context *ctx);
+		ntru_params *params);
 
 /**
  * Used to free the inner structure

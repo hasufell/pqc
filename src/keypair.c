@@ -27,10 +27,10 @@
  */
 
 #include "ascii_poly.h"
-#include "context.h"
 #include "file.h"
 #include "keypair.h"
 #include "ntru_string.h"
+#include "params.h"
 #include "poly.h"
 #include "poly_ascii.h"
 
@@ -48,29 +48,29 @@ ntru_create_keypair(
 		fmpz_poly_t f,
 		fmpz_poly_t g,
 		keypair *pair,
-		ntru_context *ctx)
+		ntru_params *params)
 {
 	bool retval = false;
 	fmpz_poly_t Fq,
 				Fp,
 				pub;
 
-	if (!f || !g || !ctx)
+	if (!f || !g || !params)
 		goto _return;
 
 	fmpz_poly_init(Fq);
 	fmpz_poly_init(Fp);
 	fmpz_poly_init(pub);
 
-	if (!poly_inverse_poly_q(f, Fq, ctx))
+	if (!poly_inverse_poly_q(f, Fq, params))
 		goto _cleanup;
 
-	if (!poly_inverse_poly_p(f, Fp, ctx))
+	if (!poly_inverse_poly_p(f, Fp, params))
 		goto _cleanup;
 
-	poly_starmultiply(Fq, g, pub, ctx, ctx->q);
-	fmpz_poly_scalar_mul_ui(pub, pub, ctx->p);
-	fmpz_poly_mod_unsigned(pub, ctx->q);
+	poly_starmultiply(Fq, g, pub, params, params->q);
+	fmpz_poly_scalar_mul_ui(pub, pub, params->p);
+	fmpz_poly_mod_unsigned(pub, params->q);
 
 	fmpz_poly_init(pair->priv);
 	fmpz_poly_init(pair->priv_inv);
@@ -95,11 +95,11 @@ _return:
 void
 export_public_key(char const * const filename,
 		fmpz_poly_t pub,
-		ntru_context *ctx)
+		ntru_params *params)
 {
 	string *pub_string;
 
-	pub_string = poly_to_base64(pub, ctx);
+	pub_string = poly_to_base64(pub, params);
 	write_file(pub_string, filename);
 
 	string_delete(pub_string);
@@ -110,16 +110,16 @@ export_public_key(char const * const filename,
 void
 export_priv_key(char const * const filename,
 		fmpz_poly_t priv,
-		ntru_context *ctx)
+		ntru_params *params)
 {
 	string *priv_string;
 	fmpz_poly_t priv_u;
 
 	fmpz_poly_init(priv_u);
 	fmpz_poly_set(priv_u, priv);
-	fmpz_poly_mod_unsigned(priv_u, ctx->p);
+	fmpz_poly_mod_unsigned(priv_u, params->p);
 
-	priv_string = poly_to_base64(priv_u, ctx);
+	priv_string = poly_to_base64(priv_u, params);
 	write_file(priv_string, filename);
 
 	fmpz_poly_clear(priv_u);
@@ -131,13 +131,13 @@ export_priv_key(char const * const filename,
 void
 import_public_key(char const * const filename,
 		fmpz_poly_t pub,
-		ntru_context *ctx)
+		ntru_params *params)
 {
 	string *pub_string;
 	fmpz_poly_t **imported;
 
 	pub_string = read_file(filename);
-	imported = base64_to_poly_arr(pub_string, ctx);
+	imported = base64_to_poly_arr(pub_string, params);
 
 	/* if the array exceeds one element, then something
 	 * went horribly wrong */
@@ -157,7 +157,7 @@ void
 import_priv_key(char const * const filename,
 		fmpz_poly_t priv,
 		fmpz_poly_t priv_inv,
-		ntru_context *ctx)
+		ntru_params *params)
 {
 	string *pub_string;
 	fmpz_poly_t **imported,
@@ -167,8 +167,8 @@ import_priv_key(char const * const filename,
 
 	pub_string = read_file(filename);
 
-	imported = base64_to_poly_arr(pub_string, ctx);
-	fmpz_poly_mod(**imported, ctx->p);
+	imported = base64_to_poly_arr(pub_string, params);
+	fmpz_poly_mod(**imported, params->p);
 
 	/* if the array exceeds one element, then something
 	 * went horribly wrong */
@@ -177,10 +177,10 @@ import_priv_key(char const * const filename,
 
 	fmpz_poly_set(priv, **imported);
 
-	if (!poly_inverse_poly_p(priv, Fp, ctx))
+	if (!poly_inverse_poly_p(priv, Fp, params))
 		goto cleanup;
 
-	fmpz_poly_mod(Fp, ctx->p);
+	fmpz_poly_mod(Fp, params->p);
 
 	fmpz_poly_set(priv_inv, Fp);
 	fmpz_poly_clear(Fp);

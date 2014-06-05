@@ -29,6 +29,7 @@
 #include "ascii_poly.h"
 #include "decrypt.h"
 #include "ntru_string.h"
+#include "params.h"
 #include "poly_ascii.h"
 
 #include <stdbool.h>
@@ -46,14 +47,14 @@ ntru_decrypt_poly(
 		const fmpz_poly_t priv_key,
 		const fmpz_poly_t priv_key_inv,
 		fmpz_poly_t out_bin,
-		const ntru_context *ctx)
+		const ntru_params *params)
 {
 	fmpz_poly_t a,
 				priv_key_tmp,
 				priv_key_inv_tmp,
 				encr_msg_tmp;
 
-	if (!encr_msg || !priv_key || !priv_key_inv || !out_bin || !ctx)
+	if (!encr_msg || !priv_key || !priv_key_inv || !out_bin || !params)
 		return false;
 
 	fmpz_poly_init(a);
@@ -69,14 +70,14 @@ ntru_decrypt_poly(
 	fmpz_poly_set(priv_key_tmp, priv_key);
 	fmpz_poly_set(priv_key_inv_tmp, priv_key_inv);
 	fmpz_poly_set(encr_msg_tmp, encr_msg);
-	fmpz_poly_mod(priv_key_tmp, ctx->q);
-	fmpz_poly_mod(priv_key_inv_tmp, ctx->q);
-	fmpz_poly_mod(encr_msg_tmp, ctx->q);
+	fmpz_poly_mod(priv_key_tmp, params->q);
+	fmpz_poly_mod(priv_key_inv_tmp, params->q);
+	fmpz_poly_mod(encr_msg_tmp, params->q);
 
-	poly_starmultiply(priv_key_tmp, encr_msg_tmp, a, ctx, ctx->q);
-	fmpz_poly_mod(a, ctx->q);
-	poly_starmultiply(a, priv_key_inv_tmp, out_bin, ctx, ctx->p);
-	fmpz_poly_mod(out_bin, ctx->p);
+	poly_starmultiply(priv_key_tmp, encr_msg_tmp, a, params, params->q);
+	fmpz_poly_mod(a, params->q);
+	poly_starmultiply(a, priv_key_inv_tmp, out_bin, params, params->p);
+	fmpz_poly_mod(out_bin, params->p);
 
 	fmpz_poly_clear(a);
 	fmpz_poly_clear(priv_key_tmp);
@@ -93,7 +94,7 @@ ntru_decrypt_string(
 		const string *encr_msg,
 		const fmpz_poly_t priv_key,
 		const fmpz_poly_t priv_key_inv,
-		const ntru_context *ctx)
+		const ntru_params *params)
 {
 	uint32_t i = 0;
 	string *decr_msg;
@@ -102,19 +103,19 @@ ntru_decrypt_string(
 	if (!encr_msg || !encr_msg->len)
 		return NULL;
 
-	poly_array = base64_to_poly_arr(encr_msg, ctx);
+	poly_array = base64_to_poly_arr(encr_msg, params);
 
 	while (*poly_array[i]) {
 		if (!ntru_decrypt_poly(*poly_array[i],
 					priv_key,
 					priv_key_inv,
 					*poly_array[i],
-					ctx))
+					params))
 			NTRU_ABORT("failed encrypting string!\n");
 		i++;
 	}
 
-	decr_msg = bin_poly_arr_to_ascii(poly_array, ctx);
+	decr_msg = bin_poly_arr_to_ascii(poly_array, params);
 
 	poly_delete_array(poly_array);
 

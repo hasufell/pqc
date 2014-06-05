@@ -28,9 +28,9 @@
 
 #include "ascii_poly.h"
 #include "common.h"
-#include "context.h"
 #include "mem.h"
 #include "ntru_string.h"
+#include "params.h"
 #include "poly.h"
 
 #include <glib.h>
@@ -78,14 +78,14 @@ get_int_to_bin_str(uint8_t value)
 /*------------------------------------------------------------------------*/
 
 fmpz_poly_t *
-ascii_bin_to_bin_poly(const char *to_poly, const ntru_context *ctx)
+ascii_bin_to_bin_poly(const char *to_poly, const ntru_params *params)
 {
 	uint32_t i = 0;
 	fmpz_poly_t *new_poly = ntru_malloc(sizeof(*new_poly));
 
 	fmpz_poly_init(*new_poly);
 
-	while (to_poly[i] && i < ctx->N) {
+	while (to_poly[i] && i < params->N) {
 		fmpz_poly_set_coeff_si(*new_poly,
 				i,
 				(to_poly[i] == '0') ? -1 : 1);
@@ -98,7 +98,7 @@ ascii_bin_to_bin_poly(const char *to_poly, const ntru_context *ctx)
 /*------------------------------------------------------------------------*/
 
 fmpz_poly_t **
-ascii_to_bin_poly_arr(const string *to_poly, const ntru_context *ctx)
+ascii_to_bin_poly_arr(const string *to_poly, const ntru_params *params)
 {
 	char *cur = to_poly->ptr;
 	char *out = ntru_malloc(CHAR_SIZE * (to_poly->len * ASCII_BITS + 1));
@@ -115,19 +115,19 @@ ascii_to_bin_poly_arr(const string *to_poly, const ntru_context *ctx)
 	}
 
 	poly_array = ntru_malloc(sizeof(**poly_array) *
-			(strlen(out) / ctx->N + 1));
+			(strlen(out) / params->N + 1));
 
-	for (uint32_t i = 0; i < strlen(out); i += ctx->N) {
-		char chunk[ctx->N + 1];
+	for (uint32_t i = 0; i < strlen(out); i += params->N) {
+		char chunk[params->N + 1];
 		size_t real_chunk_size;
 
 		real_chunk_size =
-			(strlen(out + i) > ctx->N) ? ctx->N : strlen(out + i);
+			(strlen(out + i) > params->N) ? params->N : strlen(out + i);
 
 		memcpy(chunk, out + i, real_chunk_size);
 		chunk[real_chunk_size] = '\0';
 
-		poly_array[polyc] = ascii_bin_to_bin_poly(chunk, ctx);
+		poly_array[polyc] = ascii_bin_to_bin_poly(chunk, params);
 
 		polyc++;
 	}
@@ -142,7 +142,7 @@ ascii_to_bin_poly_arr(const string *to_poly, const ntru_context *ctx)
 /*------------------------------------------------------------------------*/
 
 fmpz_poly_t **
-base64_to_poly_arr(const string *to_poly, const ntru_context *ctx)
+base64_to_poly_arr(const string *to_poly, const ntru_params *params)
 {
 	uint32_t i = 0,
 			 polyc = 0;
@@ -170,7 +170,7 @@ base64_to_poly_arr(const string *to_poly, const ntru_context *ctx)
 	new_string->len = (unsigned long)(out_len);
 
 	poly_array = ntru_malloc(sizeof(**poly_array) *
-			(new_string->len / ctx->N));
+			(new_string->len / params->N));
 
 	while (i < new_string->len) {
 		uint32_t j = 0;
@@ -178,7 +178,7 @@ base64_to_poly_arr(const string *to_poly, const ntru_context *ctx)
 
 		fmpz_poly_init(*new_poly);
 
-		while (j < ctx->N) {
+		while (j < params->N) {
 			fmpz_poly_set_coeff_si(*new_poly,
 					j,
 					(uint8_t)(base64_decoded[i]));
@@ -188,10 +188,10 @@ base64_to_poly_arr(const string *to_poly, const ntru_context *ctx)
 
 		/* fill the last poly with q (which is a non-standard
 		 * coefficient) */
-		for (uint32_t k = j; k < ctx->N; k++) {
+		for (uint32_t k = j; k < params->N; k++) {
 			fmpz_poly_set_coeff_si(*new_poly,
 					k,
-					ctx->q);
+					params->q);
 		}
 
 		poly_array[polyc] = new_poly;

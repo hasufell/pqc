@@ -30,8 +30,8 @@
 
 
 #include "common.h"
-#include "context.h"
 #include "ntru_string.h"
+#include "params.h"
 
 #include <fmpz_poly.h>
 #include <fmpz.h>
@@ -50,11 +50,11 @@
  * be filled with trailing 2's for later use in bin_poly_to_ascii().
  *
  * @param to_poly the string to get into binary polynomial format
- * @param ctx the NTRUEncrypt context
+ * @param params the NTRUEncrypt context
  * @return newly allocated array of binary polynomials
  */
 fmpz_poly_t *
-ascii_bin_to_bin_poly(const char *to_poly, const ntru_context *ctx);
+ascii_bin_to_bin_poly(const char *to_poly, const ntru_params *params);
 
 /**
  * Convert an ascii string to an array of binary polyomials.
@@ -69,11 +69,11 @@ ascii_bin_to_bin_poly(const char *to_poly, const ntru_context *ctx);
  * be filled with trailing 2's for later use in bin_poly_arr_to_ascii().
  *
  * @param to_poly the string to get into binary polynomial format
- * @param ctx the NTRUEncrypt context
+ * @param params the NTRUEncrypt context
  * @return newly allocated array of binary polynomials
  */
 fmpz_poly_t **
-ascii_to_bin_poly_arr(const string *to_poly, const ntru_context *ctx);
+ascii_to_bin_poly_arr(const string *to_poly, const ntru_params *params);
 
 /**
  * Convert an base64 encoded string to an array of polyomials with
@@ -87,11 +87,11 @@ ascii_to_bin_poly_arr(const string *to_poly, const ntru_context *ctx);
  * @param to_poly the string to get into polynomial format,
  * which is of type string, so we can iterate safely over it
  * (the string might have null-bytes in the middle of it)
- * @param ctx the NTRUEncrypt context
+ * @param params the NTRUEncrypt context
  * @return newly allocated array of polynomials
  */
 fmpz_poly_t **
-base64_to_poly_arr(const string *to_poly, const ntru_context *ctx);
+base64_to_poly_arr(const string *to_poly, const ntru_params *params);
 
 
 #endif /* NTRU_ASCII_POLY_H_ */

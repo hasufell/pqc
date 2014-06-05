@@ -28,8 +28,8 @@
 #ifndef NTRU_DECRYPT_H
 #define NTRU_DECRYPT_H
 
-#include "context.h"
 #include "ntru_string.h"
+#include "params.h"
 #include "poly.h"
 
 #include <stdbool.h>
@@ -40,7 +40,7 @@
 
 /**
  * Decryption of the given Polynom with the private key, its inverse
- * and the fitting ntru_context
+ * and the fitting ntru_params
  *
  * @param encr_msg encrypted polynom with maximum length of N from
  * 		the given context
@@ -48,7 +48,7 @@
  * 		the message
  * @param priv_key_inv the inverse polynome to the private key
  * @param out_tern the resulting ternary polynom [out]
- * @param ctx the ntru_context
+ * @param params the ntru_params
  * @return true/false for success/failure
  */
 bool
@@ -57,7 +57,7 @@ ntru_decrypt_poly(
 		const fmpz_poly_t priv_key,
 		const fmpz_poly_t priv_key_inv,
 		fmpz_poly_t out_tern,
-		const ntru_context *ctx);
+		const ntru_params *params);
 
 /**
  * Decryption of a given encrypted string.
@@ -66,7 +66,7 @@ ntru_decrypt_poly(
  * @param priv_key the polynom containing the private key to decrypt
  * 		the message
  * @param priv_key_inv the inverse polynome to the private key
- * @param ctx the ntru_context
+ * @param params the ntru_params
  * @return the decrypted string or NULL on failure
  */
 string *
@@ -74,7 +74,7 @@ ntru_decrypt_string(
 		const string *encr_msg,
 		const fmpz_poly_t priv_key,
 		const fmpz_poly_t priv_key_inv,
-		const ntru_context *ctx);
+		const ntru_params *params);
 
 
 #endif /* NTRU_DECRYPT */

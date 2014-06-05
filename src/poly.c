@@ -27,9 +27,9 @@
  * @brief operations on polynomials
  */
 
-#include "context.h"
 #include "err.h"
 #include "mem.h"
+#include "params.h"
 #include "poly.h"
 
 #include <stdarg.h>
@@ -49,12 +49,12 @@
  *
  * @param a polynomial to invert
  * @param Fq polynomial [out]
- * @param ctx NTRU context
+ * @param params NTRU context
  */
 static
 void poly_mod2_to_modq(const fmpz_poly_t a,
 		fmpz_poly_t Fq,
-		const ntru_context *ctx);
+		const ntru_params *params);
 
 
 /*------------------------------------------------------------------------*/
@@ -62,7 +62,7 @@ void poly_mod2_to_modq(const fmpz_poly_t a,
 static void
 poly_mod2_to_modq(const fmpz_poly_t a,
 		fmpz_poly_t Fq,
-		const ntru_context *ctx)
+		const ntru_params *params)
 {
 	int v = 2;
 	fmpz_poly_t poly_tmp, two;
@@ -72,13 +72,13 @@ poly_mod2_to_modq(const fmpz_poly_t a,
 	fmpz_poly_init(two);
 	fmpz_poly_set_coeff_ui(two, 0, 2);
 
-	while (v < (int)(ctx->q)) {
+	while (v < (int)(params->q)) {
 		v = v * 2;
 
-		poly_starmultiply(a, Fq, poly_tmp, ctx, v);
+		poly_starmultiply(a, Fq, poly_tmp, params, v);
 		fmpz_poly_sub(poly_tmp, two, poly_tmp);
 		fmpz_poly_mod_unsigned(poly_tmp, v);
-		poly_starmultiply(Fq, poly_tmp, Fq, ctx, v);
+		poly_starmultiply(Fq, poly_tmp, Fq, params, v);
 
 	}
 
@@ -239,7 +239,7 @@ void
 poly_starmultiply(const fmpz_poly_t a,
 		const fmpz_poly_t b,
 		fmpz_poly_t c,
-		const ntru_context *ctx,
+		const ntru_params *params,
 		uint32_t modulus)
 {
 	fmpz_poly_t a_tmp;
@@ -252,18 +252,18 @@ poly_starmultiply(const fmpz_poly_t a,
 	fmpz_poly_set(a_tmp, a);
 	fmpz_poly_zero(c);
 
-	for (int k = ctx->N - 1; k >= 0; k--) {
+	for (int k = params->N - 1; k >= 0; k--) {
 		int j;
 
 		j = k + 1;
 
 		fmpz_set_si(c_coeff_k, 0);
 
-		for (int i = ctx->N - 1; i >= 0; i--) {
+		for (int i = params->N - 1; i >= 0; i--) {
 			fmpz *a_tmp_coeff_i,
 				 *b_coeff_j;
 
-			if (j == (int)(ctx->N))
+			if (j == (int)(params->N))
 				j = 0;
 
 			a_tmp_coeff_i = fmpz_poly_get_coeff_ptr(a_tmp, i);
@@ -296,7 +296,7 @@ poly_starmultiply(const fmpz_poly_t a,
 bool
 poly_inverse_poly_q(const fmpz_poly_t a,
 		fmpz_poly_t Fq,
-		const ntru_context *ctx)
+		const ntru_params *params)
 {
 	bool retval = false;
 	int k = 0,
@@ -318,7 +318,7 @@ poly_inverse_poly_q(const fmpz_poly_t a,
 	/* set g(x) = x^N − 1 */
 	fmpz_poly_init(g);
 	fmpz_poly_set_coeff_si(g, 0, -1);
-	fmpz_poly_set_coeff_si(g, ctx->N, 1);
+	fmpz_poly_set_coeff_si(g, params->N, 1);
 
 	/* avoid side effects */
 	fmpz_poly_init(a_tmp);
@@ -327,20 +327,20 @@ poly_inverse_poly_q(const fmpz_poly_t a,
 
 	while (1) {
 		while (fmpz_is_zero(fmpz_poly_get_coeff_ptr(f, 0))) {
-			for (uint32_t i = 1; i <= ctx->N; i++) {
+			for (uint32_t i = 1; i <= params->N; i++) {
 				fmpz *f_coeff = fmpz_poly_get_coeff_ptr(f, i);
-				fmpz *c_coeff = fmpz_poly_get_coeff_ptr(c, ctx->N - i);
+				fmpz *c_coeff = fmpz_poly_get_coeff_ptr(c, params->N - i);
 
 				/* f(x) = f(x) / x */
 				fmpz_poly_set_coeff_fmpz_n(f, i - 1,
 						f_coeff);
 
 				/* c(x) = c(x) * x */
-				fmpz_poly_set_coeff_fmpz_n(c, ctx->N + 1 - i,
+				fmpz_poly_set_coeff_fmpz_n(c, params->N + 1 - i,
 						c_coeff);
 			}
 
-			fmpz_poly_set_coeff_si(f, ctx->N, 0);
+			fmpz_poly_set_coeff_si(f, params->N, 0);
 			fmpz_poly_set_coeff_si(c, 0, 0);
 
 			k++;
@@ -364,30 +364,30 @@ poly_inverse_poly_q(const fmpz_poly_t a,
 		fmpz_poly_mod_unsigned(b, 2);
 	}
 
-	k = k % ctx->N;
+	k = k % params->N;
 
-	b_last = fmpz_poly_get_coeff_ptr(b, ctx->N);
+	b_last = fmpz_poly_get_coeff_ptr(b, params->N);
 	if (fmpz_cmp_si_n(b_last, 0))
 		goto _cleanup;
 
 	/* Fq(x) = x^(N-k) * b(x) */
-	for (int i = ctx->N - 1; i >= 0; i--) {
+	for (int i = params->N - 1; i >= 0; i--) {
 		fmpz *b_i;
 
 		j = i - k;
 
 		if (j < 0)
-			j = j + ctx->N;
+			j = j + params->N;
 
 		b_i = fmpz_poly_get_coeff_ptr(b, i);
 		fmpz_poly_set_coeff_fmpz_n(Fq, j, b_i);
 	}
 
-	poly_mod2_to_modq(a_tmp, Fq, ctx);
+	poly_mod2_to_modq(a_tmp, Fq, params);
 
 	/* check if the f * Fq = 1 (mod p) condition holds true */
 	fmpz_poly_set(a_tmp, a);
-	poly_starmultiply(a_tmp, Fq, a_tmp, ctx, ctx->q);
+	poly_starmultiply(a_tmp, Fq, a_tmp, params, params->q);
 	if (fmpz_poly_is_one(a_tmp))
 		retval = true;
 	else
@@ -408,7 +408,7 @@ _cleanup:
 bool
 poly_inverse_poly_p(const fmpz_poly_t a,
 		fmpz_poly_t Fp,
-		const ntru_context *ctx)
+		const ntru_params *params)
 {
 	bool retval = false;
 	int k = 0,
@@ -430,7 +430,7 @@ poly_inverse_poly_p(const fmpz_poly_t a,
 	/* set g(x) = x^N − 1 */
 	fmpz_poly_init(g);
 	fmpz_poly_set_coeff_si(g, 0, -1);
-	fmpz_poly_set_coeff_si(g, ctx->N, 1);
+	fmpz_poly_set_coeff_si(g, params->N, 1);
 
 	/* avoid side effects */
 	fmpz_poly_init(a_tmp);
@@ -439,20 +439,20 @@ poly_inverse_poly_p(const fmpz_poly_t a,
 
 	while (1) {
 		while (fmpz_is_zero(fmpz_poly_get_coeff_ptr(f, 0))) {
-			for (uint32_t i = 1; i <= ctx->N; i++) {
+			for (uint32_t i = 1; i <= params->N; i++) {
 				fmpz *f_coeff = fmpz_poly_get_coeff_ptr(f, i);
-				fmpz *c_coeff = fmpz_poly_get_coeff_ptr(c, ctx->N - i);
+				fmpz *c_coeff = fmpz_poly_get_coeff_ptr(c, params->N - i);
 
 				/* f(x) = f(x) / x */
 				fmpz_poly_set_coeff_fmpz_n(f, i - 1,
 						f_coeff);
 
 				/* c(x) = c(x) * x */
-				fmpz_poly_set_coeff_fmpz_n(c, ctx->N + 1 - i,
+				fmpz_poly_set_coeff_fmpz_n(c, params->N + 1 - i,
 						c_coeff);
 			}
 
-			fmpz_poly_set_coeff_si(f, ctx->N, 0);
+			fmpz_poly_set_coeff_si(f, params->N, 0);
 			fmpz_poly_set_coeff_si(c, 0, 0);
 
 			k++;
@@ -491,20 +491,20 @@ poly_inverse_poly_p(const fmpz_poly_t a,
 			  /* = (f[0] mod p) * (g[0] inverse mod p) mod p */
 			fmpz_invmod_ui(u,
 					fmpz_poly_get_coeff_ptr(g, 0),
-					ctx->p);
-			fmpz_mod_ui(mp_tmp, mp_tmp, ctx->p);
+					params->p);
+			fmpz_mod_ui(mp_tmp, mp_tmp, params->p);
 			fmpz_mul(u, mp_tmp, u);
-			fmpz_mod_ui(u, u, ctx->p);
+			fmpz_mod_ui(u, u, params->p);
 
 			/* f = f - u * g mod p */
 			fmpz_poly_scalar_mul_fmpz(g_tmp, g_tmp, u);
 			fmpz_poly_sub(f, g_tmp, f);
-			fmpz_poly_mod_unsigned(f, ctx->p);
+			fmpz_poly_mod_unsigned(f, params->p);
 
 			/* b = b - u * c mod p */
 			fmpz_poly_scalar_mul_fmpz(c_tmp, c_tmp, u);
 			fmpz_poly_sub(b, c_tmp, b);
-			fmpz_poly_mod_unsigned(b, ctx->p);
+			fmpz_poly_mod_unsigned(b, params->p);
 
 			fmpz_clear(u);
 			fmpz_poly_clear(g_tmp);
@@ -512,14 +512,14 @@ poly_inverse_poly_p(const fmpz_poly_t a,
 		}
 	}
 
-	k = k % ctx->N;
+	k = k % params->N;
 
-	b_last = fmpz_poly_get_coeff_ptr(b, ctx->N);
+	b_last = fmpz_poly_get_coeff_ptr(b, params->N);
 	if (fmpz_cmp_si_n(b_last, 0))
 		goto cleanup;
 
 	/* Fp(x) = x^(N-k) * b(x) */
-	for (int i = ctx->N - 1; i >= 0; i--) {
+	for (int i = params->N - 1; i >= 0; i--) {
 		fmpz *b_i;
 
 		/* b(X) = f[0]^(-1) * b(X) (mod p) */
@@ -530,7 +530,7 @@ poly_inverse_poly_p(const fmpz_poly_t a,
 
 			fmpz_invmod_ui(mp_tmp,
 					fmpz_poly_get_coeff_ptr(f, 0),
-					ctx->p);
+					params->p);
 
 			if (fmpz_poly_get_coeff_ptr(b, i)) {
 				fmpz_mul(fmpz_poly_get_coeff_ptr(b, i),
@@ -538,13 +538,13 @@ poly_inverse_poly_p(const fmpz_poly_t a,
 						mp_tmp);
 				fmpz_mod_ui(fmpz_poly_get_coeff_ptr(b, i),
 						fmpz_poly_get_coeff_ptr(b, i),
-						ctx->p);
+						params->p);
 			}
 		}
 
 		j = i - k;
 		if (j < 0)
-			j = j + ctx->N;
+			j = j + params->N;
 
 		b_i = fmpz_poly_get_coeff_ptr(b, i);
 		fmpz_poly_set_coeff_fmpz_n(Fp, j, b_i);
@@ -552,7 +552,7 @@ poly_inverse_poly_p(const fmpz_poly_t a,
 
 	/* check if the f * Fp = 1 (mod p) condition holds true */
 	fmpz_poly_set(a_tmp, a);
-	poly_starmultiply(a_tmp, Fp, a_tmp, ctx, ctx->p);
+	poly_starmultiply(a_tmp, Fp, a_tmp, params, params->p);
 	if (fmpz_poly_is_one(a_tmp))
 		retval = true;
 	else

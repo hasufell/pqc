@@ -30,6 +30,7 @@
 #include "encrypt.h"
 #include "mem.h"
 #include "ntru_string.h"
+#include "params.h"
 #include "poly_ascii.h"
 
 #include <string.h>
@@ -46,11 +47,11 @@ ntru_encrypt_poly(
 		const fmpz_poly_t pub_key,
 		const fmpz_poly_t rnd,
 		fmpz_poly_t out,
-		const ntru_context *ctx)
+		const ntru_params *params)
 {
 	fmpz_poly_t tmp_poly_msg;
 
-	if (!msg_bin || !pub_key || !rnd || !out || !ctx)
+	if (!msg_bin || !pub_key || !rnd || !out || !params)
 		return false;
 
 	/* allow aliasing */
@@ -58,10 +59,10 @@ ntru_encrypt_poly(
 	fmpz_poly_set(tmp_poly_msg, msg_bin);
 
 	fmpz_poly_zero(out);
-	poly_starmultiply(pub_key, rnd, out, ctx, ctx->q);
+	poly_starmultiply(pub_key, rnd, out, params, params->q);
 
 	fmpz_poly_add(out, out, tmp_poly_msg);
-	fmpz_poly_mod_unsigned(out, ctx->q);
+	fmpz_poly_mod_unsigned(out, params->q);
 
 	fmpz_poly_clear(tmp_poly_msg);
 
@@ -75,7 +76,7 @@ ntru_encrypt_string(
 		const string *msg,
 		const fmpz_poly_t pub_key,
 		const fmpz_poly_t rnd,
-		const ntru_context *ctx)
+		const ntru_params *params)
 {
 	uint32_t i = 0;
 	string *enc_msg;
@@ -84,19 +85,19 @@ ntru_encrypt_string(
 	if (!msg || !msg->len)
 		return NULL;
 
-	poly_array = ascii_to_bin_poly_arr(msg, ctx);
+	poly_array = ascii_to_bin_poly_arr(msg, params);
 
 	while (*poly_array[i]) {
 		if (!ntru_encrypt_poly(*poly_array[i],
 				pub_key,
 				rnd,
 				*poly_array[i],
-				ctx))
+				params))
 			NTRU_ABORT("failed encrypting string!\n");
 		i++;
 	}
 
-	enc_msg = poly_arr_to_base64(poly_array, ctx);
+	enc_msg = poly_arr_to_base64(poly_array, params);
 
 	poly_delete_array(poly_array);
 

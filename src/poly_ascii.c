@@ -28,9 +28,9 @@
 
 #include "poly_ascii.h"
 #include "common.h"
-#include "context.h"
 #include "mem.h"
 #include "ntru_string.h"
+#include "params.h"
 #include "poly.h"
 
 #include <glib.h>
@@ -112,13 +112,13 @@ get_bin_arr_to_ascii(const char *binary_rep)
 
 string *
 bin_poly_to_ascii(const fmpz_poly_t poly,
-		const ntru_context *ctx)
+		const ntru_params *params)
 {
 	string *result_string = ntru_malloc(sizeof(*result_string));
-	char *binary_rep = ntru_malloc(CHAR_SIZE * (ctx->N));
+	char *binary_rep = ntru_malloc(CHAR_SIZE * (params->N));
 	uint32_t i = 0;
 
-	for (uint32_t j = 0; j < ctx->N; j++) {
+	for (uint32_t j = 0; j < params->N; j++) {
 		fmpz *coeff = fmpz_poly_get_coeff_ptr(poly, j);
 
 		if (coeff) {
@@ -143,7 +143,7 @@ bin_poly_to_ascii(const fmpz_poly_t poly,
 
 string *
 bin_poly_arr_to_ascii(fmpz_poly_t **bin_poly_arr,
-		const ntru_context *ctx)
+		const ntru_params *params)
 {
 	fmpz_poly_t *ascii_poly;
 	char *binary_rep = NULL;
@@ -155,11 +155,11 @@ bin_poly_arr_to_ascii(fmpz_poly_t **bin_poly_arr,
 	/*
 	 * parse the polynomial coefficients into a string
 	 */
-	binary_rep = ntru_calloc(1, CHAR_SIZE * (ctx->N + 1));
+	binary_rep = ntru_calloc(1, CHAR_SIZE * (params->N + 1));
 	while ((ascii_poly = (fmpz_poly_t *)*bin_poly_arr++)) {
 		string *single_poly_string = NULL;
 
-		new_length = CHAR_SIZE * (ctx->N);
+		new_length = CHAR_SIZE * (params->N);
 
 		REALLOC(binary_rep,
 				old_length +
@@ -168,7 +168,7 @@ bin_poly_arr_to_ascii(fmpz_poly_t **bin_poly_arr,
 
 		old_length += new_length;
 
-		single_poly_string = bin_poly_to_ascii(*ascii_poly, ctx);
+		single_poly_string = bin_poly_to_ascii(*ascii_poly, params);
 
 		memcpy(binary_rep + string_len,
 				single_poly_string->ptr,
@@ -191,21 +191,21 @@ bin_poly_arr_to_ascii(fmpz_poly_t **bin_poly_arr,
 
 string *
 poly_to_ascii(const fmpz_poly_t poly,
-		const ntru_context *ctx)
+		const ntru_params *params)
 {
 	string *result_string = ntru_malloc(sizeof(*result_string));
-	char *string_rep = ntru_malloc(CHAR_SIZE * (ctx->N));
+	char *string_rep = ntru_malloc(CHAR_SIZE * (params->N));
 
-	for (uint32_t j = 0; j < ctx->N; j++) {
+	for (uint32_t j = 0; j < params->N; j++) {
 		uint8_t coeff = fmpz_poly_get_coeff_ui(poly, j);
-		if (coeff == ctx->q)
+		if (coeff == params->q)
 			string_rep[j] = '\0';
 		else
 			string_rep[j] = (char)coeff;
 	}
 
 	result_string->ptr = string_rep;
-	result_string->len = ctx->N;
+	result_string->len = params->N;
 
 	return result_string;
 }
@@ -214,7 +214,7 @@ poly_to_ascii(const fmpz_poly_t poly,
 
 string *
 poly_arr_to_ascii(fmpz_poly_t **poly_array,
-		const ntru_context *ctx)
+		const ntru_params *params)
 {
 	fmpz_poly_t *ascii_poly;
 	char *string_rep = NULL;
@@ -226,11 +226,11 @@ poly_arr_to_ascii(fmpz_poly_t **poly_array,
 	/*
 	 * parse the polynomial coefficients into a string
 	 */
-	string_rep = ntru_calloc(1, CHAR_SIZE * (ctx->N + 1));
+	string_rep = ntru_calloc(1, CHAR_SIZE * (params->N + 1));
 	while ((ascii_poly = *poly_array++)) {
 		string *poly_str;
 
-		poly_str = poly_to_ascii(*ascii_poly, ctx);
+		poly_str = poly_to_ascii(*ascii_poly, params);
 
 		new_length = CHAR_SIZE * poly_str->len;
 		REALLOC(string_rep,
@@ -256,14 +256,14 @@ poly_arr_to_ascii(fmpz_poly_t **poly_array,
 
 string *
 poly_to_base64(const fmpz_poly_t poly,
-		const ntru_context *ctx)
+		const ntru_params *params)
 {
 	string *result_string = ntru_malloc(sizeof(*result_string));
 	string *string_rep = NULL;
 	gchar *base64_string = NULL,
 		  *tmp = NULL;
 
-	string_rep = poly_to_ascii(poly, ctx);
+	string_rep = poly_to_ascii(poly, params);
 
 	tmp = g_base64_encode((const guchar *)string_rep->ptr,
 			string_rep->len);
@@ -283,7 +283,7 @@ poly_to_base64(const fmpz_poly_t poly,
 
 string *
 poly_arr_to_base64(fmpz_poly_t **poly_array,
-		const ntru_context *ctx)
+		const ntru_params *params)
 {
 	string *string_rep;
 	string *result_string = ntru_malloc(sizeof(*result_string));
@@ -291,7 +291,7 @@ poly_arr_to_base64(fmpz_poly_t **poly_array,
 	gchar *base64_string = NULL,
 		  *tmp = NULL;
 
-	string_rep = poly_arr_to_ascii(poly_array, ctx);
+	string_rep = poly_arr_to_ascii(poly_array, params);
 
 	tmp = g_base64_encode((const guchar *)string_rep->ptr, string_rep->len);
 	base64_string = g_base64_encode((const guchar *)tmp,

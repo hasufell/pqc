@@ -29,8 +29,8 @@
 #define PQC_ENCRYPT_H
 
 
-#include "context.h"
 #include "ntru_string.h"
+#include "params.h"
 #include "poly.h"
 
 #include <stdbool.h>
@@ -59,7 +59,7 @@
  * coefficients, but not restricted to {-1, 0, 1})
  * @param out the output poly which is in the range {0, q-1}
  * (not ternary!) [out]
- * @param ctx ntru_context the ntru context
+ * @param params ntru_params the ntru context
  * @return true/false for success/failure
  */
 bool
@@ -68,7 +68,7 @@ ntru_encrypt_poly(
 		const fmpz_poly_t pub_key,
 		const fmpz_poly_t rnd,
 		fmpz_poly_t out,
-		const ntru_context *ctx);
+		const ntru_params *params);
 
 /**
  * Encrypt a message in the form of a null-terminated char array and
@@ -78,7 +78,7 @@ ntru_encrypt_poly(
  * @param pub_key the public key
  * @param rnd the random poly (should have relatively small
  * coefficients, but not restricted to {-1, 0, 1})
- * @param ctx ntru_context the ntru context
+ * @param params ntru_params the ntru context
  * @return the newly allocated encrypted string, NULL on failure
  */
 string *
@@ -86,7 +86,7 @@ ntru_encrypt_string(
 		const string *msg,
 		const fmpz_poly_t pub_key,
 		const fmpz_poly_t rnd,
-		const ntru_context *ctx);
+		const ntru_params *params);
 
 
 #endif /* PQC_ENCRYPT_H */
