@@ -29,6 +29,7 @@
 #include "ntru_ascii_poly.h"
 #include "ntru_decrypt.h"
 #include "ntru_params.h"
+#include "ntru_poly.h"
 #include "ntru_poly_ascii.h"
 #include "ntru_string.h"
 

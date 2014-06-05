@@ -30,6 +30,7 @@
 #include "ntru_encrypt.h"
 #include "ntru_mem.h"
 #include "ntru_params.h"
+#include "ntru_poly.h"
 #include "ntru_poly_ascii.h"
 #include "ntru_string.h"
 
