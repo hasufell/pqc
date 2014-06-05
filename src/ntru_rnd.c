@@ -90,8 +90,7 @@ ntru_get_rnd_tern_poly_num(fmpz_poly_t poly,
 		int (*rnd_int)(void))
 {
 	if (!poly || ! params)
-		NTRU_ABORT("unexpected NULL parameters in"
-				"ntru_get_rnd_tern_poly_num()!\n");
+		NTRU_ABORT_DEBUG("unexpected NULL parameters");
 
 	fmpz_poly_zero(poly);
 
