@@ -1,12 +1,6 @@
 include ../common.mk
 
 
-doc:
-	doxygen
-
-doc-pdf: doc
-	$(MAKE) -C latex pdf
-
 install:
 	$(INSTALL_DIR) "$(DESTDIR)$(INSTALL_INCLUDEDIR)"
 	$(INSTALL) ntru.h "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/ntru.h
@@ -22,9 +16,6 @@ uninstall:
 	$(RM) "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/keypair.h
 	$(RM) "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/rnd.h
 
-clean:
-	rm -rf html/ latex/
 
-
-.PHONY: clean doc doc-pdf install uninstall
+.PHONY: install uninstall
 

@@ -18,14 +18,13 @@ uninstall:
 clean:
 	$(MAKE) -C src clean
 	$(MAKE) -C include clean
+	$(MAKE) -C doxygen clean
 
 doc:
-	$(MAKE)	 -C src doc
-	$(MAKE)	 -C include doc
+	$(MAKE) -C doxygen doc
 
 doc-pdf: doc
-	$(MAKE) -C src doc-pdf
-	$(MAKE) -C include doc-pdf
+	$(MAKE) -C doxygen doc-pdf
 
 
 .PHONY: clean doc doc-pdf install

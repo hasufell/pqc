@@ -1,0 +1,48 @@
+/**
+@author hasufell
+
+\mainpage Index Page
+
+\section intro_sec Introduction
+Highly optimized C implementation of the NTRUEncrypt algorithm,
+using the FLINT library.
+
+\section Motivation
+Modern quantum computers will enable us to ride extremely effective attacks on crypto algorithms like rsa. One known attack is the quantum algorithm called <a href="http://en.wikipedia.org/wiki/Shor%27s_algorithm">Shor's algorithm</a>. In the light of fast paced computer hardware development and known quantum algorithms, it is of importance to find and implement alternatives which are not vulnerable to these attacks.
+
+One known alternative is called <a href="http://en.wikipedia.org/wiki/NTRUEncrypt">NTRU</a> and will be our main focus. It is lattice-based (shortest vector problem in a lattice). In fact, NTRU is a parametrised family of cryptosystems. As such it is represented by the triple (N, p, q), where N is prime, q is always larger than p and p and q are coprime. As well as four sets of polynomials: a polynomial part of the private key, a polynomial for generation of the public key, the message and a blinding value, respectively, all of degree at most N - 1. It is, in theory, very efficient, since encryption and decryption only use simple polynomial multiplication which are very fast compared to asymmetric encryption schemes.
+
+\section Goals
+Our main goal is to implement an alternative library of the NTRU algorithm in C and gather experience in cryptographic programming. Further, it may help to raise awareness of the need of quantum-secure encryption and enable us to contribute to already present implementations. It may even reveal problems of other implementations and help advancing them. It may as well help with diversity in crypto implementations, which is always a good thing. On top of that we will provide a command-line interface to our library and allow basic operations like key creation and encryption from stdin.
+
+Optimizing the algorithm itself is not within our scope. However, the library may undergo heavy changes on the mathematical implementation of polynomial arithmetic, in order to optimize run-time behaviour.
+
+\section Algorithms
+Most of the algorithms in ntru_poly.c, ntru_decrypt.c, ntru_encrypt.c and ntru_keypair.c are based on the pseudo-code from <a href="http://www.crypto.wpi.edu/Publications/Documents/ms_corourke.pdf">Efficient NTRU Implementations by Colleen Marie O'Rourke</a>.
+
+Further work is based on <a href="http://www.math.uni-hamburg.de/home/kuehn/moldenhauer-bsc-NTRUKryptosystem-final.pdf">Das NTRU-Kryptosystem von Anja Moldenhauer</a> and the official <a href="https://www.securityinnovation.com/uploads/Crypto/NTRUTech014.pdf">NTRU Cryptosystems Technical Report #14</a>.
+
+\section License
+<a href="https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL-2.1</a>
+
+\section deps Dependencies
+This library was written for Linux systems. Support for windows will not be added.
+	\* <a href="http://www.flintlib.org">FLINT-2.4.3 or later</a> (compiled with gmp and mpfr)
+	\* <a href="https://developer.gnome.org/glib/stable/">glib-2.0</a>
+	\* <a href="http://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config</a> (for the build only)
+
+\section install_sec Installation
+	\* make
+	\* make install
+
+\section Usage
+See this API doc, the public headers are in the include/ subfolder.
+
+\section References
+\* <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.25.8422&rep=rep1&type=pdf">Original NTRUEncrypt paper</a>
+\* <a href="http://www.crypto.wpi.edu/Publications/Documents/ms_corourke.pdf">Efficient NTRU Implementations by Colleen Marie O'Rourke</a>
+\* <a href="http://www.math.uni-hamburg.de/home/kuehn/moldenhauer-bsc-NTRUKryptosystem-final.pdf">Das NTRU-Kryptosystem von Anja Moldenhauer</a>
+\* <a href="https://www.securityinnovation.com/uploads/Crypto/NTRUTech014.pdf">NTRU Cryptosystems Technical Report #14</a>
+\* <a href="http://teal.gmu.edu/courses/ECE646/project/reports_2001/dsouza.pdf">The NTRU Cryptosystem: Implementation and Comparative Analysis by Rodney D'Souza</a>
+\* <a href="http://en.wikipedia.org/wiki/NTRUEncrypt">Wikipedia Article</a>
+*/

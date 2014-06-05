@@ -58,12 +58,6 @@ main: main.o libpqc.a $(LIBFLINT)
 	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) \
 		main.o libpqc.a $(LIBFLINT) $(LIBS)
 
-doc:
-	doxygen
-
-doc-pdf: doc
-	$(MAKE) -C latex pdf
-
 install:
 	$(INSTALL_DIR) "$(DESTDIR)$(INSTALL_LIBDIR)"
 	$(INSTALL_BIN) libpqc.so.$(LIBVER) "$(DESTDIR)$(INSTALL_LIBDIR)"
@@ -76,7 +70,7 @@ uninstall:
 	$(RM) "$(DESTDIR)$(INSTALL_LIBDIR)/libpqc.so.$(LIBVER)"
 
 clean:
-	rm -rf html/ latex/ *.o test libpqc.a libpqc.so* main *.dec *.enc *.hex *.orig core
+	rm -f *.o test libpqc.a libpqc.so* main *.dec *.enc *.hex *.orig core
 
 
-.PHONY: clean doc doc-pdf install uninstall
+.PHONY: clean install uninstall
