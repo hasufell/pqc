@@ -21,6 +21,13 @@ pub.key
 vgcore*
 core
 tags
+src/priv*
+src/pub*
+testfiles/
+install/
+*.png
+*.ods
+*.pdf
 
 
 # tmp files
