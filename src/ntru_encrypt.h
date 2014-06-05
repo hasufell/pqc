@@ -76,7 +76,7 @@ ntru_encrypt_poly(
  * @param rnd the random poly (should have relatively small
  * coefficients, but not restricted to {-1, 0, 1})
  * @param params ntru_params the ntru context
- * @return the newly allocated encrypted string, NULL on failure
+ * @return the newly allocated encrypted string
  */
 string *
 ntru_encrypt_string(
