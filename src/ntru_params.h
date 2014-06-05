@@ -33,11 +33,14 @@
 #include <stdint.h>
 
 
+typedef struct ntru_params ntru_params;
+
+
 /**
  * NTRU cryptosystem is specified by
  * the following triple.
  */
-typedef struct {
+struct ntru_params {
 	/**
 	 * maximal degree N - 1 for
 	 * all polynomials
@@ -51,6 +54,7 @@ typedef struct {
 	 * small modulus
 	 */
 	uint32_t p;
-} ntru_params;
+};
+
 
 #endif /* NTRU_PARAMS_H */
