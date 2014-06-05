@@ -42,7 +42,7 @@
 
 /*------------------------------------------------------------------------*/
 
-bool
+void
 ntru_encrypt_poly(
 		const fmpz_poly_t msg_bin,
 		const fmpz_poly_t pub_key,
@@ -53,7 +53,7 @@ ntru_encrypt_poly(
 	fmpz_poly_t tmp_poly_msg;
 
 	if (!msg_bin || !pub_key || !rnd || !out || !params)
-		return false;
+		NTRU_ABORT_DEBUG("Unexpected NULL parameters");
 
 	/* allow aliasing */
 	fmpz_poly_init(tmp_poly_msg);
@@ -66,8 +66,6 @@ ntru_encrypt_poly(
 	fmpz_poly_mod_unsigned(out, params->q);
 
 	fmpz_poly_clear(tmp_poly_msg);
-
-	return true;
 }
 
 /*------------------------------------------------------------------------*/
@@ -84,17 +82,16 @@ ntru_encrypt_string(
 	fmpz_poly_t **poly_array;
 
 	if (!msg || !msg->len)
-		return NULL;
+		NTRU_ABORT_DEBUG("Unexpected NULL parameters");
 
 	poly_array = ascii_to_bin_poly_arr(msg, params);
 
 	while (*poly_array[i]) {
-		if (!ntru_encrypt_poly(*poly_array[i],
+		ntru_encrypt_poly(*poly_array[i],
 				pub_key,
 				rnd,
 				*poly_array[i],
-				params))
-			NTRU_ABORT("failed encrypting string!\n");
+				params);
 		i++;
 	}
 

@@ -33,8 +33,6 @@
 #include "ntru_poly.h"
 #include "ntru_string.h"
 
-#include <stdbool.h>
-
 #include <fmpz_poly.h>
 #include <fmpz.h>
 
@@ -60,9 +58,8 @@
  * @param out the output poly which is in the range {0, q-1}
  * (not ternary!) [out]
  * @param params ntru_params the ntru context
- * @return true/false for success/failure
  */
-bool
+void
 ntru_encrypt_poly(
 		const fmpz_poly_t msg_tern,
 		const fmpz_poly_t pub_key,
