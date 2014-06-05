@@ -62,8 +62,11 @@ read_file(char const * const filename)
 		/* read and copy chunks */
 		while ((n = read(fd, buf, STD_FILE_BUF)) != 0) {
 
-			if (n == -1)
-				NTRU_ABORT("Failed while reading file descriptor %d\n", fd);
+			if (n == -1) {
+				NTRU_WARN_DEBUG("Failed while reading file descriptor %d",
+						fd);
+				goto failure_cleanup;
+			}
 
 			str_size += n; /* count total bytes read */
 
@@ -78,8 +81,10 @@ read_file(char const * const filename)
 		/* add trailing NULL byte */
 		cstring[str_size] = '\0';
 
-		if (close(fd))
-			NTRU_ABORT("Failed to close file descripter %d\n", fd);
+		if (close(fd)) {
+			NTRU_WARN_DEBUG("Failed to close file descripter %d\n", fd);
+			goto failure_cleanup;
+		}
 
 		result_string = ntru_malloc(sizeof(*result_string));
 		result_string->ptr = cstring;
@@ -90,24 +95,35 @@ read_file(char const * const filename)
 	} else {
 		return NULL;
 	}
+
+failure_cleanup:
+	free(cstring);
+	return NULL;
 }
 
 /*------------------------------------------------------------------------*/
 
-void
+bool
 write_file(string const *wstring, char const * const filename)
 {
 	FILE *fp;
 
 	fp = fopen(filename, "w");
 
-	if (!fp)
-		NTRU_ABORT("Failed while creating file\n");
+	if (!fp) {
+		NTRU_WARN_DEBUG("Failed while creating file\n");
+		return false;
+	}
 
 	for (uint32_t i = 0; i < wstring->len; i++)
 		fprintf(fp, "%c", wstring->ptr[i]);
 
-	fclose(fp);
+	if (fclose(fp)) {
+		NTRU_WARN_DEBUG("Failed to close file descripter\n");
+		return false;
+	}
+
+	return true;
 }
 
 /*------------------------------------------------------------------------*/
