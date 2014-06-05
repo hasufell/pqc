@@ -207,6 +207,7 @@ poly_inverse_poly_q(const fmpz_poly_t a,
  * @param a polynomial to invert
  * @param Fp polynomial [out]
  * @param params NTRU parameters
+ * @return true if invertible, false if not
  */
 bool
 poly_inverse_poly_p(const fmpz_poly_t a,
