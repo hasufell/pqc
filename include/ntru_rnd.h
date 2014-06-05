@@ -20,11 +20,12 @@
  */
 
 /**
- * @file ntru_encrypt.h
- * This file holds the public API of encryption
- * of the pqc NTRU implementation and is
- * meant to be installed on the client system.
- * @brief public API, encryption
+ * @file ntru_rnd.h
+ * This file holds the public API of generating
+ * random ternary polynomials of the pqc NTRU
+ * implementation and is meant to be installed
+ * on the client system.
+ * @brief public API, random polynomials
  */
 
 #ifndef PUBLIC_NTRU_RND_H_

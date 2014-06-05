@@ -21,10 +21,11 @@
 
 /**
  * @file ntru_keypair.h
- * This file holds the public API of the most basic
- * data types of the pqc NTRU implementation and is
+ * This file holds the public API of generating,
+ * exporting and importing public and private keys
+ * of the pqc NTRU implementation and is
  * meant to be installed on the client system.
- * @brief public API, basic data types
+ * @brief public API, key handling
  */
 
 #ifndef PUBLIC_NTRU_KEYPAIR_H_
