@@ -20,7 +20,7 @@
  */
 
 /**
- * @file ntru_rnd.h
+ * @file rnd.h
  * This file holds the public API of generating
  * random ternary polynomials of the pqc NTRU
  * implementation and is meant to be installed

@@ -20,15 +20,15 @@
  */
 
 /**
- * @file ntru_decrypt.h
- * This file holds the public API of decryption
+ * @file encrypt.h
+ * This file holds the public API of encryption
  * of the pqc NTRU implementation and is
  * meant to be installed on the client system.
- * @brief public API, decryption
+ * @brief public API, encryption
  */
 
-#ifndef PUBLIC_NTRU_DECRYPT_H_
-#define PUBLIC_NTRU_DECRYPT_H_
+#ifndef PUBLIC_NTRU_ENCRYPT_H_
+#define PUBLIC_NTRU_ENCRYPT_H_
 
 
 #include "ntru.h"
@@ -38,21 +38,22 @@
 
 
 /**
- * Decryption of a given encrypted string.
+ * Encrypt a message in the form of a null-terminated char array and
+ * return a string.
  *
- * @param encr_msg the encrypted message in the form of a string
- * @param priv_key the polynom containing the private key to decrypt
- * 		the message
- * @param priv_key_inv the inverse polynome to the private key
- * @param params the ntru_params
- * @return the decrypted string or NULL on failure
+ * @param msg the message
+ * @param pub_key the public key
+ * @param rnd the random poly (should have relatively small
+ * coefficients, but not restricted to {-1, 0, 1})
+ * @param params ntru_params the ntru context
+ * @return the newly allocated encrypted string, NULL on failure
  */
 string *
-ntru_decrypt_string(
-		const string *encr_msg,
-		const fmpz_poly_t priv_key,
-		const fmpz_poly_t priv_key_inv,
+ntru_encrypt_string(
+		const string *msg,
+		const fmpz_poly_t pub_key,
+		const fmpz_poly_t rnd,
 		const ntru_params *params);
 
 
-#endif /* PUBLIC_NTRU_DECRYPT_H_ */
+#endif /* PUBLIC_NTRU_ENCRYPT_H_ */

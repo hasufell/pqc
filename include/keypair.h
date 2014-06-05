@@ -20,7 +20,7 @@
  */
 
 /**
- * @file ntru_keypair.h
+ * @file keypair.h
  * This file holds the public API of generating,
  * exporting and importing public and private keys
  * of the pqc NTRU implementation and is
