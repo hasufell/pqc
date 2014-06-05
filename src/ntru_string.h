@@ -54,6 +54,11 @@ struct string {
 };
 
 
+/**
+ * Prints the given string to stdout.
+ *
+ * @param print_string the print to string
+ */
 void
 prints(const string *print_string);
 
