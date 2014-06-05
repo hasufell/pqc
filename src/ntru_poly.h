@@ -54,10 +54,10 @@ fmpz_cmp_si_n(const fmpz_t f, slong g);
  * Initializes and builds a polynomial with the
  * coefficient values of c[] of size len within NTRU
  * parameters and returns a newly allocated polynomial.
- * For an empty polynom, both parameters can be NULL/0.
+ * For an empty polynom, both c and len can be NULL/0.
  *
  * @param new_poly the polynomial to initialize and
- * fill with coefficients
+ * fill with coefficients [out]
  * @param c array of polynomial coefficients, can be NULL
  * @param len size of the coefficient array, can be 0
  * @return newly allocated polynomial pointer, must be freed
