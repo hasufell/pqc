@@ -1,6 +1,9 @@
 include ../common.mk
 
 
+SOVER = 0
+LIBVER = 0.0.1
+
 # sources, headers, objects
 PQC_SOURCES = \
 			  ntru_ascii_poly.c \
@@ -29,6 +32,7 @@ PQC_HEADERS = \
 			  ntru_rnd.h \
 			  ntru_string.h
 
+
 # libs
 LIBS += -L. -lgmp -lmpfr -lflint $(shell $(PKG_CONFIG) --libs glib-2.0) -lm
 
@@ -41,29 +45,38 @@ CFLAGS += -D_XOPEN_SOURCE -D_XOPEN_SOURCE_EXTENDED
 %.o: %.c
 	$(CC) -fPIC $(CFLAGS) $(CPPFLAGS) $(INCS) -c $*.c
 
-all: libpqc.a libpqc.so
+all: libpqc.a libpqc.so.$(LIBVER)
 
 libpqc.a: $(PQC_OBJS) $(PQC_HEADERS)
 	$(AR) cru libpqc.a $(PQC_OBJS)
 
-libpqc.so: libpqc.a $(PQC_HEADERS) $(LIBFLINT)
-	$(CC) -shared $(CFLAGS) -o $@ $(LDFLAGS) \
+libpqc.so.$(LIBVER): libpqc.a $(PQC_HEADERS) $(LIBFLINT)
+	$(CC) -shared $(CFLAGS) -Wl,-soname,libpqc$(SOVER) -o $@ $(LDFLAGS) \
 		libpqc.a $(LIBFLINT) $(LIBS)
 
 main: main.o libpqc.a $(LIBFLINT)
 	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) \
 		main.o libpqc.a $(LIBFLINT) $(LIBS)
 
+doc:
+	doxygen
+
+doc-pdf: doc
+	$(MAKE) -C latex pdf
+
 install:
-	$(INSTALL_DIR) "$(DESTDIR)$(INSTALL_BINDIR)"
-	[ -e libpqc.so ] && $(INSTALL_DIR) "$(DESTDIR)$(INSTALL_LIBDIR)"
-	[ -e libpqc.so ] && $(INSTALL_BIN) libpqc.so "$(DESTDIR)$(INSTALL_LIBDIR)"
+	$(INSTALL_DIR) "$(DESTDIR)$(INSTALL_LIBDIR)"
+	$(INSTALL_BIN) libpqc.so.$(LIBVER) "$(DESTDIR)$(INSTALL_LIBDIR)"
+	$(LN_S) libpqc.so.$(LIBVER) "$(DESTDIR)$(INSTALL_LIBDIR)"/libpqc.so
+	$(LN_S) libpqc.so.$(LIBVER) "$(DESTDIR)$(INSTALL_LIBDIR)"/libpqc.so.$(SOVER)
 
 uninstall:
-	[ -e "$(DESTDIR)$(INSTALL_LIBDIR)/libpqc.so" ] && rm "$(DESTDIR)$(INSTALL_LIBDIR)/libpqc.so"
+	$(RM) "$(DESTDIR)$(INSTALL_LIBDIR)/libpqc.so"
+	$(RM) "$(DESTDIR)$(INSTALL_LIBDIR)/libpqc.so.$(SOVER)"
+	$(RM) "$(DESTDIR)$(INSTALL_LIBDIR)/libpqc.so.$(LIBVER)"
 
 clean:
-	rm -f *.o test libpqc.a libpqc.so main *.dec *.enc *.hex *.orig core
+	rm -rf html/ latex/ *.o test libpqc.a libpqc.so* main *.dec *.enc *.hex *.orig core
 
 
-.PHONY: clean install uninstall
+.PHONY: clean doc doc-pdf install uninstall

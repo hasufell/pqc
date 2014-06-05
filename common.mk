@@ -10,7 +10,9 @@ CFLAGS += -Wno-unused-but-set-variable
 endif
 LDFLAGS ?= -Wl,-O1 -Wl,--as-needed -Wl,--hash-style=gnu
 
-# install variables
+# install/uninstall variables
+RM = rm
+LN_S = ln -s
 INSTALL = install
 INSTALL_BIN = install -m755
 INSTALL_DIR = install -d
@@ -18,3 +20,4 @@ PREFIX = /usr/local
 LIBDIR = lib64
 INSTALL_BINDIR = $(PREFIX)/bin
 INSTALL_LIBDIR = $(PREFIX)/$(LIBDIR)
+INSTALL_INCLUDEDIR = $(PREFIX)/include
