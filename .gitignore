@@ -28,6 +28,8 @@ install/
 *.png
 *.ods
 *.pdf
+*.dec
+*.enc
 
 
 # tmp files
