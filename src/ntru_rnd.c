@@ -20,15 +20,15 @@
  */
 
 /**
- * @file rnd.c
+ * @file ntru_rnd.c
  * This file allows generation of random polynomials.
  * @brief random polynomials
  */
 
-#include "err.h"
 #include "math.h"
-#include "params.h"
-#include "poly.h"
+#include "ntru_err.h"
+#include "ntru_params.h"
+#include "ntru_poly.h"
 
 #include <fmpz_poly.h>
 #include <fcntl.h>

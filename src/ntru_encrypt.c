@@ -20,18 +20,18 @@
  */
 
 /**
- * @file encrypt.c
+ * @file ntru_encrypt.c
  * This file handles the NTRU encryption
  * algorithm.
  * @brief NTRU encryption
  */
 
-#include "ascii_poly.h"
-#include "encrypt.h"
-#include "mem.h"
+#include "ntru_ascii_poly.h"
+#include "ntru_encrypt.h"
+#include "ntru_mem.h"
+#include "ntru_params.h"
+#include "ntru_poly_ascii.h"
 #include "ntru_string.h"
-#include "params.h"
-#include "poly_ascii.h"
 
 #include <string.h>
 

@@ -20,18 +20,18 @@
  */
 
 /**
- * @file poly_ascii.h
- * Header for the internal API of poly_ascii.c.
- * @brief header for poly_ascii.c
+ * @file ntru_poly_ascii.h
+ * Header for the internal API of ntru_poly_ascii.c.
+ * @brief header for ntru_poly_ascii.c
  */
 
 #ifndef NTRU_POLY_ASCII_H_
 #define NTRU_POLY_ASCII_H_
 
 
-#include "common.h"
+#include "ntru_common.h"
+#include "ntru_params.h"
 #include "ntru_string.h"
-#include "params.h"
 
 #include <fmpz_poly.h>
 #include <fmpz.h>

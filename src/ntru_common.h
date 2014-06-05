@@ -20,19 +20,22 @@
  */
 
 /**
- * @file err.h
- * This file provides error macros
- * and functions for the NTRU cryptosystem.
- * @brief error handling
+ * @file ntru_common.h
+ * This file holds common macros and functions
+ * shared throughout the whole codebase without
+ * any particular purpose.
+ * @brief common macros/functions
  */
 
-#ifndef NTRU_ERR_H
-#define NTRU_ERR_H
+#ifndef NTRU_COMMON_H
+#define NTRU_COMMON_H
 
-#define NTRU_ABORT(...) \
-{ \
-	fprintf(stderr, __VA_ARGS__); \
-	abort(); \
-}
 
-#endif /* NTRU_ERR_H */
+#include <stdlib.h>
+
+
+#define CHAR_SIZE sizeof(char)
+#define ASCII_BITS 8
+
+
+#endif /* NTRU_COMMON_H */

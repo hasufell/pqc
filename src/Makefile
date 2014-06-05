@@ -2,31 +2,32 @@ include ../common.mk
 
 
 # sources, headers, objects
-PQC_SOURCES = poly.c \
-			  mem.c \
-			  encrypt.c \
-			  decrypt.c \
-			  keypair.c \
-			  ascii_poly.c \
-			  file.c \
-			  ntru_string.c \
-			  poly_ascii.c \
-			  rnd.c
+PQC_SOURCES = \
+			  ntru_ascii_poly.c \
+			  ntru_decrypt.c \
+			  ntru_encrypt.c \
+			  ntru_file.c \
+			  ntru_keypair.c \
+			  ntru_mem.c \
+			  ntru_poly.c \
+			  ntru_poly_ascii.c \
+			  ntru_rnd.c \
+			  ntru_string.c
 
 PQC_OBJS = $(patsubst %.c, %.o, $(PQC_SOURCES))
 
-PQC_HEADERS = err.h \
-			  poly.h \
-			  params.h \
-			  encrypt.h \
-			  decrypt.h \
-			  keypair.h \
-			  ascii_poly.h \
-			  params.h \
-			  file.h \
-			  ntru_string.h \
-			  poly_ascii.h \
-			  rnd.h
+PQC_HEADERS = \
+			  ntru_ascii_poly.h \
+			  ntru_decrypt.h \
+			  ntru_encrypt.h \
+			  ntru_err.h \
+			  ntru_file.h \
+			  ntru_keypair.h \
+			  ntru_poly.h \
+			  ntru_params.h \
+			  ntru_poly_ascii.h \
+			  ntru_rnd.h \
+			  ntru_string.h
 
 # libs
 LIBS += -L. -lgmp -lmpfr -lflint $(shell $(PKG_CONFIG) --libs glib-2.0) -lm

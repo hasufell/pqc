@@ -20,16 +20,16 @@
  */
 
 /**
- * @file keypair.h
- * Header for internal API of keypair.c.
- * @brief header for keypair.c
+ * @file ntru_keypair.h
+ * Header for internal API of ntru_keypair.c.
+ * @brief header for ntru_keypair.c
  */
 
 #ifndef NTRU_KEYPAIR_H
 #define NTRU_KEYPAIR_H
 
 
-#include "params.h"
+#include "ntru_params.h"
 
 #include <fmpz_poly.h>
 #include <fmpz.h>

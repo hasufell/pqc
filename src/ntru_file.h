@@ -20,16 +20,16 @@
  */
 
 /**
- * @file file.h
- * Header for the external API of file.c.
- * @brief header for file.c
+ * @file ntru_file.h
+ * Header for the external API of ntru_file.c.
+ * @brief header for ntru_file.c
  */
 
 #ifndef NTRU_FILE_H
 #define NTRU_FILE_H
 
 
-#include "common.h"
+#include "ntru_common.h"
 #include "ntru_string.h"
 
 

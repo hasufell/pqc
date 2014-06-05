@@ -20,17 +20,17 @@
  */
 
 /**
- * @file decrypt.c
+ * @file ntru_decrypt.c
  * This file handles the NTRU decryption
  * algorithm.
  * @brief NTRU decryption
  */
 
-#include "ascii_poly.h"
-#include "decrypt.h"
+#include "ntru_ascii_poly.h"
+#include "ntru_decrypt.h"
+#include "ntru_params.h"
+#include "ntru_poly_ascii.h"
 #include "ntru_string.h"
-#include "params.h"
-#include "poly_ascii.h"
 
 #include <stdbool.h>
 #include <string.h>

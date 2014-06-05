@@ -20,15 +20,15 @@
  */
 
 /**
- * @file file.c
+ * @file ntru_file.c
  * Allows operations on files, such as reading
  * and writing.
  * @brief file operations
  */
 
-#include "common.h"
-#include "err.h"
-#include "mem.h"
+#include "ntru_common.h"
+#include "ntru_err.h"
+#include "ntru_mem.h"
 #include "ntru_string.h"
 
 #include <fcntl.h>

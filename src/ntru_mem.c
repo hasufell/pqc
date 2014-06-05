@@ -20,37 +20,52 @@
  */
 
 /**
- * @file params.h
- * This file defines the ntru_params
- * and related data types.
- * @brief NTRU parameters
+ * @file ntru_mem.c
+ * This file provides functions for
+ * memory management.
+ * @brief memory management
  */
 
-#ifndef NTRU_PARAMS_H
-#define NTRU_PARAMS_H
+#include "ntru_mem.h"
+
+#include <stdio.h>
+#include <stdlib.h>
 
 
-#include <stdint.h>
+/*------------------------------------------------------------------------*/
 
+void *
+ntru_malloc(size_t size)
+{
+	void *ptr;
 
-/**
- * NTRU cryptosystem is specified by
- * the following triple.
- */
-typedef struct {
-	/**
-	 * maximal degree N - 1 for
-	 * all polynomials
-	 */
-	uint32_t N;
-	/**
-	 * large modulus
-	 */
-	uint32_t q;
-	/**
-	 * small modulus
-	 */
-	uint32_t p;
-} ntru_params;
+	ptr = malloc(size);
 
-#endif /* NTRU_PARAMS_H */
+	if (size)
+		if (!ptr) {
+			fprintf(stderr, "failed to allocate memory, aborting!");
+			abort();
+		}
+
+	return ptr;
+}
+
+/*------------------------------------------------------------------------*/
+
+void *
+ntru_calloc(size_t nmemb, size_t size)
+{
+	void *ptr;
+
+	ptr = calloc(nmemb, size);
+
+	if (size)
+		if (!ptr) {
+			fprintf(stderr, "failed to allocate memory, aborting!");
+			abort();
+		}
+
+	return ptr;
+}
+
+/*------------------------------------------------------------------------*/

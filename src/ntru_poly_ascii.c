@@ -20,18 +20,18 @@
  */
 
 /**
- * @file poly_ascii.c
+ * @file ntru_poly_ascii.c
  * This file allows to convert polynomials to
  * ascii strings, including base64 encoded.
  * @brief polynomials to acii
  */
 
-#include "poly_ascii.h"
-#include "common.h"
-#include "mem.h"
+#include "ntru_poly_ascii.h"
+#include "ntru_common.h"
+#include "ntru_mem.h"
+#include "ntru_params.h"
+#include "ntru_poly.h"
 #include "ntru_string.h"
-#include "params.h"
-#include "poly.h"
 
 #include <glib.h>
 

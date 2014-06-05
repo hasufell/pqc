@@ -20,8 +20,8 @@
  */
 
 /**
- * @file encrypt.h
- * Header for the internal API of encrypt.c.
+ * @file ntru_encrypt.h
+ * Header for the internal API of ntru_encrypt.c.
  * @brief header for encrypt.c
  */
 
@@ -29,9 +29,9 @@
 #define PQC_ENCRYPT_H
 
 
+#include "ntru_params.h"
+#include "ntru_poly.h"
 #include "ntru_string.h"
-#include "params.h"
-#include "poly.h"
 
 #include <stdbool.h>
 

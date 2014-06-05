@@ -20,16 +20,16 @@
  */
 
 /**
- * @file poly.h
- * Header for the internal API of poly.c.
- * @brief header for poly.c
+ * @file ntru_poly.h
+ * Header for the internal API of ntru_poly.c.
+ * @brief header for ntru_poly.c
  */
 
 #ifndef NTRU_POLY_H
 #define NTRU_POLY_H
 
-#include "err.h"
-#include "params.h"
+#include "ntru_err.h"
+#include "ntru_params.h"
 
 #include <stdarg.h>
 #include <stdbool.h>

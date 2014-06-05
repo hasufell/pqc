@@ -20,17 +20,17 @@
  */
 
 /**
- * @file decrypt.h
- * Header for the external API of decrypt.c.
- * @brief header for decrypt.c
+ * @file ntru_decrypt.h
+ * Header for the external API of ntru_decrypt.c.
+ * @brief header for ntru_decrypt.c
  */
 
 #ifndef NTRU_DECRYPT_H
 #define NTRU_DECRYPT_H
 
+#include "ntru_params.h"
+#include "ntru_poly.h"
 #include "ntru_string.h"
-#include "params.h"
-#include "poly.h"
 
 #include <stdbool.h>
 

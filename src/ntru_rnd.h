@@ -20,15 +20,15 @@
  */
 
 /**
- * @file rnd.h
- * Header for the internal API of rnd.c.
- * @brief header for rnd.c
+ * @file ntru_rnd.h
+ * Header for the internal API of ntru_rnd.c.
+ * @brief header for ntru_rnd.c
  */
 
 #ifndef NTRU_RND_H
 #define NTRU_RND_H
 
-#include "params.h"
+#include "ntru_params.h"
 
 #include <stdlib.h>
 

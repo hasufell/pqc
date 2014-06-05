@@ -20,9 +20,9 @@
  */
 
 /**
- * @file mem.h
- * Header for the internal API of mem.c.
- * @brief header for mem.c
+ * @file ntru_mem.h
+ * Header for the internal API of ntru_mem.c.
+ * @brief header for ntru_mem.c
  */
 
 #ifndef NTRU_MEM_H

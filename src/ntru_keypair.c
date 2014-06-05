@@ -20,19 +20,19 @@
  */
 
 /**
- * @file keypair.c
+ * @file ntru_keypair.c
  * This file handles the creation of the
  * key pair and possibly common operations on them.
  * @brief key creation and operations
  */
 
-#include "ascii_poly.h"
-#include "file.h"
-#include "keypair.h"
+#include "ntru_ascii_poly.h"
+#include "ntru_file.h"
+#include "ntru_keypair.h"
+#include "ntru_params.h"
+#include "ntru_poly.h"
+#include "ntru_poly_ascii.h"
 #include "ntru_string.h"
-#include "params.h"
-#include "poly.h"
-#include "poly_ascii.h"
 
 #include <fmpz_poly.h>
 #include <fmpz.h>

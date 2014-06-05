@@ -20,17 +20,17 @@
  */
 
 /**
- * @file poly.c
+ * @file ntru_poly.c
  * This files purpose is to handle polynomials
  * in general, allowing modification, arithmetic
  * and common algorithms like inverting them.
  * @brief operations on polynomials
  */
 
-#include "err.h"
-#include "mem.h"
-#include "params.h"
-#include "poly.h"
+#include "ntru_err.h"
+#include "ntru_mem.h"
+#include "ntru_params.h"
+#include "ntru_poly.h"
 
 #include <stdarg.h>
 #include <stdbool.h>
