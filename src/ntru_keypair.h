@@ -71,6 +71,8 @@ struct keypair {
  * @param g a random polynomial
  * @param pair store private and public components here [out]
  * @param params the NTRU context
+ * @return true for success, false if f or g are not invertible
+ * (then the caller hast to try different ones)
  */
 bool
 ntru_create_keypair(
