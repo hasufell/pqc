@@ -42,7 +42,7 @@
 
 /*------------------------------------------------------------------------*/
 
-bool
+void
 ntru_decrypt_poly(
 		const fmpz_poly_t encr_msg,
 		const fmpz_poly_t priv_key,
@@ -56,7 +56,7 @@ ntru_decrypt_poly(
 				encr_msg_tmp;
 
 	if (!encr_msg || !priv_key || !priv_key_inv || !out_bin || !params)
-		return false;
+		NTRU_ABORT_DEBUG("Unexpected NULL parameters");
 
 	fmpz_poly_init(a);
 	fmpz_poly_zero(a);
@@ -84,8 +84,6 @@ ntru_decrypt_poly(
 	fmpz_poly_clear(priv_key_tmp);
 	fmpz_poly_clear(priv_key_inv_tmp);
 	fmpz_poly_clear(encr_msg_tmp);
-
-	return true;
 }
 
 /*------------------------------------------------------------------------*/
@@ -102,17 +100,16 @@ ntru_decrypt_string(
 	fmpz_poly_t **poly_array;
 
 	if (!encr_msg || !encr_msg->len)
-		return NULL;
+		NTRU_ABORT_DEBUG("Unexpected NULL parameters");
 
 	poly_array = base64_to_poly_arr(encr_msg, params);
 
 	while (*poly_array[i]) {
-		if (!ntru_decrypt_poly(*poly_array[i],
+		ntru_decrypt_poly(*poly_array[i],
 					priv_key,
 					priv_key_inv,
 					*poly_array[i],
-					params))
-			NTRU_ABORT("failed encrypting string!\n");
+					params);
 		i++;
 	}
 
