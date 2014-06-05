@@ -7,6 +7,7 @@ implementation with the primary goal of learning.
 
 * FLINT (compiled with gmp and mpfr)
 * glib-2.0
+* pkgconfig (for the build only)
 
 ## Compiling
 
