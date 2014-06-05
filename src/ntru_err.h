@@ -29,10 +29,32 @@
 #ifndef NTRU_ERR_H
 #define NTRU_ERR_H
 
+
 #define NTRU_ABORT(...) \
 { \
 	fprintf(stderr, __VA_ARGS__); \
 	abort(); \
 }
+
+#define NTRU_ABORT_DEBUG(...) \
+{ \
+	fprintf(stderr, __VA_ARGS__); \
+	fprintf(stderr, " [file %s, line %d]:\n", \
+				__FILE__, __LINE__); \
+	abort(); \
+}
+
+#define NTRU_WARN(...) \
+{ \
+	fprintf(stderr, __VA_ARGS__); \
+}
+
+#define NTRU_WARN_DEBUG(...) \
+{ \
+	fprintf(stderr, __VA_ARGS__); \
+	fprintf(stderr, " [file %s, line %d]:\n", \
+				__FILE__, __LINE__); \
+}
+
 
 #endif /* NTRU_ERR_H */
