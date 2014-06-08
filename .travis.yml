@@ -1,5 +1,8 @@
 language: c
 compiler: clang
+env:
+    global:
+        secure: "BB9eiRNXC1PfNRLEifc0yQQZnM25zqaWNGVWN+atzT+NkxhVKyVr8+DoyPYaa8tOKybuSZhVkKnIiCd8iGMe3v+WyuHKFuhdiwdnEQhxbBlUCb9dDLEexI+J8QiYwC8AW/t6H9LWVwSka0RI3GJujJ8HKIBzW45I/j+1NlUte8U="
 before_script:
     - sudo apt-get install -qq libgmp-dev libmpfr-dev
     - wget http://www.flintlib.org/flint-2.4.3.tar.gz
@@ -11,3 +14,6 @@ before_script:
     - cd ..
 script:
     - make CC=clang
+    - make doc
+after_script:
+    - ./update-gh-pages.sh
