@@ -17,7 +17,6 @@ uninstall:
 
 clean:
 	$(MAKE) -C src clean
-	$(MAKE) -C include clean
 	$(MAKE) -C doxygen clean
 
 doc:
