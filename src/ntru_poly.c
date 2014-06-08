@@ -49,7 +49,7 @@
  *
  * @param a polynomial to invert
  * @param Fq polynomial [out]
- * @param params NTRU context
+ * @param params NTRU parameters
  */
 static
 void poly_mod2_to_modq(const fmpz_poly_t a,
