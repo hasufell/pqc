@@ -106,8 +106,6 @@ ascii_to_bin_poly_arr(const string *to_poly, const ntru_params *params)
 	size_t out_len = 0;
 	fmpz_poly_t **poly_array;
 
-	*out = '\0';
-
 	for (uint32_t i = 0; i < to_poly->len; i++) {
 		char *tmp_string = get_int_to_bin_str((int)(*cur));
 		memcpy(out + out_len, tmp_string, ASCII_BITS);
