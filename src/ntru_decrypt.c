@@ -113,7 +113,8 @@ ntru_decrypt_string(
 		i++;
 	}
 
-	decr_msg = bin_poly_arr_to_ascii(poly_array, params);
+	decr_msg = bin_poly_arr_to_ascii((const fmpz_poly_t **)poly_array,
+			i, params);
 
 	poly_delete_array(poly_array);
 

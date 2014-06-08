@@ -95,7 +95,8 @@ ntru_encrypt_string(
 		i++;
 	}
 
-	enc_msg = poly_arr_to_base64(poly_array, params);
+	enc_msg = poly_arr_to_base64((const fmpz_poly_t **)poly_array,
+			i, params);
 
 	poly_delete_array(poly_array);
 
