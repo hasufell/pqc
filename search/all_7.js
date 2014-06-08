@@ -1,0 +1,6 @@
+var searchData=
+[
+  ['import_5fpriv_5fkey',['import_priv_key',['../ntru__keypair_8c.html#a1f917ea6ef5302826c888e5c88e0869e',1,'import_priv_key(char const *const filename, fmpz_poly_t priv, fmpz_poly_t priv_inv, ntru_params *params):&#160;ntru_keypair.c'],['../ntru__keypair_8h.html#a1f917ea6ef5302826c888e5c88e0869e',1,'import_priv_key(char const *const filename, fmpz_poly_t priv, fmpz_poly_t priv_inv, ntru_params *params):&#160;ntru_keypair.c'],['../keypair_8h.html#a1f917ea6ef5302826c888e5c88e0869e',1,'import_priv_key(char const *const filename, fmpz_poly_t priv, fmpz_poly_t priv_inv, ntru_params *params):&#160;ntru_keypair.c']]],
+  ['import_5fpublic_5fkey',['import_public_key',['../ntru__keypair_8c.html#a4e2c6da04c55e8c1b6c447f4cc9f1d6f',1,'import_public_key(char const *const filename, fmpz_poly_t pub, ntru_params *params):&#160;ntru_keypair.c'],['../ntru__keypair_8h.html#a4e2c6da04c55e8c1b6c447f4cc9f1d6f',1,'import_public_key(char const *const filename, fmpz_poly_t pub, ntru_params *params):&#160;ntru_keypair.c'],['../keypair_8h.html#a4e2c6da04c55e8c1b6c447f4cc9f1d6f',1,'import_public_key(char const *const filename, fmpz_poly_t pub, ntru_params *params):&#160;ntru_keypair.c']]],
+  ['index_20page',['Index Page',['../index.html',1,'']]]
+];
