@@ -103,26 +103,29 @@ ascii_to_bin_poly_arr(const string *to_poly, const ntru_params *params)
 	char *cur = to_poly->ptr;
 	char *out = ntru_malloc(CHAR_SIZE * (to_poly->len * ASCII_BITS + 1));
 	uint32_t polyc = 0;
+	size_t out_len = 0;
 	fmpz_poly_t **poly_array;
 
 	*out = '\0';
 
 	for (uint32_t i = 0; i < to_poly->len; i++) {
 		char *tmp_string = get_int_to_bin_str((int)(*cur));
-		strcat(out, tmp_string);
+		memcpy(out + out_len, tmp_string, ASCII_BITS);
+		out_len += ASCII_BITS;
 		cur++;
 		free(tmp_string);
 	}
+	out[out_len] = '\0';
 
 	poly_array = ntru_malloc(sizeof(**poly_array) *
 			(strlen(out) / params->N + 1));
 
-	for (uint32_t i = 0; i < strlen(out); i += params->N) {
+	for (uint32_t i = 0; i < out_len; i += params->N) {
 		char chunk[params->N + 1];
 		size_t real_chunk_size;
 
 		real_chunk_size =
-			(strlen(out + i) > params->N) ? params->N : strlen(out + i);
+			(out_len - i > params->N) ? params->N : out_len - i;
 
 		memcpy(chunk, out + i, real_chunk_size);
 		chunk[real_chunk_size] = '\0';
