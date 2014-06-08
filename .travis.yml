@@ -4,7 +4,7 @@ env:
     global:
         secure: "BB9eiRNXC1PfNRLEifc0yQQZnM25zqaWNGVWN+atzT+NkxhVKyVr8+DoyPYaa8tOKybuSZhVkKnIiCd8iGMe3v+WyuHKFuhdiwdnEQhxbBlUCb9dDLEexI+J8QiYwC8AW/t6H9LWVwSka0RI3GJujJ8HKIBzW45I/j+1NlUte8U="
 before_script:
-    - sudo apt-get install -qq libgmp-dev libmpfr-dev
+    - sudo apt-get install -qq libgmp-dev libmpfr-dev doxygen
     - wget http://www.flintlib.org/flint-2.4.3.tar.gz
     - tar -xzf flint-2.4.3.tar.gz
     - cd flint-2.4.3
