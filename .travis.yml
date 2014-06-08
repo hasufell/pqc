@@ -14,7 +14,7 @@ before_script:
     - sudo make install
     - cd ..
     - wget http://ftp.stack.nl/pub/users/dimitri/doxygen-1.8.7.src.tar.gz
-    - tar -xzf flint-2.4.3.tar.gz
+    - tar -xzf doxygen-1.8.7.src.tar.gz
     - cd doxygen-1.8.7
     - ./configure
     - make
