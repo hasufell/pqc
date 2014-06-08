@@ -19,6 +19,7 @@ before_script:
     - ./configure
     - make
     - sudo make install
+    - cd ..
 script:
     - make CC=clang
     - make doc
