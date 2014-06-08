@@ -54,9 +54,14 @@ read_file(char const * const filename)
 	int fd = 0;
 	size_t str_size = 0;
 	ssize_t n;
+	size_t file_length = 0;
 	string *result_string;
 
 	fd = open(filename, O_RDONLY);
+	file_length = lseek(fd, 0, SEEK_END) + 1;
+	lseek(fd, 0, SEEK_SET);
+
+	cstring = malloc(sizeof(char) * file_length);
 
 	if (fd != -1) {
 		/* read and copy chunks */
@@ -69,11 +74,6 @@ read_file(char const * const filename)
 			}
 
 			str_size += n; /* count total bytes read */
-
-			REALLOC( /* allocate correct size */
-					cstring, /* pointer to realloc */
-					str_size /* total bytes read */
-					+ 1); /* space for trailing NULL byte */
 
 			/* append buffer to string */
 			memcpy(cstring + (str_size - n), buf, (size_t)n);
