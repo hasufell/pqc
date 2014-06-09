@@ -16,6 +16,14 @@ uninstall:
 	$(RM) "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/keypair.h
 	$(RM) "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/rnd.h
 
+doc:
+	doxygen
 
-.PHONY: install uninstall
+doc-pdf: doc
+	$(MAKE) -C latex pdf
 
+clean:
+	rm -rf html/ latex/
+
+
+.PHONY: clean doc doc-pdf install uninstall

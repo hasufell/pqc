@@ -1,0 +1,46 @@
+/**
+@author hasufell
+
+\mainpage Index Page
+
+\tableofcontents
+
+\section intro_sec Introduction
+Highly optimized C implementation of the NTRUEncrypt algorithm,
+using the FLINT library.
+This is only the internal API.
+
+\section algos Algorithms
+Most of the algorithms in ntru_poly.c, ntru_decrypt.c, ntru_encrypt.c and ntru_keypair.c are based on the pseudo-code from <a href="http://www.crypto.wpi.edu/Publications/Documents/ms_corourke.pdf">Efficient NTRU Implementations by Colleen Marie O'Rourke</a>.
+
+Further work is based on <a href="http://www.math.uni-hamburg.de/home/kuehn/moldenhauer-bsc-NTRUKryptosystem-final.pdf">Das NTRU-Kryptosystem von Anja Moldenhauer</a> and the official <a href="https://www.securityinnovation.com/uploads/Crypto/NTRUTech014.pdf">NTRU Cryptosystems Technical Report #14</a>.
+
+\section license License
+<a href="https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL-2.1</a>
+
+\section deps Dependencies
+This library was written for Linux systems. Support for windows will not be added.
+	\* <a href="http://www.flintlib.org">FLINT-2.4.3 or later</a> (compiled with gmp and mpfr)
+	\* <a href="https://developer.gnome.org/glib/stable/">glib-2.0</a>
+	\* <a href="http://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config</a> (for the build only)
+
+\section install_sec Installation
+	\* make
+	\* make install
+
+\section usage Usage
+See this API doc, the public headers are in the include/ subfolder.
+
+\section perf Performance
+See <a href="https://github.com/hasufell/pqc/wiki/Performance-analysis">Performance Analysis on github</a>.
+
+\section ref References
+\* <a href="https://github.com/hasufell/pqc">This library on github</a>
+\* <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.25.8422&rep=rep1&type=pdf">Original NTRUEncrypt paper</a>
+\* <a href="http://www.crypto.wpi.edu/Publications/Documents/ms_corourke.pdf">Efficient NTRU Implementations by Colleen Marie O'Rourke</a>
+\* <a href="http://www.math.uni-hamburg.de/home/kuehn/moldenhauer-bsc-NTRUKryptosystem-final.pdf">Das NTRU-Kryptosystem von Anja Moldenhauer</a>
+\* <a href="https://www.securityinnovation.com/uploads/Crypto/NTRUTech014.pdf">NTRU Cryptosystems Technical Report #14</a>
+\* <a href="http://teal.gmu.edu/courses/ECE646/project/reports_2001/dsouza.pdf">The NTRU Cryptosystem: Implementation and Comparative Analysis by Rodney D'Souza</a>
+\* <a href="http://en.wikipedia.org/wiki/NTRUEncrypt">Wikipedia Article</a>
+
+*/

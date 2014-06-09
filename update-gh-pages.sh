@@ -10,7 +10,7 @@ cd gh-pages || exit 1
 echo "Removing old C docs."
 git rm -rf .
 echo "Adding new C docs."
-cp -rf "$TRAVIS_BUILD_DIR"/doxygen/html/* . || exit 1
+cp -rf "$TRAVIS_BUILD_DIR"/include/html/* . || exit 1
 git add *
 
 if [[ -e ./index.html ]] ; then

@@ -69,8 +69,14 @@ uninstall:
 	$(RM) "$(DESTDIR)$(INSTALL_LIBDIR)/libpqc.so.$(SOVER)"
 	$(RM) "$(DESTDIR)$(INSTALL_LIBDIR)/libpqc.so.$(LIBVER)"
 
+doc:
+	doxygen
+
+doc-pdf: doc
+	$(MAKE) -C latex pdf
+
 clean:
-	rm -f *.o test libpqc.a libpqc.so* main *.dec *.enc *.hex *.orig core
+	rm -rf html/ latex/ *.o test libpqc.a libpqc.so* main *.dec *.enc *.hex *.orig core
 
 
-.PHONY: clean install uninstall
+.PHONY: clean doc doc-pdf install uninstall
