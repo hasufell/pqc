@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['base64_5fto_5fpoly_5farr',['base64_to_poly_arr',['../ntru__ascii__poly_8c.html#a8460cd27ad4562f560bb304609a3e06d',1,'base64_to_poly_arr(const string *to_poly, const ntru_params *params):&#160;ntru_ascii_poly.c'],['../ntru__ascii__poly_8h.html#a8460cd27ad4562f560bb304609a3e06d',1,'base64_to_poly_arr(const string *to_poly, const ntru_params *params):&#160;ntru_ascii_poly.c']]],
-  ['bin_5fpoly_5farr_5fto_5fascii',['bin_poly_arr_to_ascii',['../ntru__poly__ascii_8c.html#ab9464c96c3ebec6ee716c604fdc4ad21',1,'bin_poly_arr_to_ascii(const fmpz_poly_t **bin_poly_arr, const uint32_t poly_c, const ntru_params *params):&#160;ntru_poly_ascii.c'],['../ntru__poly__ascii_8h.html#ab9464c96c3ebec6ee716c604fdc4ad21',1,'bin_poly_arr_to_ascii(const fmpz_poly_t **bin_poly_arr, const uint32_t poly_c, const ntru_params *params):&#160;ntru_poly_ascii.c']]],
-  ['bin_5fpoly_5fto_5fascii',['bin_poly_to_ascii',['../ntru__poly__ascii_8c.html#a0d86ab2dede39b332d4149e16b2046b8',1,'bin_poly_to_ascii(const fmpz_poly_t poly, const ntru_params *params):&#160;ntru_poly_ascii.c'],['../ntru__poly__ascii_8h.html#a0d86ab2dede39b332d4149e16b2046b8',1,'bin_poly_to_ascii(const fmpz_poly_t poly, const ntru_params *params):&#160;ntru_poly_ascii.c']]]
+  ['get_5frnd_5fint',['get_rnd_int',['../rnd_8h.html#ad85ebfb1cb4b4942942213b750812cf0',1,'rnd.h']]],
+  ['get_5furnd_5fint',['get_urnd_int',['../rnd_8h.html#a99e4820cab7157eb1e16109e21dac81f',1,'rnd.h']]]
 ];

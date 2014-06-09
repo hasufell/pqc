@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['export_5fpriv_5fkey',['export_priv_key',['../ntru__keypair_8c.html#afa29f14a14486d3f6b979ee900d7e738',1,'export_priv_key(char const *const filename, fmpz_poly_t priv, ntru_params *params):&#160;ntru_keypair.c'],['../ntru__keypair_8h.html#afa29f14a14486d3f6b979ee900d7e738',1,'export_priv_key(char const *const filename, fmpz_poly_t priv, ntru_params *params):&#160;ntru_keypair.c'],['../keypair_8h.html#afa29f14a14486d3f6b979ee900d7e738',1,'export_priv_key(char const *const filename, fmpz_poly_t priv, ntru_params *params):&#160;ntru_keypair.c']]],
-  ['export_5fpublic_5fkey',['export_public_key',['../ntru__keypair_8c.html#a41741ed660cb806c47335f66055e1bdd',1,'export_public_key(char const *const filename, fmpz_poly_t pub, ntru_params *params):&#160;ntru_keypair.c'],['../ntru__keypair_8h.html#a41741ed660cb806c47335f66055e1bdd',1,'export_public_key(char const *const filename, fmpz_poly_t pub, ntru_params *params):&#160;ntru_keypair.c'],['../keypair_8h.html#a41741ed660cb806c47335f66055e1bdd',1,'export_public_key(char const *const filename, fmpz_poly_t pub, ntru_params *params):&#160;ntru_keypair.c']]]
+  ['import_5fpriv_5fkey',['import_priv_key',['../keypair_8h.html#a1f917ea6ef5302826c888e5c88e0869e',1,'keypair.h']]],
+  ['import_5fpublic_5fkey',['import_public_key',['../keypair_8h.html#a4e2c6da04c55e8c1b6c447f4cc9f1d6f',1,'keypair.h']]]
 ];

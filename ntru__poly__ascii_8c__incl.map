@@ -1,9 +1,0 @@
-<map id="/home/travis/build/hasufell/pqc/src/ntru_poly_ascii.c" name="/home/travis/build/hasufell/pqc/src/ntru_poly_ascii.c">
-<area shape="rect" id="node3" href="$ntru__poly__ascii_8h.html" title="header for ntru_poly_ascii.c " alt="" coords="276,117,396,147"/>
-<area shape="rect" id="node5" href="$ntru__common_8h.html" title="common macros/functions " alt="" coords="70,195,182,224"/>
-<area shape="rect" id="node9" href="$ntru__params_8h.html" title="NTRU parameters. " alt="" coords="526,195,630,224"/>
-<area shape="rect" id="node13" href="$ntru__string_8h.html" title="header for ntru_string.c " alt="" coords="291,195,384,224"/>
-<area shape="rect" id="node21" href="$ntru__mem_8h.html" title="header for ntru_mem.c " alt="" coords="30,117,120,147"/>
-<area shape="rect" id="node25" href="$ntru__poly_8h.html" title="header for ntru_poly.c " alt="" coords="660,117,746,147"/>
-<area shape="rect" id="node27" href="$ntru__err_8h.html" title="error handling " alt="" coords="947,195,1024,224"/>
-</map>

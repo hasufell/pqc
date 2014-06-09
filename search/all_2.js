@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['char_5fsize',['CHAR_SIZE',['../ntru__common_8h.html#a22c7f61c2f0fa6b1943548e838055cec',1,'ntru_common.h']]]
+  ['get_5frnd_5fint',['get_rnd_int',['../rnd_8h.html#ad85ebfb1cb4b4942942213b750812cf0',1,'rnd.h']]],
+  ['get_5furnd_5fint',['get_urnd_int',['../rnd_8h.html#a99e4820cab7157eb1e16109e21dac81f',1,'rnd.h']]]
 ];

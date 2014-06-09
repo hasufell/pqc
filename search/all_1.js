@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['base64_5fto_5fpoly_5farr',['base64_to_poly_arr',['../ntru__ascii__poly_8c.html#a8460cd27ad4562f560bb304609a3e06d',1,'base64_to_poly_arr(const string *to_poly, const ntru_params *params):&#160;ntru_ascii_poly.c'],['../ntru__ascii__poly_8h.html#a8460cd27ad4562f560bb304609a3e06d',1,'base64_to_poly_arr(const string *to_poly, const ntru_params *params):&#160;ntru_ascii_poly.c']]],
-  ['bin_5fpoly_5farr_5fto_5fascii',['bin_poly_arr_to_ascii',['../ntru__poly__ascii_8c.html#ab9464c96c3ebec6ee716c604fdc4ad21',1,'bin_poly_arr_to_ascii(const fmpz_poly_t **bin_poly_arr, const uint32_t poly_c, const ntru_params *params):&#160;ntru_poly_ascii.c'],['../ntru__poly__ascii_8h.html#ab9464c96c3ebec6ee716c604fdc4ad21',1,'bin_poly_arr_to_ascii(const fmpz_poly_t **bin_poly_arr, const uint32_t poly_c, const ntru_params *params):&#160;ntru_poly_ascii.c']]],
-  ['bin_5fpoly_5fto_5fascii',['bin_poly_to_ascii',['../ntru__poly__ascii_8c.html#a0d86ab2dede39b332d4149e16b2046b8',1,'bin_poly_to_ascii(const fmpz_poly_t poly, const ntru_params *params):&#160;ntru_poly_ascii.c'],['../ntru__poly__ascii_8h.html#a0d86ab2dede39b332d4149e16b2046b8',1,'bin_poly_to_ascii(const fmpz_poly_t poly, const ntru_params *params):&#160;ntru_poly_ascii.c']]]
+  ['encrypt_2eh',['encrypt.h',['../encrypt_8h.html',1,'']]],
+  ['export_5fpriv_5fkey',['export_priv_key',['../keypair_8h.html#afa29f14a14486d3f6b979ee900d7e738',1,'keypair.h']]],
+  ['export_5fpublic_5fkey',['export_public_key',['../keypair_8h.html#a41741ed660cb806c47335f66055e1bdd',1,'keypair.h']]]
 ];

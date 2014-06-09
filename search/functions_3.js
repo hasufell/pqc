@@ -1,9 +1,8 @@
 var searchData=
 [
-  ['fmpz_5fadd_5fn',['fmpz_add_n',['../ntru__poly_8c.html#ad2a11e832808ef1cfee0eed1cc02f4b9',1,'fmpz_add_n(fmpz_t f, const fmpz_t g, const fmpz_t h):&#160;ntru_poly.c'],['../ntru__poly_8h.html#ad2a11e832808ef1cfee0eed1cc02f4b9',1,'fmpz_add_n(fmpz_t f, const fmpz_t g, const fmpz_t h):&#160;ntru_poly.c']]],
-  ['fmpz_5fcmp_5fsi_5fn',['fmpz_cmp_si_n',['../ntru__poly_8c.html#aaaac83ec72414aa208832442657c3520',1,'fmpz_cmp_si_n(const fmpz_t f, slong g):&#160;ntru_poly.c'],['../ntru__poly_8h.html#aaaac83ec72414aa208832442657c3520',1,'fmpz_cmp_si_n(const fmpz_t f, slong g):&#160;ntru_poly.c']]],
-  ['fmpz_5finvmod_5fui',['fmpz_invmod_ui',['../ntru__poly_8c.html#a59da1b7962829af8f18d58c05f588606',1,'fmpz_invmod_ui(fmpz_t f, const fmpz_t g, const uint32_t mod):&#160;ntru_poly.c'],['../ntru__poly_8h.html#a59da1b7962829af8f18d58c05f588606',1,'fmpz_invmod_ui(fmpz_t f, const fmpz_t g, const uint32_t mod):&#160;ntru_poly.c']]],
-  ['fmpz_5fpoly_5fmod',['fmpz_poly_mod',['../ntru__poly_8c.html#a7c4f5e96355518dc97a23da8f34b661a',1,'fmpz_poly_mod(fmpz_poly_t a, const uint32_t mod):&#160;ntru_poly.c'],['../ntru__poly_8h.html#a7c4f5e96355518dc97a23da8f34b661a',1,'fmpz_poly_mod(fmpz_poly_t a, const uint32_t mod):&#160;ntru_poly.c']]],
-  ['fmpz_5fpoly_5fmod_5funsigned',['fmpz_poly_mod_unsigned',['../ntru__poly_8c.html#ae7d0d8364dba689df3fb4904610634cc',1,'fmpz_poly_mod_unsigned(fmpz_poly_t a, const uint32_t mod):&#160;ntru_poly.c'],['../ntru__poly_8h.html#ae7d0d8364dba689df3fb4904610634cc',1,'fmpz_poly_mod_unsigned(fmpz_poly_t a, const uint32_t mod):&#160;ntru_poly.c']]],
-  ['fmpz_5fpoly_5fset_5fcoeff_5ffmpz_5fn',['fmpz_poly_set_coeff_fmpz_n',['../ntru__poly_8c.html#ab1f966fe680d1ce7c19c8c812d1932a7',1,'fmpz_poly_set_coeff_fmpz_n(fmpz_poly_t poly, slong n, const fmpz_t x):&#160;ntru_poly.c'],['../ntru__poly_8h.html#ab1f966fe680d1ce7c19c8c812d1932a7',1,'fmpz_poly_set_coeff_fmpz_n(fmpz_poly_t poly, slong n, const fmpz_t x):&#160;ntru_poly.c']]]
+  ['ntru_5fcreate_5fkeypair',['ntru_create_keypair',['../keypair_8h.html#a6873d41211a92c4f6b0074ef34ae1743',1,'keypair.h']]],
+  ['ntru_5fdecrypt_5fstring',['ntru_decrypt_string',['../decrypt_8h.html#aa9cc61eec0c119e48762f6078a14527b',1,'decrypt.h']]],
+  ['ntru_5fdelete_5fkeypair',['ntru_delete_keypair',['../keypair_8h.html#a5279c4990bc22bb9e735fe36372a6786',1,'keypair.h']]],
+  ['ntru_5fencrypt_5fstring',['ntru_encrypt_string',['../encrypt_8h.html#a0bb47c0fa0dd4a4cfa0c0f7a722fd554',1,'encrypt.h']]],
+  ['ntru_5fget_5frnd_5ftern_5fpoly_5fnum',['ntru_get_rnd_tern_poly_num',['../rnd_8h.html#a916a55c609c172ae4e48896032b36e47',1,'rnd.h']]]
 ];
