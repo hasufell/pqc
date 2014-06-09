@@ -45,10 +45,10 @@
 
 bool
 ntru_create_keypair(
-		fmpz_poly_t f,
-		fmpz_poly_t g,
+		const fmpz_poly_t f,
+		const fmpz_poly_t g,
 		keypair *pair,
-		ntru_params *params)
+		const ntru_params *params)
 {
 	bool retval = false;
 	fmpz_poly_t Fq,
@@ -94,8 +94,8 @@ _return:
 
 void
 export_public_key(char const * const filename,
-		fmpz_poly_t pub,
-		ntru_params *params)
+		const fmpz_poly_t pub,
+		const ntru_params *params)
 {
 	string *pub_string;
 
@@ -109,8 +109,8 @@ export_public_key(char const * const filename,
 
 void
 export_priv_key(char const * const filename,
-		fmpz_poly_t priv,
-		ntru_params *params)
+		const fmpz_poly_t priv,
+		const ntru_params *params)
 {
 	string *priv_string;
 	fmpz_poly_t priv_u;
@@ -131,7 +131,7 @@ export_priv_key(char const * const filename,
 void
 import_public_key(char const * const filename,
 		fmpz_poly_t pub,
-		ntru_params *params)
+		const ntru_params *params)
 {
 	string *pub_string;
 	fmpz_poly_t **imported;
@@ -157,7 +157,7 @@ void
 import_priv_key(char const * const filename,
 		fmpz_poly_t priv,
 		fmpz_poly_t priv_inv,
-		ntru_params *params)
+		const ntru_params *params)
 {
 	string *pub_string;
 	fmpz_poly_t **imported,
