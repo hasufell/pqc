@@ -45,12 +45,13 @@
 
 /**
  * Convert an integer to it's binary representation
- * as a string and return it.
+ * as a char array and return it (not NULL terminated).
  *
  * As in: 90 => "10110101"
  *
  * @param value the integer to convert
- * @return the binary representation as a newly allocated string
+ * @return the binary representation as a newly allocated char array
+ * (not NULL terminated)
  */
 static char *
 get_int_to_bin_str(uint8_t value);
@@ -62,12 +63,9 @@ static char *
 get_int_to_bin_str(uint8_t value)
 {
     int i;
-	const size_t bin_string_size = ASCII_BITS + 1;
+	const size_t bin_string_size = ASCII_BITS;
 	char *bin_string = ntru_malloc(sizeof(*bin_string) *
-			(bin_string_size)); /* account for trailing null-byte */
-
-	/* terminate properly */
-    bin_string[bin_string_size - 1] = '\0';
+			(bin_string_size));
 
     for (i = ASCII_BITS - 1; i >= 0; --i, value >>= 1)
         bin_string[i] = (value & 1) + '0';
