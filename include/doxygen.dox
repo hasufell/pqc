@@ -39,6 +39,7 @@ This library was written for Linux systems. Support for windows will not be adde
 
 \section usage Usage
 See this API doc, the public headers are in the include/ subfolder.
+This is only the external API. For the internal API please clone the repository, run 'make doc' and check the src/html subfolder.
 
 \section perf Performance
 See <a href="https://github.com/hasufell/pqc/wiki/Performance-analysis">Performance Analysis on github</a>.

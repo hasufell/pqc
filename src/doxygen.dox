@@ -8,7 +8,6 @@
 \section intro_sec Introduction
 Highly optimized C implementation of the NTRUEncrypt algorithm,
 using the FLINT library.
-This is only the internal API.
 
 \section algos Algorithms
 Most of the algorithms in ntru_poly.c, ntru_decrypt.c, ntru_encrypt.c and ntru_keypair.c are based on the pseudo-code from <a href="http://www.crypto.wpi.edu/Publications/Documents/ms_corourke.pdf">Efficient NTRU Implementations by Colleen Marie O'Rourke</a>.
@@ -29,7 +28,8 @@ This library was written for Linux systems. Support for windows will not be adde
 	\* make install
 
 \section usage Usage
-See this API doc, the public headers are in the include/ subfolder.
+See this API doc. This is only the internal API. For the external API
+check the include/html subfolder.
 
 \section perf Performance
 See <a href="https://github.com/hasufell/pqc/wiki/Performance-analysis">Performance Analysis on github</a>.
