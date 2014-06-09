@@ -41,7 +41,7 @@
  * Decryption of a given encrypted string.
  *
  * @param encr_msg the encrypted message in the form of a string
- * @param priv_key the polynom containing the private key to decrypt
+ * @param priv_key the polynomial containing the private key to decrypt
  * 		the message
  * @param priv_key_inv the inverse polynome to the private key
  * @param params the ntru_params

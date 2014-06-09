@@ -40,9 +40,9 @@
  * Decryption of the given Polynom with the private key, its inverse
  * and the fitting ntru_params
  *
- * @param encr_msg encrypted polynom with maximum length of N from
+ * @param encr_msg encrypted polynomial with maximum length of N from
  * 		the given context
- * @param priv_key the polynom containing the private key to decrypt
+ * @param priv_key the polynomial containing the private key to decrypt
  * 		the message
  * @param priv_key_inv the inverse polynome to the private key
  * @param out_tern the resulting ternary polynom [out]
@@ -60,7 +60,7 @@ ntru_decrypt_poly(
  * Decryption of a given encrypted string.
  *
  * @param encr_msg the encrypted message in the form of a string
- * @param priv_key the polynom containing the private key to decrypt
+ * @param priv_key the polynomial containing the private key to decrypt
  * 		the message
  * @param priv_key_inv the inverse polynome to the private key
  * @param params the ntru_params
