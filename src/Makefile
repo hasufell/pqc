@@ -34,7 +34,7 @@ PQC_HEADERS = \
 
 
 # libs
-LIBS += -L. -lgmp -lmpfr -lflint $(shell $(PKG_CONFIG) --libs glib-2.0) -lm
+LIBS += -L. -llz4 -lgmp -lmpfr -lflint $(shell $(PKG_CONFIG) --libs glib-2.0) -lm
 
 # includes
 INCS = -I. -I/usr/include/flint $(shell $(PKG_CONFIG) --cflags glib-2.0)

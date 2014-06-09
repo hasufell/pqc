@@ -34,11 +34,51 @@
 #include "ntru_poly_ascii.h"
 #include "ntru_string.h"
 
+#include <lz4.h>
 #include <string.h>
 
 #include <fmpz_poly.h>
 #include <fmpz.h>
 
+
+/**
+ * Compress a string and return it, newly allocated.
+ *
+ * @param str the string to compress
+ * @return the compressed string, newly allocated
+ */
+static string *
+get_compressed_str(const string *str);
+
+
+/*------------------------------------------------------------------------*/
+
+static string *
+get_compressed_str(const string *str)
+{
+	int out_len = 0;
+	string *compressed_str;
+	uint32_t max_output_size;
+
+	if (!str)
+		NTRU_ABORT_DEBUG("Unexpected NULL parameters");
+
+	max_output_size = str->len;
+	compressed_str = ntru_malloc(sizeof(string));
+	compressed_str->ptr = ntru_malloc(
+			sizeof(char) * max_output_size);
+	out_len = LZ4_compress(
+			(const char*) str->ptr,
+			compressed_str->ptr,
+			str->len);
+
+	if (out_len > 0)
+		compressed_str->len = out_len;
+	else
+		NTRU_ABORT_DEBUG("Failed compressing the message");
+
+	return compressed_str;
+}
 
 /*------------------------------------------------------------------------*/
 
@@ -80,11 +120,14 @@ ntru_encrypt_string(
 	uint32_t i = 0;
 	string *enc_msg;
 	fmpz_poly_t **poly_array;
+	string *compressed_msg;
 
 	if (!msg || !msg->len)
 		NTRU_ABORT_DEBUG("Unexpected NULL parameters");
 
-	poly_array = ascii_to_bin_poly_arr(msg, params);
+	compressed_msg = get_compressed_str(msg);
+
+	poly_array = ascii_to_bin_poly_arr(compressed_msg, params);
 
 	while (*poly_array[i]) {
 		ntru_encrypt_poly(*poly_array[i],
@@ -99,6 +142,7 @@ ntru_encrypt_string(
 			i, params);
 
 	poly_delete_array(poly_array);
+	string_delete(compressed_msg);
 
 	return enc_msg;
 }
