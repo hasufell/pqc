@@ -46,9 +46,6 @@
  *
  * 0 => -1
  *
- * If the polynomial is of degree less than N -1, then it will
- * be filled with trailing 2's for later use in bin_poly_to_ascii().
- *
  * @param to_poly the string to get into binary polynomial format
  * @param params the NTRUEncrypt context
  * @return newly allocated array of binary polynomials
@@ -64,9 +61,6 @@ ascii_bin_to_bin_poly(const char *to_poly, const ntru_params *params);
  * 1 => 1
  *
  * 0 => -1
- *
- * If the last polynomial is of degree less than N -1, then it will
- * be filled with trailing 2's for later use in bin_poly_arr_to_ascii().
  *
  * @param to_poly the string to get into binary polynomial format
  * @param params the NTRUEncrypt context
