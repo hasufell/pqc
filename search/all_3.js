@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['import_5fpriv_5fkey',['import_priv_key',['../keypair_8h.html#a1f917ea6ef5302826c888e5c88e0869e',1,'keypair.h']]],
-  ['import_5fpublic_5fkey',['import_public_key',['../keypair_8h.html#a4e2c6da04c55e8c1b6c447f4cc9f1d6f',1,'keypair.h']]],
+  ['import_5fpriv_5fkey',['import_priv_key',['../ntru__keypair_8h.html#aedfa3c9cc36b536a12278c3584d94623',1,'ntru_keypair.h']]],
+  ['import_5fpublic_5fkey',['import_public_key',['../ntru__keypair_8h.html#a6a028c6830d7be6ea75f322911289d2c',1,'ntru_keypair.h']]],
   ['index_20page',['Index Page',['../index.html',1,'']]]
 ];

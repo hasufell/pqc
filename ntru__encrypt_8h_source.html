@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.7"/>
-<title>post quantum cryptography: decrypt.h Source File</title>
+<title>post quantum cryptography: ntru_encrypt.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -81,10 +81,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div class="header">
   <div class="headertitle">
-<div class="title">decrypt.h</div>  </div>
+<div class="title">ntru_encrypt.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="decrypt_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
+<a href="ntru__encrypt_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Copyright (C) 2014 FH Bielefeld</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * This file is part of a FH Bielefeld project.</span></div>
@@ -105,32 +105,32 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> * MA  02110-1301  USA</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#ifndef PUBLIC_NTRU_DECRYPT_H_</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#define PUBLIC_NTRU_DECRYPT_H_</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#ifndef PUBLIC_NTRU_ENCRYPT_H_</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#define PUBLIC_NTRU_ENCRYPT_H_</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ntru_8h.html">ntru.h</a>&quot;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="ntru_8h.html">ntru.h</a>&gt;</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &lt;fmpz_poly.h&gt;</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &lt;fmpz.h&gt;</span></div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keywordtype">string</span> *</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<a class="code" href="decrypt_8h.html#aa9cc61eec0c119e48762f6078a14527b">ntru_decrypt_string</a>(</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">string</span> *encr_msg,</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keyword">const</span> fmpz_poly_t priv_key,</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keyword">const</span> fmpz_poly_t priv_key_inv,</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keyword">const</span> <a class="code" href="structntru__params.html">ntru_params</a> *params);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keywordtype">string</span> *</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<a class="code" href="ntru__encrypt_8h.html#a0bb47c0fa0dd4a4cfa0c0f7a722fd554">ntru_encrypt_string</a>(</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">string</span> *msg,</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keyword">const</span> fmpz_poly_t pub_key,</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keyword">const</span> fmpz_poly_t rnd,</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keyword">const</span> <a class="code" href="structntru__params.html">ntru_params</a> *params);</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* PUBLIC_NTRU_DECRYPT_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* PUBLIC_NTRU_ENCRYPT_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="ntru_8h_html"><div class="ttname"><a href="ntru_8h.html">ntru.h</a></div><div class="ttdoc">public API, basic data types </div></div>
-<div class="ttc" id="decrypt_8h_html_aa9cc61eec0c119e48762f6078a14527b"><div class="ttname"><a href="decrypt_8h.html#aa9cc61eec0c119e48762f6078a14527b">ntru_decrypt_string</a></div><div class="ttdeci">string * ntru_decrypt_string(const string *encr_msg, const fmpz_poly_t priv_key, const fmpz_poly_t priv_key_inv, const ntru_params *params)</div></div>
 <div class="ttc" id="structntru__params_html"><div class="ttname"><a href="structntru__params.html">ntru_params</a></div><div class="ttdef"><b>Definition:</b> <a href="ntru_8h_source.html#l00047">ntru.h:47</a></div></div>
+<div class="ttc" id="ntru__encrypt_8h_html_a0bb47c0fa0dd4a4cfa0c0f7a722fd554"><div class="ttname"><a href="ntru__encrypt_8h.html#a0bb47c0fa0dd4a4cfa0c0f7a722fd554">ntru_encrypt_string</a></div><div class="ttdeci">string * ntru_encrypt_string(const string *msg, const fmpz_poly_t pub_key, const fmpz_poly_t rnd, const ntru_params *params)</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jun 9 2014 23:03:53 for post quantum cryptography by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jun 22 2014 20:59:44 for post quantum cryptography by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.7
 </small></address>

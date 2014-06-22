@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.7"/>
-<title>post quantum cryptography: keypair.h Source File</title>
+<title>post quantum cryptography: ntru_keypair.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -81,10 +81,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div class="header">
   <div class="headertitle">
-<div class="title">keypair.h</div>  </div>
+<div class="title">ntru_keypair.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="keypair_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
+<a href="ntru__keypair_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Copyright (C) 2014 FH Bielefeld</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * This file is part of a FH Bielefeld project.</span></div>
@@ -108,7 +108,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#ifndef PUBLIC_NTRU_KEYPAIR_H_</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#define PUBLIC_NTRU_KEYPAIR_H_</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ntru_8h.html">ntru.h</a>&quot;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="ntru_8h.html">ntru.h</a>&gt;</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &lt;fmpz_poly.h&gt;</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &lt;fmpz.h&gt;</span></div>
@@ -116,7 +116,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="keypair_8h.html#aacfc9254c7939584924ab9d27ba6f504">   42</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structkeypair.html">keypair</a> <a class="code" href="structkeypair.html">keypair</a>;</div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="ntru__keypair_8h.html#aacfc9254c7939584924ab9d27ba6f504">   42</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structkeypair.html">keypair</a> <a class="code" href="structkeypair.html">keypair</a>;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
 <div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="structkeypair.html">   49</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structkeypair.html">keypair</a> {</div>
@@ -126,55 +126,57 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;};</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keywordtype">bool</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<a class="code" href="keypair_8h.html#a6873d41211a92c4f6b0074ef34ae1743">ntru_create_keypair</a>(</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        fmpz_poly_t f,</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        fmpz_poly_t g,</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keywordtype">bool</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<a class="code" href="ntru__keypair_8h.html#a2917137d0281aee3157e348581cef3a9">ntru_create_keypair</a>(</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <a class="code" href="structkeypair.html">keypair</a> *pair,</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <a class="code" href="structntru__params.html">ntru_params</a> *params);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="keywordtype">void</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<a class="code" href="keypair_8h.html#a41741ed660cb806c47335f66055e1bdd">export_public_key</a>(<span class="keywordtype">char</span> <span class="keyword">const</span> * <span class="keyword">const</span> filename,</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        fmpz_poly_t pub,</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <a class="code" href="structntru__params.html">ntru_params</a> *params);</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="keywordtype">void</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<a class="code" href="keypair_8h.html#afa29f14a14486d3f6b979ee900d7e738">export_priv_key</a>(<span class="keywordtype">char</span> <span class="keyword">const</span> * <span class="keyword">const</span> filename,</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        fmpz_poly_t priv,</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <a class="code" href="structntru__params.html">ntru_params</a> *params);</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="keywordtype">void</span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<a class="code" href="keypair_8h.html#a4e2c6da04c55e8c1b6c447f4cc9f1d6f">import_public_key</a>(<span class="keywordtype">char</span> <span class="keyword">const</span> * <span class="keyword">const</span> filename,</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        fmpz_poly_t pub,</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <a class="code" href="structntru__params.html">ntru_params</a> *params);</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="keywordtype">void</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<a class="code" href="keypair_8h.html#a1f917ea6ef5302826c888e5c88e0869e">import_priv_key</a>(<span class="keywordtype">char</span> <span class="keyword">const</span> * <span class="keyword">const</span> filename,</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        fmpz_poly_t priv,</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        fmpz_poly_t priv_inv,</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        <a class="code" href="structntru__params.html">ntru_params</a> *params);</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;<span class="keywordtype">void</span></div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;<a class="code" href="keypair_8h.html#a5279c4990bc22bb9e735fe36372a6786">ntru_delete_keypair</a>(<a class="code" href="structkeypair.html">keypair</a> *pair);</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* PUBLIC_NTRU_KEYPAIR_H_ */</span><span class="preprocessor"></span></div>
-<div class="ttc" id="keypair_8h_html_a5279c4990bc22bb9e735fe36372a6786"><div class="ttname"><a href="keypair_8h.html#a5279c4990bc22bb9e735fe36372a6786">ntru_delete_keypair</a></div><div class="ttdeci">void ntru_delete_keypair(keypair *pair)</div></div>
-<div class="ttc" id="keypair_8h_html_a1f917ea6ef5302826c888e5c88e0869e"><div class="ttname"><a href="keypair_8h.html#a1f917ea6ef5302826c888e5c88e0869e">import_priv_key</a></div><div class="ttdeci">void import_priv_key(char const *const filename, fmpz_poly_t priv, fmpz_poly_t priv_inv, ntru_params *params)</div></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keyword">const</span> fmpz_poly_t f,</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keyword">const</span> fmpz_poly_t g,</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keyword">const</span> <a class="code" href="structntru__params.html">ntru_params</a> *params);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keywordtype">void</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<a class="code" href="ntru__keypair_8h.html#ab6cb83ee5f477ac473021c3b680bebaf">export_public_key</a>(<span class="keywordtype">char</span> <span class="keyword">const</span> * <span class="keyword">const</span> filename,</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="keyword">const</span> fmpz_poly_t pub,</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keyword">const</span> <a class="code" href="structntru__params.html">ntru_params</a> *params)</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="keywordtype">void</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;export_priv_key(<span class="keywordtype">char</span> <span class="keyword">const</span> * <span class="keyword">const</span> filename,</div>
+<div class="line"><a name="l00108"></a><span class="lineno"><a class="line" href="ntru__keypair_8h.html#a205b65fe204c1506a749de8a2ff29418">  108</a></span>&#160;        <span class="keyword">const</span> fmpz_poly_t <a class="code" href="ntru__keypair_8h.html#a205b65fe204c1506a749de8a2ff29418">priv</a>,</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="keyword">const</span> <a class="code" href="structntru__params.html">ntru_params</a> *params)</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="keywordtype">void</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<a class="code" href="ntru__keypair_8h.html#a6a028c6830d7be6ea75f322911289d2c">import_public_key</a>(fmpz_poly_t pub,</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="keywordtype">char</span> <span class="keyword">const</span> * <span class="keyword">const</span> filename,</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="keyword">const</span> <a class="code" href="structntru__params.html">ntru_params</a> *params);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="keywordtype">void</span></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<a class="code" href="ntru__keypair_8h.html#aedfa3c9cc36b536a12278c3584d94623">import_priv_key</a>(fmpz_poly_t <a class="code" href="ntru__keypair_8h.html#a205b65fe204c1506a749de8a2ff29418">priv</a>,</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        fmpz_poly_t priv_inv,</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        <span class="keywordtype">char</span> <span class="keyword">const</span> * <span class="keyword">const</span> filename,</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        <span class="keyword">const</span> <a class="code" href="structntru__params.html">ntru_params</a> *params);</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="keywordtype">void</span></div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<a class="code" href="ntru__keypair_8h.html#a5279c4990bc22bb9e735fe36372a6786">ntru_delete_keypair</a>(<a class="code" href="structkeypair.html">keypair</a> *pair);</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* PUBLIC_NTRU_KEYPAIR_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="ntru_8h_html"><div class="ttname"><a href="ntru_8h.html">ntru.h</a></div><div class="ttdoc">public API, basic data types </div></div>
-<div class="ttc" id="keypair_8h_html_afa29f14a14486d3f6b979ee900d7e738"><div class="ttname"><a href="keypair_8h.html#afa29f14a14486d3f6b979ee900d7e738">export_priv_key</a></div><div class="ttdeci">void export_priv_key(char const *const filename, fmpz_poly_t priv, ntru_params *params)</div></div>
-<div class="ttc" id="keypair_8h_html_a6873d41211a92c4f6b0074ef34ae1743"><div class="ttname"><a href="keypair_8h.html#a6873d41211a92c4f6b0074ef34ae1743">ntru_create_keypair</a></div><div class="ttdeci">bool ntru_create_keypair(fmpz_poly_t f, fmpz_poly_t g, keypair *pair, ntru_params *params)</div></div>
+<div class="ttc" id="ntru__keypair_8h_html_ab6cb83ee5f477ac473021c3b680bebaf"><div class="ttname"><a href="ntru__keypair_8h.html#ab6cb83ee5f477ac473021c3b680bebaf">export_public_key</a></div><div class="ttdeci">void export_public_key(char const *const filename, const fmpz_poly_t pub, const ntru_params *params) void export_priv_key(char const *const filename</div></div>
+<div class="ttc" id="ntru__keypair_8h_html_aedfa3c9cc36b536a12278c3584d94623"><div class="ttname"><a href="ntru__keypair_8h.html#aedfa3c9cc36b536a12278c3584d94623">import_priv_key</a></div><div class="ttdeci">void import_priv_key(fmpz_poly_t priv, fmpz_poly_t priv_inv, char const *const filename, const ntru_params *params)</div></div>
 <div class="ttc" id="structntru__params_html"><div class="ttname"><a href="structntru__params.html">ntru_params</a></div><div class="ttdef"><b>Definition:</b> <a href="ntru_8h_source.html#l00047">ntru.h:47</a></div></div>
-<div class="ttc" id="structkeypair_html_a9e63f1d275b91c9d9716fb4069461799"><div class="ttname"><a href="structkeypair.html#a9e63f1d275b91c9d9716fb4069461799">keypair::priv_inv</a></div><div class="ttdeci">fmpz_poly_t priv_inv</div><div class="ttdef"><b>Definition:</b> <a href="keypair_8h_source.html#l00059">keypair.h:59</a></div></div>
-<div class="ttc" id="keypair_8h_html_a4e2c6da04c55e8c1b6c447f4cc9f1d6f"><div class="ttname"><a href="keypair_8h.html#a4e2c6da04c55e8c1b6c447f4cc9f1d6f">import_public_key</a></div><div class="ttdeci">void import_public_key(char const *const filename, fmpz_poly_t pub, ntru_params *params)</div></div>
-<div class="ttc" id="structkeypair_html_afa635c70f233d0b7449b4a17513646c4"><div class="ttname"><a href="structkeypair.html#afa635c70f233d0b7449b4a17513646c4">keypair::pub</a></div><div class="ttdeci">fmpz_poly_t pub</div><div class="ttdef"><b>Definition:</b> <a href="keypair_8h_source.html#l00064">keypair.h:64</a></div></div>
-<div class="ttc" id="structkeypair_html_a9e9805ad001216da53f2c57accb288e1"><div class="ttname"><a href="structkeypair.html#a9e9805ad001216da53f2c57accb288e1">keypair::priv</a></div><div class="ttdeci">fmpz_poly_t priv</div><div class="ttdef"><b>Definition:</b> <a href="keypair_8h_source.html#l00054">keypair.h:54</a></div></div>
-<div class="ttc" id="structkeypair_html"><div class="ttname"><a href="structkeypair.html">keypair</a></div><div class="ttdef"><b>Definition:</b> <a href="keypair_8h_source.html#l00049">keypair.h:49</a></div></div>
-<div class="ttc" id="keypair_8h_html_a41741ed660cb806c47335f66055e1bdd"><div class="ttname"><a href="keypair_8h.html#a41741ed660cb806c47335f66055e1bdd">export_public_key</a></div><div class="ttdeci">void export_public_key(char const *const filename, fmpz_poly_t pub, ntru_params *params)</div></div>
+<div class="ttc" id="structkeypair_html_a9e63f1d275b91c9d9716fb4069461799"><div class="ttname"><a href="structkeypair.html#a9e63f1d275b91c9d9716fb4069461799">keypair::priv_inv</a></div><div class="ttdeci">fmpz_poly_t priv_inv</div><div class="ttdef"><b>Definition:</b> <a href="ntru__keypair_8h_source.html#l00059">ntru_keypair.h:59</a></div></div>
+<div class="ttc" id="ntru__keypair_8h_html_a2917137d0281aee3157e348581cef3a9"><div class="ttname"><a href="ntru__keypair_8h.html#a2917137d0281aee3157e348581cef3a9">ntru_create_keypair</a></div><div class="ttdeci">bool ntru_create_keypair(keypair *pair, const fmpz_poly_t f, const fmpz_poly_t g, const ntru_params *params)</div></div>
+<div class="ttc" id="structkeypair_html_afa635c70f233d0b7449b4a17513646c4"><div class="ttname"><a href="structkeypair.html#afa635c70f233d0b7449b4a17513646c4">keypair::pub</a></div><div class="ttdeci">fmpz_poly_t pub</div><div class="ttdef"><b>Definition:</b> <a href="ntru__keypair_8h_source.html#l00064">ntru_keypair.h:64</a></div></div>
+<div class="ttc" id="structkeypair_html_a9e9805ad001216da53f2c57accb288e1"><div class="ttname"><a href="structkeypair.html#a9e9805ad001216da53f2c57accb288e1">keypair::priv</a></div><div class="ttdeci">fmpz_poly_t priv</div><div class="ttdef"><b>Definition:</b> <a href="ntru__keypair_8h_source.html#l00054">ntru_keypair.h:54</a></div></div>
+<div class="ttc" id="structkeypair_html"><div class="ttname"><a href="structkeypair.html">keypair</a></div><div class="ttdef"><b>Definition:</b> <a href="ntru__keypair_8h_source.html#l00049">ntru_keypair.h:49</a></div></div>
+<div class="ttc" id="ntru__keypair_8h_html_a6a028c6830d7be6ea75f322911289d2c"><div class="ttname"><a href="ntru__keypair_8h.html#a6a028c6830d7be6ea75f322911289d2c">import_public_key</a></div><div class="ttdeci">void const fmpz_poly_t const ntru_params *params void import_public_key(fmpz_poly_t pub, char const *const filename, const ntru_params *params)</div></div>
+<div class="ttc" id="ntru__keypair_8h_html_a5279c4990bc22bb9e735fe36372a6786"><div class="ttname"><a href="ntru__keypair_8h.html#a5279c4990bc22bb9e735fe36372a6786">ntru_delete_keypair</a></div><div class="ttdeci">void ntru_delete_keypair(keypair *pair)</div></div>
+<div class="ttc" id="ntru__keypair_8h_html_a205b65fe204c1506a749de8a2ff29418"><div class="ttname"><a href="ntru__keypair_8h.html#a205b65fe204c1506a749de8a2ff29418">priv</a></div><div class="ttdeci">void const fmpz_poly_t priv</div><div class="ttdef"><b>Definition:</b> <a href="ntru__keypair_8h_source.html#l00108">ntru_keypair.h:108</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jun 9 2014 23:03:53 for post quantum cryptography by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jun 22 2014 20:59:44 for post quantum cryptography by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.7
 </small></address>
