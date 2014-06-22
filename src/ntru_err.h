@@ -30,12 +30,20 @@
 #define NTRU_ERR_H
 
 
+/**
+ * Print a message to stderr and abort the program.
+ */
 #define NTRU_ABORT(...) \
 { \
 	fprintf(stderr, __VA_ARGS__); \
 	abort(); \
 }
 
+/**
+ * Print a message to stderr, giving the
+ * current file and line and abort the program
+ * and finally abort the program.
+ */
 #define NTRU_ABORT_DEBUG(...) \
 { \
 	fprintf(stderr, __VA_ARGS__); \
@@ -44,11 +52,18 @@
 	abort(); \
 }
 
+/**
+ * Print a message to stderr.
+ */
 #define NTRU_WARN(...) \
 { \
 	fprintf(stderr, __VA_ARGS__); \
 }
 
+/**
+ * Print a message to stderr, giving the
+ * current file and line.
+ */
 #define NTRU_WARN_DEBUG(...) \
 { \
 	fprintf(stderr, __VA_ARGS__); \
