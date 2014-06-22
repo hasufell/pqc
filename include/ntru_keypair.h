@@ -77,10 +77,10 @@ struct keypair {
  */
 bool
 ntru_create_keypair(
-		fmpz_poly_t f,
-		fmpz_poly_t g,
+		const fmpz_poly_t f,
+		const fmpz_poly_t g,
 		keypair *pair,
-		ntru_params *params);
+		const ntru_params *params);
 
 /**
  * Export the public key to a file.
@@ -91,8 +91,8 @@ ntru_create_keypair(
  */
 void
 export_public_key(char const * const filename,
-		fmpz_poly_t pub,
-		ntru_params *params);
+		const fmpz_poly_t pub,
+		const ntru_params *params)
 
 /**
  * Export the private key to a file.
@@ -103,8 +103,8 @@ export_public_key(char const * const filename,
  */
 void
 export_priv_key(char const * const filename,
-		fmpz_poly_t priv,
-		ntru_params *params);
+		const fmpz_poly_t priv,
+		const ntru_params *params)
 
 /**
  * Import the public key from a file.
@@ -115,7 +115,7 @@ export_priv_key(char const * const filename,
 void
 import_public_key(char const * const filename,
 		fmpz_poly_t pub,
-		ntru_params *params);
+		const ntru_params *params);
 
 /**
  * Import the private key from a file and store him
@@ -130,7 +130,7 @@ void
 import_priv_key(char const * const filename,
 		fmpz_poly_t priv,
 		fmpz_poly_t priv_inv,
-		ntru_params *params);
+		const ntru_params *params);
 
 /**
  * Used to free the inner structure
