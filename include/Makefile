@@ -4,17 +4,17 @@ include ../common.mk
 install:
 	$(INSTALL_DIR) "$(DESTDIR)$(INSTALL_INCLUDEDIR)"
 	$(INSTALL) ntru.h "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/ntru.h
-	$(INSTALL) decrypt.h "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/decrypt.h
-	$(INSTALL) encrypt.h "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/encrypt.h
-	$(INSTALL) keypair.h "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/keypair.h
-	$(INSTALL) rnd.h "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/rnd.h
+	$(INSTALL) ntru_decrypt.h "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/ntru_decrypt.h
+	$(INSTALL) ntru_encrypt.h "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/ntru_encrypt.h
+	$(INSTALL) ntru_keypair.h "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/ntru_keypair.h
+	$(INSTALL) ntru_rnd.h "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/ntru_rnd.h
 
 uninstall:
 	$(RM) "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/ntru.h
-	$(RM) "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/decrypt.h
-	$(RM) "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/encrypt.h
-	$(RM) "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/keypair.h
-	$(RM) "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/rnd.h
+	$(RM) "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/ntru_decrypt.h
+	$(RM) "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/ntru_encrypt.h
+	$(RM) "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/ntru_keypair.h
+	$(RM) "$(DESTDIR)$(INSTALL_INCLUDEDIR)"/ntru_rnd.h
 
 doc:
 	doxygen
