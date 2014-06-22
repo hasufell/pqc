@@ -51,20 +51,20 @@
  *
  * q = large mod
  *
+ * @param out the output poly which is in the range {0, q-1}
+ * (not ternary!) [out]
  * @param msg_tern the message to encrypt, in ternary format
  * @param pub_key the public key
  * @param rnd the random poly (should have relatively small
  * coefficients, but not restricted to {-1, 0, 1})
- * @param out the output poly which is in the range {0, q-1}
- * (not ternary!) [out]
  * @param params ntru_params the ntru context
  */
 void
 ntru_encrypt_poly(
+		fmpz_poly_t out,
 		const fmpz_poly_t msg_tern,
 		const fmpz_poly_t pub_key,
 		const fmpz_poly_t rnd,
-		fmpz_poly_t out,
 		const ntru_params *params);
 
 /**

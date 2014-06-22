@@ -169,16 +169,16 @@ fmpz_add_n(fmpz_t f, const fmpz_t g, const fmpz_t h);
  * Starmultiplication, as follows:
  * c = a * b mod (x^N − 1)
  *
+ * @param c polynom [out]
  * @param a polynom to multiply (can be the same as c)
  * @param b polynom to multiply
- * @param c polynom [out]
  * @param params NTRU parameters
  * @param modulus whether we use p or q
  */
 void
-poly_starmultiply(const fmpz_poly_t a,
+poly_starmultiply(fmpz_poly_t c,
+		const fmpz_poly_t a,
 		const fmpz_poly_t b,
-		fmpz_poly_t c,
 		const ntru_params *params,
 		uint32_t modulus);
 
@@ -189,14 +189,14 @@ poly_starmultiply(const fmpz_poly_t a,
  * See NTRU Cryptosystems Tech Report #014 "Almost Inverses
  * and Fast NTRU Key Creation."
  *
- * @param a polynomial to invert (is allowed to be the same as param Fq)
  * @param Fq polynomial [out]
+ * @param a polynomial to invert (is allowed to be the same as param Fq)
  * @param params NTRU parameters
  * @return true if invertible, false if not
  */
 bool
-poly_inverse_poly_q(const fmpz_poly_t a,
-		fmpz_poly_t Fq,
+poly_inverse_poly_q(fmpz_poly_t Fq,
+		const fmpz_poly_t a,
 		const ntru_params *params);
 
 /**
@@ -204,14 +204,14 @@ poly_inverse_poly_q(const fmpz_poly_t a,
  * See NTRU Cryptosystems Tech Report #014 "Almost Inverses
  * and Fast NTRU Key Creation."
  *
- * @param a polynomial to invert
  * @param Fp polynomial [out]
+ * @param a polynomial to invert
  * @param params NTRU parameters
  * @return true if invertible, false if not
  */
 bool
-poly_inverse_poly_p(const fmpz_poly_t a,
-		fmpz_poly_t Fp,
+poly_inverse_poly_p(fmpz_poly_t Fp,
+		const fmpz_poly_t a,
 		const ntru_params *params);
 
 /**

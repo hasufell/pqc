@@ -44,10 +44,10 @@
 
 void
 ntru_decrypt_poly(
+		fmpz_poly_t out_bin,
 		const fmpz_poly_t encr_msg,
 		const fmpz_poly_t priv_key,
 		const fmpz_poly_t priv_key_inv,
-		fmpz_poly_t out_bin,
 		const ntru_params *params)
 {
 	fmpz_poly_t a,
@@ -75,9 +75,9 @@ ntru_decrypt_poly(
 	fmpz_poly_mod(priv_key_inv_tmp, params->q);
 	fmpz_poly_mod(encr_msg_tmp, params->q);
 
-	poly_starmultiply(priv_key_tmp, encr_msg_tmp, a, params, params->q);
+	poly_starmultiply(a, priv_key_tmp, encr_msg_tmp, params, params->q);
 	fmpz_poly_mod(a, params->q);
-	poly_starmultiply(a, priv_key_inv_tmp, out_bin, params, params->p);
+	poly_starmultiply(out_bin, a, priv_key_inv_tmp, params, params->p);
 	fmpz_poly_mod(out_bin, params->p);
 
 	fmpz_poly_clear(a);
@@ -106,9 +106,9 @@ ntru_decrypt_string(
 
 	while (*poly_array[i]) {
 		ntru_decrypt_poly(*poly_array[i],
+					*poly_array[i],
 					priv_key,
 					priv_key_inv,
-					*poly_array[i],
 					params);
 		i++;
 	}

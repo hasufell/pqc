@@ -47,21 +47,21 @@
  * Find the inverse polynomial modulo a power of 2,
  * which is q.
  *
- * @param a polynomial to invert
  * @param Fq polynomial [out]
+ * @param a polynomial to invert
  * @param params NTRU parameters
  */
 static
-void poly_mod2_to_modq(const fmpz_poly_t a,
-		fmpz_poly_t Fq,
+void poly_mod2_to_modq(fmpz_poly_t Fq,
+		const fmpz_poly_t a,
 		const ntru_params *params);
 
 
 /*------------------------------------------------------------------------*/
 
 static void
-poly_mod2_to_modq(const fmpz_poly_t a,
-		fmpz_poly_t Fq,
+poly_mod2_to_modq(fmpz_poly_t Fq,
+		const fmpz_poly_t a,
 		const ntru_params *params)
 {
 	int v = 2;
@@ -75,10 +75,10 @@ poly_mod2_to_modq(const fmpz_poly_t a,
 	while (v < (int)(params->q)) {
 		v = v * 2;
 
-		poly_starmultiply(a, Fq, poly_tmp, params, v);
+		poly_starmultiply(poly_tmp, a, Fq, params, v);
 		fmpz_poly_sub(poly_tmp, two, poly_tmp);
 		fmpz_poly_mod_unsigned(poly_tmp, v);
-		poly_starmultiply(Fq, poly_tmp, Fq, params, v);
+		poly_starmultiply(Fq, Fq, poly_tmp, params, v);
 
 	}
 
@@ -236,9 +236,9 @@ fmpz_add_n(fmpz_t f, const fmpz_t g, const fmpz_t h)
 /*------------------------------------------------------------------------*/
 
 void
-poly_starmultiply(const fmpz_poly_t a,
+poly_starmultiply(fmpz_poly_t c,
+		const fmpz_poly_t a,
 		const fmpz_poly_t b,
-		fmpz_poly_t c,
 		const ntru_params *params,
 		uint32_t modulus)
 {
@@ -294,8 +294,8 @@ poly_starmultiply(const fmpz_poly_t a,
 /*------------------------------------------------------------------------*/
 
 bool
-poly_inverse_poly_q(const fmpz_poly_t a,
-		fmpz_poly_t Fq,
+poly_inverse_poly_q(fmpz_poly_t Fq,
+		const fmpz_poly_t a,
 		const ntru_params *params)
 {
 	bool retval = false;
@@ -383,11 +383,11 @@ poly_inverse_poly_q(const fmpz_poly_t a,
 		fmpz_poly_set_coeff_fmpz_n(Fq, j, b_i);
 	}
 
-	poly_mod2_to_modq(a_tmp, Fq, params);
+	poly_mod2_to_modq(Fq, a_tmp, params);
 
 	/* check if the f * Fq = 1 (mod p) condition holds true */
 	fmpz_poly_set(a_tmp, a);
-	poly_starmultiply(a_tmp, Fq, a_tmp, params, params->q);
+	poly_starmultiply(a_tmp, a_tmp, Fq, params, params->q);
 	if (fmpz_poly_is_one(a_tmp))
 		retval = true;
 	else
@@ -406,8 +406,8 @@ _cleanup:
 /*------------------------------------------------------------------------*/
 
 bool
-poly_inverse_poly_p(const fmpz_poly_t a,
-		fmpz_poly_t Fp,
+poly_inverse_poly_p(fmpz_poly_t Fp,
+		const fmpz_poly_t a,
 		const ntru_params *params)
 {
 	bool retval = false;
@@ -552,7 +552,7 @@ poly_inverse_poly_p(const fmpz_poly_t a,
 
 	/* check if the f * Fp = 1 (mod p) condition holds true */
 	fmpz_poly_set(a_tmp, a);
-	poly_starmultiply(a_tmp, Fp, a_tmp, params, params->p);
+	poly_starmultiply(a_tmp, a_tmp, Fp, params, params->p);
 	if (fmpz_poly_is_one(a_tmp))
 		retval = true;
 	else

@@ -40,20 +40,20 @@
  * Decryption of the given Polynom with the private key, its inverse
  * and the fitting ntru_params
  *
+ * @param out_tern the resulting ternary polynom [out]
  * @param encr_msg encrypted polynomial with maximum length of N from
  * 		the given context
  * @param priv_key the polynomial containing the private key to decrypt
  * 		the message
  * @param priv_key_inv the inverse polynome to the private key
- * @param out_tern the resulting ternary polynom [out]
  * @param params the ntru_params
  */
 void
 ntru_decrypt_poly(
+		fmpz_poly_t out_tern,
 		const fmpz_poly_t encr_msg,
 		const fmpz_poly_t priv_key,
 		const fmpz_poly_t priv_key_inv,
-		fmpz_poly_t out_tern,
 		const ntru_params *params);
 
 /**

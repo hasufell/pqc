@@ -45,9 +45,9 @@
 
 bool
 ntru_create_keypair(
+		keypair *pair,
 		const fmpz_poly_t f,
 		const fmpz_poly_t g,
-		keypair *pair,
 		const ntru_params *params)
 {
 	bool retval = false;
@@ -62,13 +62,13 @@ ntru_create_keypair(
 	fmpz_poly_init(Fp);
 	fmpz_poly_init(pub);
 
-	if (!poly_inverse_poly_q(f, Fq, params))
+	if (!poly_inverse_poly_q(Fq, f, params))
 		goto _cleanup;
 
-	if (!poly_inverse_poly_p(f, Fp, params))
+	if (!poly_inverse_poly_p(Fp, f, params))
 		goto _cleanup;
 
-	poly_starmultiply(Fq, g, pub, params, params->q);
+	poly_starmultiply(pub, Fq, g, params, params->q);
 	fmpz_poly_scalar_mul_ui(pub, pub, params->p);
 	fmpz_poly_mod_unsigned(pub, params->q);
 
@@ -129,8 +129,8 @@ export_priv_key(char const * const filename,
 /*------------------------------------------------------------------------*/
 
 void
-import_public_key(char const * const filename,
-		fmpz_poly_t pub,
+import_public_key(fmpz_poly_t pub,
+		char const * const filename,
 		const ntru_params *params)
 {
 	string *pub_string;
@@ -154,9 +154,9 @@ import_public_key(char const * const filename,
 /*------------------------------------------------------------------------*/
 
 void
-import_priv_key(char const * const filename,
-		fmpz_poly_t priv,
+import_priv_key(fmpz_poly_t priv,
 		fmpz_poly_t priv_inv,
+		char const * const filename,
 		const ntru_params *params)
 {
 	string *pub_string;
@@ -177,7 +177,7 @@ import_priv_key(char const * const filename,
 
 	fmpz_poly_set(priv, **imported);
 
-	if (!poly_inverse_poly_p(priv, Fp, params))
+	if (!poly_inverse_poly_p(Fp, priv, params))
 		goto cleanup;
 
 	fmpz_poly_mod(Fp, params->p);

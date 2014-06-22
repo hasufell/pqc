@@ -44,10 +44,10 @@
 
 void
 ntru_encrypt_poly(
+		fmpz_poly_t out,
 		const fmpz_poly_t msg_bin,
 		const fmpz_poly_t pub_key,
 		const fmpz_poly_t rnd,
-		fmpz_poly_t out,
 		const ntru_params *params)
 {
 	fmpz_poly_t tmp_poly_msg;
@@ -60,7 +60,7 @@ ntru_encrypt_poly(
 	fmpz_poly_set(tmp_poly_msg, msg_bin);
 
 	fmpz_poly_zero(out);
-	poly_starmultiply(pub_key, rnd, out, params, params->q);
+	poly_starmultiply(out, pub_key, rnd, params, params->q);
 
 	fmpz_poly_add(out, out, tmp_poly_msg);
 	fmpz_poly_mod_unsigned(out, params->q);
@@ -88,9 +88,9 @@ ntru_encrypt_string(
 
 	while (*poly_array[i]) {
 		ntru_encrypt_poly(*poly_array[i],
+				*poly_array[i],
 				pub_key,
 				rnd,
-				*poly_array[i],
 				params);
 		i++;
 	}

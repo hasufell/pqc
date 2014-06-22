@@ -67,18 +67,18 @@ struct keypair {
  * consisting of public and private
  * components.
  *
+ * @param pair store private and public components here [out]
  * @param f a random polynomial
  * @param g a random polynomial
- * @param pair store private and public components here [out]
  * @param params the NTRU context
  * @return true for success, false if f or g are not invertible
  * (then the caller hast to try different ones)
  */
 bool
 ntru_create_keypair(
+		keypair *pair,
 		const fmpz_poly_t f,
 		const fmpz_poly_t g,
-		keypair *pair,
 		const ntru_params *params);
 
 /**
@@ -107,28 +107,29 @@ export_priv_key(char const * const filename,
 
 /**
  * Import the public key from a file.
- * @param filename the file to get the public key from
+ *
  * @param pub where to save the public key [out]
+ * @param filename the file to get the public key from
  * @param params the NTRU context
  */
 void
-import_public_key(char const * const filename,
-		fmpz_poly_t pub,
+import_public_key(fmpz_poly_t pub,
+		char const * const filename,
 		const ntru_params *params);
 
 /**
  * Import the private key from a file and store him
  * along with his inverse.
  *
- * @param filename the file to get the private key from
  * @param priv where to save the private key [out]
  * @param priv_inv where to save the inverse of the private key [out]
+ * @param filename the file to get the private key from
  * @param params the NTRU context
  */
 void
-import_priv_key(char const * const filename,
-		fmpz_poly_t priv,
+import_priv_key(fmpz_poly_t priv,
 		fmpz_poly_t priv_inv,
+		char const * const filename,
 		const ntru_params *params);
 
 /**
