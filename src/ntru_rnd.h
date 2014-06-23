@@ -55,7 +55,7 @@ get_urnd_int(void);
  * Get a random ternary polynomial with specified numbers
  * of 1 coefficients and -1 coefficients.
  *
- * @param poly the resulting random polynomial [out]
+ * @param poly the resulting random polynomial, must be initialized [out]
  * @param params the NTRU context
  * @param num_ones the number of 1 coefficients
  * @param num_neg_ones the number of -1 coefficients
