@@ -67,7 +67,9 @@ struct keypair {
  * consisting of public and private
  * components.
  *
- * @param pair store private and public components here [out]
+ * @param pair store private and public components here (the
+ * polynomials inside the struct will be automatically
+ * initialized) [out]
  * @param f a random polynomial
  * @param g a random polynomial
  * @param params the NTRU context
@@ -108,7 +110,7 @@ export_priv_key(char const * const filename,
 /**
  * Import the public key from a file.
  *
- * @param pub where to save the public key [out]
+ * @param pub where to save the public key, must be initialized [out]
  * @param filename the file to get the public key from
  * @param params the NTRU context
  */
@@ -121,8 +123,9 @@ import_public_key(fmpz_poly_t pub,
  * Import the private key from a file and store him
  * along with his inverse.
  *
- * @param priv where to save the private key [out]
- * @param priv_inv where to save the inverse of the private key [out]
+ * @param priv where to save the private key, must be initialized [out]
+ * @param priv_inv where to save the inverse of the private key,
+ * must be initialized [out]
  * @param filename the file to get the private key from
  * @param params the NTRU context
  */

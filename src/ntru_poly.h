@@ -60,8 +60,6 @@ fmpz_cmp_si_n(const fmpz_t f, slong g);
  * fill with coefficients [out]
  * @param c array of polynomial coefficients, can be NULL
  * @param len size of the coefficient array, can be 0
- * @return newly allocated polynomial pointer, must be freed
- * with fmpz_poly_clear()
  */
 void
 poly_new(fmpz_poly_t new_poly,
@@ -169,7 +167,7 @@ fmpz_add_n(fmpz_t f, const fmpz_t g, const fmpz_t h);
  * Starmultiplication, as follows:
  * c = a * b mod (x^N − 1)
  *
- * @param c polynom [out]
+ * @param c polynom, must be initialized [out]
  * @param a polynom to multiply (can be the same as c)
  * @param b polynom to multiply
  * @param params NTRU parameters
@@ -189,7 +187,7 @@ poly_starmultiply(fmpz_poly_t c,
  * See NTRU Cryptosystems Tech Report #014 "Almost Inverses
  * and Fast NTRU Key Creation."
  *
- * @param Fq polynomial [out]
+ * @param Fq polynomial, must be initialized [out]
  * @param a polynomial to invert (is allowed to be the same as param Fq)
  * @param params NTRU parameters
  * @return true if invertible, false if not
@@ -204,7 +202,7 @@ poly_inverse_poly_q(fmpz_poly_t Fq,
  * See NTRU Cryptosystems Tech Report #014 "Almost Inverses
  * and Fast NTRU Key Creation."
  *
- * @param Fp polynomial [out]
+ * @param Fp polynomial, must be initialized [out]
  * @param a polynomial to invert
  * @param params NTRU parameters
  * @return true if invertible, false if not

@@ -52,7 +52,7 @@
  * q = large mod
  *
  * @param out the output poly which is in the range {0, q-1}
- * (not ternary!) [out]
+ * (not ternary!), must be initialized [out]
  * @param msg_tern the message to encrypt, in ternary format
  * @param pub_key the public key
  * @param rnd the random poly (should have relatively small

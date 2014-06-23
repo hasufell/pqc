@@ -47,7 +47,7 @@
  * Find the inverse polynomial modulo a power of 2,
  * which is q.
  *
- * @param Fq polynomial [out]
+ * @param Fq polynomial, must be initialized [out]
  * @param a polynomial to invert
  * @param params NTRU parameters
  */

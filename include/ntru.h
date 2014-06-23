@@ -108,8 +108,6 @@ string_delete(string *del_string);
  * fill with coefficients [out]
  * @param c array of polynomial coefficients, can be NULL
  * @param len size of the coefficient array, can be 0
- * @return newly allocated polynomial pointer, must be freed
- * with fmpz_poly_clear()
  */
 void
 poly_new(fmpz_poly_t new_poly,
