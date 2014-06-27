@@ -71,5 +71,5 @@ void test_poly_new2(void)
 
 	poly_new(new_poly, NULL, 0);
 
-	CU_ASSERT_PTR_NULL(fmpz_poly_get_coeff_ptr(new_poly, 0));
+	CU_ASSERT_EQUAL(fmpz_poly_is_zero(new_poly), 1);
 }
