@@ -63,7 +63,7 @@ get_compressed_str(const string *str)
 	if (!str)
 		NTRU_ABORT_DEBUG("Unexpected NULL parameters");
 
-	max_output_size = str->len;
+	max_output_size = str->len + 1;
 	compressed_str = ntru_malloc(sizeof(string));
 	compressed_str->ptr = ntru_malloc(
 			sizeof(char) * max_output_size);
