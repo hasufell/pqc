@@ -111,6 +111,9 @@ poly_new(fmpz_poly_t new_poly,
 		int const * const c,
 		const size_t len)
 {
+	if (!new_poly)
+		NTRU_ABORT_DEBUG("Unexpected NULL parameter in");
+
 	fmpz_poly_init(new_poly);
 
 	for (uint32_t i = 0; i < len; i++)
@@ -326,7 +329,8 @@ poly_inverse_poly_q(fmpz_poly_t Fq,
 	fmpz_poly_zero(Fq);
 
 	while (1) {
-		while (fmpz_is_zero(fmpz_poly_get_coeff_ptr(f, 0))) {
+		while (fmpz_poly_get_coeff_ptr(f, 0) &&
+				fmpz_is_zero(fmpz_poly_get_coeff_ptr(f, 0))) {
 			for (uint32_t i = 1; i <= params->N; i++) {
 				fmpz *f_coeff = fmpz_poly_get_coeff_ptr(f, i);
 				fmpz *c_coeff = fmpz_poly_get_coeff_ptr(c, params->N - i);
@@ -346,8 +350,11 @@ poly_inverse_poly_q(fmpz_poly_t Fq,
 			k++;
 
 			if (fmpz_poly_degree(f) == -1)
-				goto _cleanup;
+				goto cleanup;
 		}
+
+		if (fmpz_poly_is_zero(g) == 1)
+			goto cleanup;
 
 		if (fmpz_poly_degree(f) == 0)
 			break;
@@ -368,7 +375,7 @@ poly_inverse_poly_q(fmpz_poly_t Fq,
 
 	b_last = fmpz_poly_get_coeff_ptr(b, params->N);
 	if (fmpz_cmp_si_n(b_last, 0))
-		goto _cleanup;
+		goto cleanup;
 
 	/* Fq(x) = x^(N-k) * b(x) */
 	for (int i = params->N - 1; i >= 0; i--) {
@@ -393,7 +400,7 @@ poly_inverse_poly_q(fmpz_poly_t Fq,
 	else
 		fmpz_poly_zero(Fq);
 
-_cleanup:
+cleanup:
 	fmpz_poly_clear(a_tmp);
 	fmpz_poly_clear(b);
 	fmpz_poly_clear(c);
@@ -438,7 +445,8 @@ poly_inverse_poly_p(fmpz_poly_t Fp,
 	fmpz_poly_zero(Fp);
 
 	while (1) {
-		while (fmpz_is_zero(fmpz_poly_get_coeff_ptr(f, 0))) {
+		while (fmpz_poly_get_coeff_ptr(f, 0) &&
+				fmpz_is_zero(fmpz_poly_get_coeff_ptr(f, 0))) {
 			for (uint32_t i = 1; i <= params->N; i++) {
 				fmpz *f_coeff = fmpz_poly_get_coeff_ptr(f, i);
 				fmpz *c_coeff = fmpz_poly_get_coeff_ptr(c, params->N - i);
@@ -460,6 +468,9 @@ poly_inverse_poly_p(fmpz_poly_t Fp,
 			if (fmpz_poly_degree(f) == -1)
 				goto cleanup;
 		}
+
+		if (fmpz_poly_is_zero(g) == 1)
+			goto cleanup;
 
 		if (fmpz_poly_degree(f) == 0)
 			break;

@@ -239,21 +239,17 @@ poly_to_base64(const fmpz_poly_t poly,
 {
 	string *result_string = ntru_malloc(sizeof(*result_string));
 	string *string_rep = NULL;
-	gchar *base64_string = NULL,
-		  *tmp = NULL;
+	gchar *base64_string = NULL;
 
 	string_rep = poly_to_ascii(poly, params);
 
-	tmp = g_base64_encode((const guchar *)string_rep->ptr,
+	base64_string = g_base64_encode((const guchar *)string_rep->ptr,
 			string_rep->len);
-	base64_string = g_base64_encode((const guchar *)tmp,
-			strlen(tmp));
 
 	result_string->ptr = base64_string;
 	result_string->len = strlen(base64_string);
 
 	string_delete(string_rep);
-	free(tmp);
 
 	return result_string;
 }
@@ -268,20 +264,17 @@ poly_arr_to_base64(const fmpz_poly_t **poly_array,
 	string *string_rep;
 	string *result_string = ntru_malloc(sizeof(*result_string));
 
-	gchar *base64_string = NULL,
-		  *tmp = NULL;
+	gchar *base64_string = NULL;
 
 	string_rep = poly_arr_to_ascii(poly_array, poly_c, params);
 
-	tmp = g_base64_encode((const guchar *)string_rep->ptr, string_rep->len);
-	base64_string = g_base64_encode((const guchar *)tmp,
-			strlen(tmp));
+	base64_string = g_base64_encode((const guchar *)string_rep->ptr,
+			string_rep->len);
 
 	result_string->ptr = base64_string;
 	result_string->len = strlen(base64_string);
 
 	string_delete(string_rep);
-	free(tmp);
 
 	return result_string;
 }

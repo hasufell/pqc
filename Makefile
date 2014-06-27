@@ -15,9 +15,16 @@ uninstall:
 	$(MAKE) -C src uninstall
 	$(MAKE) -C include uninstall
 
+check:
+	$(MAKE) -C tests check
+
+test:
+	$(MAKE) -C tests check
+
 clean:
 	$(MAKE) -C include clean
 	$(MAKE) -C src clean
+	$(MAKE) -C tests clean
 
 doc:
 	$(MAKE) -C include doc

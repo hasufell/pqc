@@ -30,6 +30,8 @@ install/
 *.pdf
 *.dec
 *.enc
+tests/test-file.out
+tests/ntru_cunit
 
 
 # tmp files

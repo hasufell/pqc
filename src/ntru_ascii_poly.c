@@ -146,8 +146,7 @@ base64_to_poly_arr(const string *to_poly, const ntru_params *params)
 	uint32_t i = 0,
 			 polyc = 0;
 	gsize out_len;
-	guchar *base64_decoded = NULL,
-		   *base_tmp = NULL;
+	guchar *base64_decoded = NULL;
 	string *new_string = ntru_malloc(sizeof(*new_string));
 	fmpz_poly_t **poly_array;
 	char *tmp = ntru_malloc(sizeof(char) * (to_poly->len + 1));
@@ -155,13 +154,6 @@ base64_to_poly_arr(const string *to_poly, const ntru_params *params)
 	/* g_base64_decode() needs it null-terminated */
 	memcpy(tmp, to_poly->ptr, to_poly->len);
 	tmp[to_poly->len] = '\0';
-
-	base_tmp = g_base64_decode((const gchar *)tmp, &out_len);
-
-	/* g_base64_decode() needs it null-terminated */
-	REALLOC(tmp, sizeof(char) * (out_len + 1));
-	memcpy(tmp, base_tmp, out_len);
-	tmp[out_len] = '\0';
 
 	base64_decoded = g_base64_decode((const gchar *)tmp, &out_len);
 
@@ -200,7 +192,6 @@ base64_to_poly_arr(const string *to_poly, const ntru_params *params)
 	poly_array[polyc] = NULL;
 
 	string_delete(new_string);
-	free(base_tmp);
 	free(tmp);
 
 	return poly_array;

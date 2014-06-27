@@ -34,7 +34,7 @@ PQC_HEADERS = \
 
 
 # libs
-LIBS += -L. -lgmp -lmpfr -lflint $(shell $(PKG_CONFIG) --libs glib-2.0) -lm
+LIBS += -L. -llz4 -lgmp -lmpfr -lflint $(shell $(PKG_CONFIG) --libs glib-2.0) -lm
 
 # includes
 INCS = -I. -I/usr/include/flint $(shell $(PKG_CONFIG) --cflags glib-2.0)
@@ -50,13 +50,13 @@ all: libpqc.a libpqc.so.$(LIBVER)
 libpqc.a: $(PQC_OBJS) $(PQC_HEADERS)
 	$(AR) cru libpqc.a $(PQC_OBJS)
 
-libpqc.so.$(LIBVER): libpqc.a $(PQC_HEADERS) $(LIBFLINT)
+libpqc.so.$(LIBVER): libpqc.a $(PQC_HEADERS)
 	$(CC) -shared $(CFLAGS) -Wl,-soname,libpqc$(SOVER) -o $@ $(LDFLAGS) \
-		libpqc.a $(LIBFLINT) $(LIBS)
+		libpqc.a $(LIBS)
 
-main: main.o libpqc.a $(LIBFLINT)
+main: main.o libpqc.a
 	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) \
-		main.o libpqc.a $(LIBFLINT) $(LIBS)
+		main.o libpqc.a $(LIBS)
 
 install:
 	$(INSTALL_DIR) "$(DESTDIR)$(INSTALL_LIBDIR)"

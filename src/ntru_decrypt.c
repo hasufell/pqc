@@ -28,17 +28,62 @@
 
 #include "ntru_ascii_poly.h"
 #include "ntru_decrypt.h"
+#include "ntru_mem.h"
 #include "ntru_params.h"
 #include "ntru_poly.h"
 #include "ntru_poly_ascii.h"
 #include "ntru_string.h"
 
+#include <lz4.h>
 #include <stdbool.h>
 #include <string.h>
 
 #include <fmpz_poly.h>
 #include <fmpz.h>
 
+
+/**
+ * Decompress a string and return it, newly allocated.
+ *
+ * @param compr_str the compressed string to decompress
+ * @return the decompressed string, newly allocated
+ */
+static string *
+get_decompressed_str(const string *compr_str);
+
+
+/*------------------------------------------------------------------------*/
+
+static string *
+get_decompressed_str(const string *compr_str)
+{
+	int out_len = 0;
+	const uint32_t max_lz4_ratio = 3;
+	uint32_t max_out_len = 0;
+	string *decompressed_msg = NULL;
+
+	if (!compr_str)
+		NTRU_ABORT_DEBUG("Unexpected NULL parameters");
+
+	max_out_len = compr_str->len * max_lz4_ratio;
+	decompressed_msg = ntru_malloc(sizeof(string));
+	decompressed_msg->ptr = ntru_malloc(
+			/* this is more than needed, but safe */
+			sizeof(char) * max_out_len);
+
+	out_len = LZ4_decompress_safe(
+			(const char *)compr_str->ptr,
+			decompressed_msg->ptr,
+			compr_str->len,
+			max_out_len);
+
+	if (out_len > 0)
+		decompressed_msg->len = out_len;
+	else
+		NTRU_ABORT_DEBUG("Failed decompressing the message");
+
+	return decompressed_msg;
+}
 
 /*------------------------------------------------------------------------*/
 
@@ -98,6 +143,7 @@ ntru_decrypt_string(
 	uint32_t i = 0;
 	string *decr_msg;
 	fmpz_poly_t **poly_array;
+	string *decompressed_msg = NULL;
 
 	if (!encr_msg || !encr_msg->len)
 		NTRU_ABORT_DEBUG("Unexpected NULL parameters");
@@ -116,9 +162,12 @@ ntru_decrypt_string(
 	decr_msg = bin_poly_arr_to_ascii((const fmpz_poly_t **)poly_array,
 			i, params);
 
-	poly_delete_array(poly_array);
+	decompressed_msg = get_decompressed_str(decr_msg);
 
-	return decr_msg;
+	poly_delete_array(poly_array);
+	string_delete(decr_msg);
+
+	return decompressed_msg;
 }
 
 /*------------------------------------------------------------------------*/

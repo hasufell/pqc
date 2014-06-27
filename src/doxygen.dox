@@ -21,6 +21,7 @@ Further work is based on <a href="http://www.math.uni-hamburg.de/home/kuehn/mold
 This library was written for Linux systems. Support for windows will not be added.
 	\* <a href="http://www.flintlib.org">FLINT-2.4.3 or later</a> (compiled with gmp and mpfr)
 	\* <a href="https://developer.gnome.org/glib/stable/">glib-2.0</a>
+	\* <a href="https://code.google.com/p/lz4">lz4</a>
 	\* <a href="http://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config</a> (for the build only)
 
 \section install_sec Installation

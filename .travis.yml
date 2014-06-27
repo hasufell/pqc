@@ -4,7 +4,7 @@ env:
     global:
         secure: "BB9eiRNXC1PfNRLEifc0yQQZnM25zqaWNGVWN+atzT+NkxhVKyVr8+DoyPYaa8tOKybuSZhVkKnIiCd8iGMe3v+WyuHKFuhdiwdnEQhxbBlUCb9dDLEexI+J8QiYwC8AW/t6H9LWVwSka0RI3GJujJ8HKIBzW45I/j+1NlUte8U="
 before_script:
-    - sudo apt-get install -qq libgmp-dev libmpfr-dev doxygen graphviz
+    - sudo apt-get install -qq libgmp-dev libmpfr-dev doxygen graphviz cmake libcunit1 libcunit1-dev
     - sudo apt-get remove doxygen
     - wget http://www.flintlib.org/flint-2.4.3.tar.gz
     - tar -xzf flint-2.4.3.tar.gz
@@ -20,8 +20,16 @@ before_script:
     - make
     - sudo make install
     - cd ..
+    - wget http://dev.gentoo.org/~ryao/dist/lz4-0_p106.tar.xz
+    - tar -xJf lz4-0_p106.tar.xz
+    - cd lz4-0_p106/cmake
+    - cmake -DBUILD_LIBS=ON -DBUILD_SHARED_LIBS=ON .
+    - make
+    - sudo make install
+    - cd ../..
 script:
     - make CC=clang
+    - make CC=clang check
     - make doc
 after_script:
     - ./update-gh-pages.sh
