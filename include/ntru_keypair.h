@@ -96,7 +96,7 @@ ntru_create_keypair(
 void
 export_public_key(char const * const filename,
 		const fmpz_poly_t pub,
-		const ntru_params *params)
+		const ntru_params *params);
 
 /**
  * Export the private key to a file.
@@ -108,7 +108,7 @@ export_public_key(char const * const filename,
 void
 export_priv_key(char const * const filename,
 		const fmpz_poly_t priv,
-		const ntru_params *params)
+		const ntru_params *params);
 
 /**
  * Import the public key from a file.
