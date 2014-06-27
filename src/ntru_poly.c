@@ -329,7 +329,8 @@ poly_inverse_poly_q(fmpz_poly_t Fq,
 	fmpz_poly_zero(Fq);
 
 	while (1) {
-		while (fmpz_is_zero(fmpz_poly_get_coeff_ptr(f, 0))) {
+		while (fmpz_poly_get_coeff_ptr(f, 0) &&
+				fmpz_is_zero(fmpz_poly_get_coeff_ptr(f, 0))) {
 			for (uint32_t i = 1; i <= params->N; i++) {
 				fmpz *f_coeff = fmpz_poly_get_coeff_ptr(f, i);
 				fmpz *c_coeff = fmpz_poly_get_coeff_ptr(c, params->N - i);
@@ -444,7 +445,8 @@ poly_inverse_poly_p(fmpz_poly_t Fp,
 	fmpz_poly_zero(Fp);
 
 	while (1) {
-		while (fmpz_is_zero(fmpz_poly_get_coeff_ptr(f, 0))) {
+		while (fmpz_poly_get_coeff_ptr(f, 0) &&
+				fmpz_is_zero(fmpz_poly_get_coeff_ptr(f, 0))) {
 			for (uint32_t i = 1; i <= params->N; i++) {
 				fmpz *f_coeff = fmpz_poly_get_coeff_ptr(f, i);
 				fmpz *c_coeff = fmpz_poly_get_coeff_ptr(c, params->N - i);
