@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['import_5fpriv_5fkey',['import_priv_key',['../ntru__keypair_8h.html#aedfa3c9cc36b536a12278c3584d94623',1,'ntru_keypair.h']]],
-  ['import_5fpublic_5fkey',['import_public_key',['../ntru__keypair_8h.html#a6a028c6830d7be6ea75f322911289d2c',1,'ntru_keypair.h']]]
+  ['import_5fpriv_5fkey',['import_priv_key',['../ntru__keypair_8h.html#a0d387f6329b9bf79e4f9e8286a5d3337',1,'ntru_keypair.h']]],
+  ['import_5fpublic_5fkey',['import_public_key',['../ntru__keypair_8h.html#a9fedb1c2bbcec20c67244e91987a7a77',1,'ntru_keypair.h']]]
 ];

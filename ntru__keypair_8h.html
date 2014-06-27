@@ -83,8 +83,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">ntru_keypair.h File Reference</div>  </div>
 </div><!--header-->
@@ -102,7 +101,7 @@ Include dependency graph for ntru_keypair.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="ntru__keypair_8h__incl.png" border="0" usemap="#ntru__keypair_8h" alt=""/></div>
 <map name="ntru__keypair_8h" id="ntru__keypair_8h">
-<area shape="rect" id="node3" href="ntru_8h.html" title="public API, basic data types " alt="" coords="147,83,200,112"/></map>
+<area shape="rect" id="node3" href="ntru_8h.html" title="public API, basic data types " alt="" coords="165,83,219,112"/></map>
 </div>
 </div>
 <p><a href="ntru__keypair_8h_source.html">Go to the source code of this file.</a></p>
@@ -121,20 +120,16 @@ Typedefs</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:a2917137d0281aee3157e348581cef3a9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ntru__keypair_8h.html#a2917137d0281aee3157e348581cef3a9">ntru_create_keypair</a> (<a class="el" href="structkeypair.html">keypair</a> *pair, const fmpz_poly_t f, const fmpz_poly_t g, const <a class="el" href="structntru__params.html">ntru_params</a> *params)</td></tr>
 <tr class="separator:a2917137d0281aee3157e348581cef3a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab6cb83ee5f477ac473021c3b680bebaf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ntru__keypair_8h.html#ab6cb83ee5f477ac473021c3b680bebaf">export_public_key</a> (char const *const filename, const fmpz_poly_t pub, const <a class="el" href="structntru__params.html">ntru_params</a> *params) void export_priv_key(char const *const filename</td></tr>
-<tr class="separator:ab6cb83ee5f477ac473021c3b680bebaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a028c6830d7be6ea75f322911289d2c"><td class="memItemLeft" align="right" valign="top">void const fmpz_poly_t const <br class="typebreak" />
-<a class="el" href="structntru__params.html">ntru_params</a> *params void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ntru__keypair_8h.html#a6a028c6830d7be6ea75f322911289d2c">import_public_key</a> (fmpz_poly_t pub, char const *const filename, const <a class="el" href="structntru__params.html">ntru_params</a> *params)</td></tr>
-<tr class="separator:a6a028c6830d7be6ea75f322911289d2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aedfa3c9cc36b536a12278c3584d94623"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ntru__keypair_8h.html#aedfa3c9cc36b536a12278c3584d94623">import_priv_key</a> (fmpz_poly_t <a class="el" href="ntru__keypair_8h.html#a205b65fe204c1506a749de8a2ff29418">priv</a>, fmpz_poly_t priv_inv, char const *const filename, const <a class="el" href="structntru__params.html">ntru_params</a> *params)</td></tr>
-<tr class="separator:aedfa3c9cc36b536a12278c3584d94623"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c1eb586b7b1c46d1a43147c88e0b25f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ntru__keypair_8h.html#a4c1eb586b7b1c46d1a43147c88e0b25f">export_public_key</a> (char const *const filename, const fmpz_poly_t pub, const <a class="el" href="structntru__params.html">ntru_params</a> *params)</td></tr>
+<tr class="separator:a4c1eb586b7b1c46d1a43147c88e0b25f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4fa7bc1bbfb224f02a5aa8c498d7107"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ntru__keypair_8h.html#ab4fa7bc1bbfb224f02a5aa8c498d7107">export_priv_key</a> (char const *const filename, const fmpz_poly_t priv, const <a class="el" href="structntru__params.html">ntru_params</a> *params)</td></tr>
+<tr class="separator:ab4fa7bc1bbfb224f02a5aa8c498d7107"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fedb1c2bbcec20c67244e91987a7a77"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ntru__keypair_8h.html#a9fedb1c2bbcec20c67244e91987a7a77">import_public_key</a> (fmpz_poly_t pub, char const *const filename, const <a class="el" href="structntru__params.html">ntru_params</a> *params)</td></tr>
+<tr class="separator:a9fedb1c2bbcec20c67244e91987a7a77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d387f6329b9bf79e4f9e8286a5d3337"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ntru__keypair_8h.html#a0d387f6329b9bf79e4f9e8286a5d3337">import_priv_key</a> (fmpz_poly_t priv, fmpz_poly_t priv_inv, char const *const filename, const <a class="el" href="structntru__params.html">ntru_params</a> *params)</td></tr>
+<tr class="separator:a0d387f6329b9bf79e4f9e8286a5d3337"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5279c4990bc22bb9e735fe36372a6786"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ntru__keypair_8h.html#a5279c4990bc22bb9e735fe36372a6786">ntru_delete_keypair</a> (<a class="el" href="structkeypair.html">keypair</a> *pair)</td></tr>
 <tr class="separator:a5279c4990bc22bb9e735fe36372a6786"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a205b65fe204c1506a749de8a2ff29418"><td class="memItemLeft" align="right" valign="top">void const fmpz_poly_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ntru__keypair_8h.html#a205b65fe204c1506a749de8a2ff29418">priv</a></td></tr>
-<tr class="separator:a205b65fe204c1506a749de8a2ff29418"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>public API, key handling </p>
@@ -157,12 +152,54 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="ab6cb83ee5f477ac473021c3b680bebaf"></a>
+<a class="anchor" id="ab4fa7bc1bbfb224f02a5aa8c498d7107"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void export_public_key </td>
+          <td class="memname">bool export_priv_key </td>
+          <td>(</td>
+          <td class="paramtype">char const *const&#160;</td>
+          <td class="paramname"><em>filename</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const fmpz_poly_t&#160;</td>
+          <td class="paramname"><em>priv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structntru__params.html">ntru_params</a> *&#160;</td>
+          <td class="paramname"><em>params</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Export the private key to a file.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>the file to save the private key into </td></tr>
+    <tr><td class="paramname">priv</td><td>the private key </td></tr>
+    <tr><td class="paramname">params</td><td>the NTRU context </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true for success, false if any of the file operations failed </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a4c1eb586b7b1c46d1a43147c88e0b25f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool export_public_key </td>
           <td>(</td>
           <td class="paramtype">char const *const&#160;</td>
           <td class="paramname"><em>filename</em>, </td>
@@ -182,7 +219,7 @@ Variables</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> const</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -191,22 +228,20 @@ Variables</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">filename</td><td>the file to save the public key into </td></tr>
     <tr><td class="paramname">pub</td><td>the public key </td></tr>
-    <tr><td class="paramname">params</td><td>the NTRU context Export the private key to a file.</td></tr>
-    <tr><td class="paramname">filename</td><td>the file to save the private key into </td></tr>
-    <tr><td class="paramname">priv</td><td>the private key </td></tr>
     <tr><td class="paramname">params</td><td>the NTRU context </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>true for success, false if any of the file operations failed </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="aedfa3c9cc36b536a12278c3584d94623"></a>
+<a class="anchor" id="a0d387f6329b9bf79e4f9e8286a5d3337"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void import_priv_key </td>
+          <td class="memname">bool import_priv_key </td>
           <td>(</td>
           <td class="paramtype">fmpz_poly_t&#160;</td>
           <td class="paramname"><em>priv</em>, </td>
@@ -246,15 +281,16 @@ Variables</h2></td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>true for success, false if any of the file operations failed </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="a6a028c6830d7be6ea75f322911289d2c"></a>
+<a class="anchor" id="a9fedb1c2bbcec20c67244e91987a7a77"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void const fmpz_poly_t const <a class="el" href="structntru__params.html">ntru_params</a>* params void import_public_key </td>
+          <td class="memname">bool import_public_key </td>
           <td>(</td>
           <td class="paramtype">fmpz_poly_t&#160;</td>
           <td class="paramname"><em>pub</em>, </td>
@@ -287,6 +323,7 @@ Variables</h2></td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>true for success, false if any of the file operations failed </dd></dl>
 
 </div>
 </div>
@@ -362,25 +399,10 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a class="anchor" id="a205b65fe204c1506a749de8a2ff29418"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void const fmpz_poly_t priv</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="ntru__keypair_8h_source.html#l00110">110</a> of file <a class="el" href="ntru__keypair_8h_source.html">ntru_keypair.h</a>.</p>
-
-</div>
-</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jun 23 2014 16:42:52 for post quantum cryptography by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 27 2014 23:12:09 for post quantum cryptography by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.7
 </small></address>
