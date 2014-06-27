@@ -349,7 +349,7 @@ poly_inverse_poly_q(fmpz_poly_t Fq,
 			k++;
 
 			if (fmpz_poly_degree(f) == -1)
-				goto _cleanup;
+				goto cleanup;
 		}
 
 		if (fmpz_poly_degree(f) == 0)
@@ -371,7 +371,7 @@ poly_inverse_poly_q(fmpz_poly_t Fq,
 
 	b_last = fmpz_poly_get_coeff_ptr(b, params->N);
 	if (fmpz_cmp_si_n(b_last, 0))
-		goto _cleanup;
+		goto cleanup;
 
 	/* Fq(x) = x^(N-k) * b(x) */
 	for (int i = params->N - 1; i >= 0; i--) {
@@ -396,7 +396,7 @@ poly_inverse_poly_q(fmpz_poly_t Fq,
 	else
 		fmpz_poly_zero(Fq);
 
-_cleanup:
+cleanup:
 	fmpz_poly_clear(a_tmp);
 	fmpz_poly_clear(b);
 	fmpz_poly_clear(c);
