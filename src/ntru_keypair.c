@@ -55,8 +55,8 @@ ntru_create_keypair(
 				Fp,
 				pub;
 
-	if (!f || !g || !params)
-		goto _return;
+	if (!pair || !f || !g || !params)
+		NTRU_ABORT_DEBUG("Unexpected NULL parameters in");
 
 	fmpz_poly_init(Fq);
 	fmpz_poly_init(Fp);
@@ -86,7 +86,7 @@ _cleanup:
 	fmpz_poly_clear(Fq);
 	fmpz_poly_clear(Fp);
 	fmpz_poly_clear(pub);
-_return:
+
 	return retval;
 }
 
