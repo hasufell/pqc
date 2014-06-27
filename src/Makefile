@@ -50,13 +50,13 @@ all: libpqc.a libpqc.so.$(LIBVER)
 libpqc.a: $(PQC_OBJS) $(PQC_HEADERS)
 	$(AR) cru libpqc.a $(PQC_OBJS)
 
-libpqc.so.$(LIBVER): libpqc.a $(PQC_HEADERS) $(LIBFLINT)
+libpqc.so.$(LIBVER): libpqc.a $(PQC_HEADERS)
 	$(CC) -shared $(CFLAGS) -Wl,-soname,libpqc$(SOVER) -o $@ $(LDFLAGS) \
-		libpqc.a $(LIBFLINT) $(LIBS)
+		libpqc.a $(LIBS)
 
-main: main.o libpqc.a $(LIBFLINT)
+main: main.o libpqc.a
 	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) \
-		main.o libpqc.a $(LIBFLINT) $(LIBS)
+		main.o libpqc.a $(LIBS)
 
 install:
 	$(INSTALL_DIR) "$(DESTDIR)$(INSTALL_LIBDIR)"
