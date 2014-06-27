@@ -33,6 +33,7 @@
 
 #include <fmpz_poly.h>
 #include <fmpz.h>
+#include <stdbool.h>
 #include <stdint.h>
 
 
@@ -178,8 +179,9 @@ read_file(char const * const filename);
  *
  * @param wstring the string to write to the file
  * @param filename the name of the file to write to
+ * @return true for success or false for failure if fopen or fclose failed
  */
-void
+bool
 write_file(string const *wstring, char const * const filename);
 
 
