@@ -108,6 +108,9 @@ write_file(string const *wstring, char const * const filename)
 {
 	FILE *fp;
 
+	if (!wstring || !filename)
+		return false;
+
 	fp = fopen(filename, "w");
 
 	if (!fp) {
