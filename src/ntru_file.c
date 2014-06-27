@@ -56,8 +56,19 @@ read_file(char const * const filename)
 	ssize_t n;
 	size_t file_length = 0;
 	string *result_string;
+	struct stat s;
+
+	if (!filename)
+		return NULL;
 
 	fd = open(filename, O_RDONLY);
+
+	/* check if this is a real file */
+	if (fstat(fd, &s) == -1)
+		return NULL;
+	if (!S_ISREG(s.st_mode))
+		return NULL;
+
 	file_length = lseek(fd, 0, SEEK_END) + 1;
 	lseek(fd, 0, SEEK_SET);
 
@@ -107,8 +118,15 @@ bool
 write_file(string const *wstring, char const * const filename)
 {
 	FILE *fp;
+	struct stat s;
 
 	if (!wstring || !filename)
+		return false;
+
+	/* if "filename" already exists, we need to make sure
+	 * it's a regular file */
+	if (stat(filename, &s) == 0 &&
+			!S_ISREG(s.st_mode))
 		return false;
 
 	fp = fopen(filename, "w");
