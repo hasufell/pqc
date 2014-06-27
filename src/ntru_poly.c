@@ -111,6 +111,9 @@ poly_new(fmpz_poly_t new_poly,
 		int const * const c,
 		const size_t len)
 {
+	if (!new_poly)
+		NTRU_ABORT_DEBUG("Unexpected NULL parameter in");
+
 	fmpz_poly_init(new_poly);
 
 	for (uint32_t i = 0; i < len; i++)
