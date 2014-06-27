@@ -29,6 +29,7 @@ before_script:
     - cd ../..
 script:
     - make CC=clang
+    - make CC=clang check
     - make doc
 after_script:
     - ./update-gh-pages.sh
