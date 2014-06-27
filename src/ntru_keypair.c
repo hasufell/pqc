@@ -92,43 +92,55 @@ _cleanup:
 
 /*------------------------------------------------------------------------*/
 
-void
+bool
 export_public_key(char const * const filename,
 		const fmpz_poly_t pub,
 		const ntru_params *params)
 {
 	string *pub_string;
+	bool retval = false;
+
+	if (!filename || !pub || !params)
+		NTRU_ABORT_DEBUG("Unexpected NULL parameters in");
 
 	pub_string = poly_to_base64(pub, params);
-	write_file(pub_string, filename);
+	retval = write_file(pub_string, filename);
 
 	string_delete(pub_string);
+
+	return retval;
 }
 
 /*------------------------------------------------------------------------*/
 
-void
+bool
 export_priv_key(char const * const filename,
 		const fmpz_poly_t priv,
 		const ntru_params *params)
 {
 	string *priv_string;
 	fmpz_poly_t priv_u;
+	bool retval = false;
+
+	if (!filename || !priv || !params)
+		NTRU_ABORT_DEBUG("Unexpected NULL parameters in");
 
 	fmpz_poly_init(priv_u);
 	fmpz_poly_set(priv_u, priv);
 	fmpz_poly_mod_unsigned(priv_u, params->p);
 
 	priv_string = poly_to_base64(priv_u, params);
-	write_file(priv_string, filename);
+	retval = write_file(priv_string, filename);
 
 	fmpz_poly_clear(priv_u);
 	string_delete(priv_string);
+
+	return retval;
 }
 
 /*------------------------------------------------------------------------*/
 
-void
+bool
 import_public_key(fmpz_poly_t pub,
 		char const * const filename,
 		const ntru_params *params)
@@ -136,7 +148,12 @@ import_public_key(fmpz_poly_t pub,
 	string *pub_string;
 	fmpz_poly_t **imported;
 
-	pub_string = read_file(filename);
+	if (!pub || !filename || !params)
+		NTRU_ABORT_DEBUG("Unexpected NULL parameters in");
+
+	if (!(pub_string = read_file(filename)))
+		return false;
+
 	imported = base64_to_poly_arr(pub_string, params);
 
 	/* if the array exceeds one element, then something
@@ -149,25 +166,31 @@ import_public_key(fmpz_poly_t pub,
 	string_delete(pub_string);
 	poly_delete_array(imported);
 	free(imported);
+
+	return true;
 }
 
 /*------------------------------------------------------------------------*/
 
-void
+bool
 import_priv_key(fmpz_poly_t priv,
 		fmpz_poly_t priv_inv,
 		char const * const filename,
 		const ntru_params *params)
 {
-	string *pub_string;
+	string *priv_string;
 	fmpz_poly_t **imported,
 				Fp;
 
+	if (!priv || !priv_inv || !filename || !params)
+		NTRU_ABORT_DEBUG("Unexpected NULL parameters in");
+
+	if (!(priv_string = read_file(filename)))
+		return false;
+
 	fmpz_poly_init(Fp);
 
-	pub_string = read_file(filename);
-
-	imported = base64_to_poly_arr(pub_string, params);
+	imported = base64_to_poly_arr(priv_string, params);
 	fmpz_poly_mod(**imported, params->p);
 
 	/* if the array exceeds one element, then something
@@ -186,9 +209,11 @@ import_priv_key(fmpz_poly_t priv,
 	fmpz_poly_clear(Fp);
 
 cleanup:
-	string_delete(pub_string);
+	string_delete(priv_string);
 	poly_delete_array(imported);
 	free(imported);
+
+	return true;
 }
 
 /*------------------------------------------------------------------------*/

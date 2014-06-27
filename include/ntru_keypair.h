@@ -92,8 +92,9 @@ ntru_create_keypair(
  * @param filename the file to save the public key into
  * @param pub the public key
  * @param params the NTRU context
+ * @return true for success, false if any of the file operations failed
  */
-void
+bool
 export_public_key(char const * const filename,
 		const fmpz_poly_t pub,
 		const ntru_params *params);
@@ -104,8 +105,9 @@ export_public_key(char const * const filename,
  * @param filename the file to save the private key into
  * @param priv the private key
  * @param params the NTRU context
+ * @return true for success, false if any of the file operations failed
  */
-void
+bool
 export_priv_key(char const * const filename,
 		const fmpz_poly_t priv,
 		const ntru_params *params);
@@ -116,8 +118,9 @@ export_priv_key(char const * const filename,
  * @param pub where to save the public key, must be initialized [out]
  * @param filename the file to get the public key from
  * @param params the NTRU context
+ * @return true for success, false if any of the file operations failed
  */
-void
+bool
 import_public_key(fmpz_poly_t pub,
 		char const * const filename,
 		const ntru_params *params);
@@ -132,8 +135,9 @@ import_public_key(fmpz_poly_t pub,
  * must be initialized [out]
  * @param filename the file to get the private key from
  * @param params the NTRU context
+ * @return true for success, false if any of the file operations failed
  */
-void
+bool
 import_priv_key(fmpz_poly_t priv,
 		fmpz_poly_t priv_inv,
 		char const * const filename,
