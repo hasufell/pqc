@@ -352,6 +352,9 @@ poly_inverse_poly_q(fmpz_poly_t Fq,
 				goto cleanup;
 		}
 
+		if (fmpz_poly_is_zero(g) == 1)
+			goto cleanup;
+
 		if (fmpz_poly_degree(f) == 0)
 			break;
 
@@ -463,6 +466,9 @@ poly_inverse_poly_p(fmpz_poly_t Fp,
 			if (fmpz_poly_degree(f) == -1)
 				goto cleanup;
 		}
+
+		if (fmpz_poly_is_zero(g) == 1)
+			goto cleanup;
 
 		if (fmpz_poly_degree(f) == 0)
 			break;
