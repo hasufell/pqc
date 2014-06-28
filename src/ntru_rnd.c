@@ -25,7 +25,6 @@
  * @brief random polynomials
  */
 
-#include "math.h"
 #include "ntru_err.h"
 #include "ntru_params.h"
 #include "ntru_poly.h"
