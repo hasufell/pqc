@@ -44,4 +44,4 @@ clean:
 	rm -f *.o ntru_cunit *.orig core test-file.out pub.key
 
 
-.PHONY: check clean test
+.PHONY: check clean libpqc.a test
