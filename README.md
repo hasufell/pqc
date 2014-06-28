@@ -11,6 +11,7 @@ implementation with the primary goal of learning.
 * glib-2.0
 * lz4 (https://code.google.com/p/lz4)
 * cunit (for the tests only)
+* doxygen (for the documentation only)
 * pkgconfig (for the build only)
 
 ### Compiling the library
