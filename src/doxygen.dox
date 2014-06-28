@@ -22,10 +22,12 @@ This library was written for Linux systems. Support for windows will not be adde
 	\* <a href="http://www.flintlib.org">FLINT-2.4.3 or later</a> (compiled with gmp and mpfr)
 	\* <a href="https://developer.gnome.org/glib/stable/">glib-2.0</a>
 	\* <a href="https://code.google.com/p/lz4">lz4</a>
+	\* <a href="http://cunit.sourceforge.net">cunit</a> (for the tests only)
 	\* <a href="http://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config</a> (for the build only)
 
 \section install_sec Installation
 	\* make
+	\* make check (optional, runs the test suite)
 	\* make install
 
 \section usage Usage
