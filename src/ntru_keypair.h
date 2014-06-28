@@ -70,11 +70,11 @@ struct keypair {
  * @param pair store private and public components here (the
  * polynomials inside the struct will be automatically
  * initialized) [out]
- * @param f a random polynomial
- * @param g a random polynomial
+ * @param f a random ternary polynomial
+ * @param g a random ternary polynomial
  * @param params the NTRU context
  * @return true for success, false if f or g are not invertible
- * (then the caller hast to try different ones)
+ * (then the caller has to try different ones)
  */
 bool
 ntru_create_keypair(
