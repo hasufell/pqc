@@ -183,7 +183,7 @@ poly_starmultiply(fmpz_poly_t c,
 /**
  * Compute the inverse of a polynomial in modulo a power of 2,
  * which is q. This is based off the pseudo-code for "Inversion
- * in (Z/2Z)[X](X^N - 1)" and "Inversion in (Z/p^r Z)[X](X^N - 1)".
+ * in (Z/2Z)[X]/(X^N - 1)" and "Inversion in (Z/p^r Z)[X](X^N - 1)".
  * See NTRU Cryptosystems Tech Report #014 "Almost Inverses
  * and Fast NTRU Key Creation."
  *
