@@ -509,12 +509,12 @@ poly_inverse_poly_p(fmpz_poly_t Fp,
 
 			/* f = f - u * g mod p */
 			fmpz_poly_scalar_mul_fmpz(g_tmp, g_tmp, u);
-			fmpz_poly_sub(f, g_tmp, f);
+			fmpz_poly_sub(f, f, g_tmp);
 			fmpz_poly_mod_unsigned(f, params->p);
 
 			/* b = b - u * c mod p */
 			fmpz_poly_scalar_mul_fmpz(c_tmp, c_tmp, u);
-			fmpz_poly_sub(b, c_tmp, b);
+			fmpz_poly_sub(b, b, c_tmp);
 			fmpz_poly_mod_unsigned(b, params->p);
 
 			fmpz_clear(u);
